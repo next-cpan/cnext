@@ -30,6 +30,7 @@ sub generate_file {
     rename "$target.tmp", $target;
 }
 
+system "rm", "-r", ".build" if -d '.build';
 mkdir ".build", 0777;
 system qw(cp -r fatlib lib .build/);
 
@@ -42,7 +43,7 @@ my $fatpack_compact;
     unlink 'lib/.keep';
     unlink 'fatlib/.keep';
 
-    $fatpack = `fatpack file`;
+    $fatpack = qx{fatpack file};
 
     my @files;
     my $want = sub {
@@ -53,7 +54,7 @@ my $fatpack_compact;
     find({ wanted => $want, no_chdir => 1 }, "fatlib", "lib");
     system 'perlstrip', '--cache', '-v', @files;
 
-    $fatpack_compact = `fatpack file`;
+    $fatpack_compact = qx{fatpack file};
 }
 
 generate_file('script/cplay.PL', "cplay", $fatpack_compact);

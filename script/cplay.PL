@@ -1,13 +1,16 @@
 #!/usr/bin/env perl
 
+# __FATPACK__
+
 use strict;
 use warnings;
 
 use FindBin qw($Bin);    # Auto-removed
-use lib "$Bin/../lib", "$Bin/../../Menlo-Legacy/lib", "$Bin/../../Menlo/lib", "$Bin/../fatlib";    # Auto-removed
+use lib "$Bin/../lib", "$Bin/../fatlib";    # Auto-removed
+#use lib "$Bin/../fatpack-build/local/lib/perl5";  # Auto-removed FIXME
 
-#use Simple::Accessor ();
-#use App::cpanminus::script;
+use Simple::Accessor ();
+use App::cplay;
 
 unless (caller) {
     print qq[OK $0\n];

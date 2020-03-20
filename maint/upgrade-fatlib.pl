@@ -19,8 +19,8 @@ my $core_version = "5.008001";
 my $plenv_version = "5.8.5";
 
 sub run_command {
-    local $ENV{PLENV_VERSION} = $plenv_version;
-    system "plenv", "exec", @_;
+    #local $ENV{PLENV_VERSION} = $plenv_version;
+    system @_;
 }
 
 sub rewrite_version_pm {
@@ -49,7 +49,9 @@ sub build_snapshot {
 # EOF
 #         close $fh;
     
-        run_command "carton", "install";
+        my $out = qx{carton install};
+
+        $? == 0 or die $out;
     }
 
     my $snapshot = Carton::Snapshot->new(path => "$dir/cpanfile.snapshot");
@@ -86,8 +88,8 @@ sub required_modules {
         }
     };
 
-    #my $cpanfile = Module::CPANfile->load("../Menlo/cpanfile");
-    #$finder->( $cpanfile->prereqs );
+    my $cpanfile = Module::CPANfile->load("./fatpack-build/cpanfile");
+    $finder->( $cpanfile->prereqs );
 
     $requires->clear_requirement($_) for qw( Module::CoreList ExtUtils::MakeMaker Carp );
 
@@ -123,6 +125,9 @@ sub run {
 
     my $snapshot = build_snapshot($dir);
     my @modules  = required_modules($snapshot, $dir);
+
+use Test::More;
+note explain \@modules;
 
     pack_modules($dir, @modules);
 
