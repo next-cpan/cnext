@@ -1,0 +1,16 @@
+#!perl
+
+use strict;
+use warnings;
+
+
+#use Simple::Accessor ();
+#use App::cpanminus::script;
+
+unless (caller) {
+    print qq[OK $0\n];
+
+    #my $app = App::cpanminus::script->new(name => "App::cpanminus");
+    #$app->parse_options(@ARGV);
+    #exit $app->doit;
+}

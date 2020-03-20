@@ -1,37 +1,75 @@
-## Welcome to GitHub Pages
+# NAME
 
-You can use the [editor on GitHub](https://github.com/pause-play/cplay/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+App::cplay -  CPAN client using pause-play indexes
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+# SYNOPSIS
 
-### Markdown
+    cplay Distribution
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Run `cplay -h` or `perldoc cplay` for more options.
 
-```markdown
-Syntax highlighted code block
+# DESCRIPTION
 
-# Header 1
-## Header 2
-### Header 3
+....
 
-- Bulleted
-- List
+# INSTALLATION
 
-1. Numbered
-2. List
+....
 
-**Bold** and _Italic_ and `Code` text
+## Package management system
 
-[Link](url) and ![Image](src)
-```
+...
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+## Installing to system perl
 
-### Jekyll Themes
+...
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/pause-play/cplay/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+# DEPENDENCIES
 
-### Support or Contact
+...
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+# QUESTIONS
+
+## Something?
+
+Answer
+
+# COPYRIGHT
+
+Copyright 2020 - Nicolas R.
+
+The standalone executable contains the following modules embedded.
+
+- [HTTP::Tiny](https://metacpan.org/pod/HTTP%3A%3ATiny) Copyright 2011 Christian Hansen
+- [JSON::PP](https://metacpan.org/pod/JSON%3A%3APP) Copyright 2007-2011 by Makamaka Hannyaharamitu
+- [File::pushd](https://metacpan.org/pod/File%3A%3Apushd) Copyright 2012 David Golden
+- [parent](https://metacpan.org/pod/parent) Copyright (c) 2007-10 Max Maischein
+
+# LICENSE
+
+This software is licensed under the same terms as Perl.
+
+# CREDITS
+
+## CONTRIBUTORS
+
+Patches and code improvements were contributed by:
+
+...
+
+## ACKNOWLEDGEMENTS
+
+Bug reports, suggestions and feedbacks were sent by, or general
+acknowledgement goes to:
+
+....
+
+# NO WARRANTY
+
+This software is provided "as-is," without any express or implied
+warranty. In no event shall the author be held liable for any damages
+arising from the use of the software.
+
+# SEE ALSO
+
+[CPAN](https://metacpan.org/pod/CPAN) [CPANPLUS](https://metacpan.org/pod/CPANPLUS) [pip](https://metacpan.org/pod/pip) [App::cpm](https://metacpan.org/pod/App%3A%3Acpm) [App:cpanminus](App:cpanminus)

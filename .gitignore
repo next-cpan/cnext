@@ -1,0 +1,9 @@
+.build
+*.tar.gz
+App-cplay-*
+MYMETA.json
+MYMETA.yml
+Makefile
+blib/
+pm_to_blib
+MANIFEST

@@ -1,0 +1,2 @@
+
+requires 'Simple::Accessor' => 0;
