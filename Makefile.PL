@@ -36,6 +36,7 @@ my %WriteMakefileArgs = (
   "NAME" => "App::cplay",
   "PREREQ_PM" => {
     "App::FatPacker" => 0,
+    "Carton::Snapshot" => 0,
     "JSON" => 0,
     "Module::Build::Tiny" => "0.039",
     "Module::Install" => 0,
@@ -53,6 +54,7 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "App::FatPacker" => 0,
+  "Carton::Snapshot" => 0,
   "JSON" => 0,
   "Module::Build::Tiny" => "0.039",
   "Module::Install" => 0,

@@ -46,6 +46,7 @@
          },
          "requires" : {
             "App::FatPacker" : "0",
+            "Carton::Snapshot" : "0",
             "JSON" : "0",
             "Module::Build::Tiny" : "0.039",
             "Module::Install" : "0",
