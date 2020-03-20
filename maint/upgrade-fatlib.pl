@@ -43,14 +43,11 @@ sub build_snapshot {
     {
         my $pushd = pushd $dir;
 
-        copy "../../Menlo/cpanfile" => "cpanfile"
-            or die $!;
-
-        open my $fh, ">>cpanfile" or die $!;
-        print $fh <<EOF;
-requires 'Exporter', '5.59'; # only need 5.57, but force it in Carton for 5.8.5
-EOF
-        close $fh;
+#         open my $fh, ">>cpanfile" or die $!;
+#         print $fh <<EOF;
+# requires 'Exporter', '5.59'; # only need 5.57, but force it in Carton for 5.8.5
+# EOF
+#         close $fh;
     
         run_command "carton", "install";
     }
@@ -89,8 +86,8 @@ sub required_modules {
         }
     };
 
-    my $cpanfile = Module::CPANfile->load("../Menlo/cpanfile");
-    $finder->( $cpanfile->prereqs );
+    #my $cpanfile = Module::CPANfile->load("../Menlo/cpanfile");
+    #$finder->( $cpanfile->prereqs );
 
     $requires->clear_requirement($_) for qw( Module::CoreList ExtUtils::MakeMaker Carp );
 
