@@ -22,6 +22,10 @@ unless (caller) {
 
 1;
 
+# __PERLPOD_START__
+
+# __PERLPOD_END__
+
 __END__
 
 TODO

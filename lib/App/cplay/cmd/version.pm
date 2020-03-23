@@ -1,12 +1,6 @@
 package App::cplay::cmd::version;
 
-use v5.20;
-
-use strict;
-use warnings;
-
-use feature 'signatures';
-no warnings 'experimental::signatures';
+use App::cplay::std;
 
 sub run($self) {
 

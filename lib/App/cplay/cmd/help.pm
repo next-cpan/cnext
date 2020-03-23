@@ -1,12 +1,6 @@
 package App::cplay::cmd::help;
 
-use v5.20;
-
-use strict;
-use warnings;
-
-use feature 'signatures';
-no warnings 'experimental::signatures';
+use App::cplay::std;
 
 use Pod::Text ();
 
@@ -17,6 +11,8 @@ sub run($self) {
 
     my $f = $INC{'App/cplay.pm'};
     $f = $0 unless -e $f;
+
+    print STDERR "### $f\n";
 
     Pod::Text->new->parse_from_file( $f, $fh );
 

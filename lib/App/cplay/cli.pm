@@ -1,13 +1,6 @@
 package App::cplay::cli;
 
-## ...  move to its own module...  App::cplay or App::cplay::std ??
-use strict;
-use warnings;
-
-use v5.20;
-use feature 'signatures';
-no warnings 'experimental::signatures';
-## ...
+use App::cplay::std;
 
 # use App::cpm::DistNotation;
 # use App::cpm::Distribution;
