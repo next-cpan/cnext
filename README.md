@@ -4,7 +4,20 @@ App::cplay -  CPAN client using pause-play indexes
 
 # SYNOPSIS
 
-    cplay Distribution
+    # install one ore more distribution
+
+    cplay Cwd
+    cplay Cwd File::Copy
+
+    cplay install Cwd
+    cplay install Cwd File::Copy
+
+    # install distributions from a cpanfile
+
+    cplay cpanfile
+
+    cplay --version
+    cplay --help
 
 Run `cplay -h` or `perldoc cplay` for more options.
 

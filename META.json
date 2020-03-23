@@ -64,11 +64,32 @@
          "file" : "lib/App/cplay.pm",
          "version" : "0.0001"
       },
+      "App::cplay::Http" : {
+         "file" : "lib/App/cplay/Http.pm"
+      },
+      "App::cplay::Index" : {
+         "file" : "lib/App/cplay/Index.pm"
+      },
+      "App::cplay::Index::ExplicitVersions" : {
+         "file" : "lib/App/cplay/Index/ExplicitVersions.pm"
+      },
+      "App::cplay::Index::Modules" : {
+         "file" : "lib/App/cplay/Index/Modules.pm"
+      },
+      "App::cplay::Index::Repositories" : {
+         "file" : "lib/App/cplay/Index/Repositories.pm"
+      },
+      "App::cplay::Logger" : {
+         "file" : "lib/App/cplay/Logger.pm"
+      },
       "App::cplay::cli" : {
          "file" : "lib/App/cplay/cli.pm"
       },
       "App::cplay::cmd::help" : {
          "file" : "lib/App/cplay/cmd/help.pm"
+      },
+      "App::cplay::cmd::install" : {
+         "file" : "lib/App/cplay/cmd/install.pm"
       },
       "App::cplay::cmd::version" : {
          "file" : "lib/App/cplay/cmd/version.pm"
