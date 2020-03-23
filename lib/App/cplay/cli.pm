@@ -16,7 +16,8 @@ use App::cplay::std;
 # use App::cpm::version;
 
 use App::cplay ();
-use Cwd        ();
+use App::cplay::Logger;
+use Cwd ();
 
 # need to load all commands to fatpack them
 use App::cplay::cmd::help    ();
@@ -221,7 +222,12 @@ sub run ( $self, @argv ) {
     die qq[Unknown subcommand '$cmd'] unless defined $run && ref $run eq 'CODE';
 
     $self->parse_options(@argv);
+
+    $cmd =~ s{^-+}{} if $cmd;
     ## maybe do an extra parse_options for every commands?
+    if ( $cmd && $cmd !~ m{^(?:help|version)$} ) {
+        App::cplay::Logger->INFO("Running action '$cmd'");
+    }
 
     return $run->( $self, @argv );
 }

@@ -3,9 +3,15 @@ package App::cplay::std;
 use strict;
 use warnings;
 
-#use v5.20;
-#use feature 'signatures';
-#no warnings 'experimental::signatures';
+=pod
+
+This is importing the following to your namespace
+
+	use v5.20;
+	use feature 'signatures';
+	no warnings 'experimental::signatures';
+
+=cut
 
 sub import {
 
