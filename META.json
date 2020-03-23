@@ -62,6 +62,15 @@
       "App::cplay" : {
          "file" : "lib/App/cplay.pm",
          "version" : "0.0001"
+      },
+      "App::cplay::cli" : {
+         "file" : "lib/App/cplay/cli.pm"
+      },
+      "App::cplay::cmd::help" : {
+         "file" : "lib/App/cplay/cmd/help.pm"
+      },
+      "App::cplay::cmd::version" : {
+         "file" : "lib/App/cplay/cmd/version.pm"
       }
    },
    "release_status" : "stable",

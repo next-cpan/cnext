@@ -1,21 +1,30 @@
 #!/usr/bin/env perl
 
+BEGIN {
+    if ( "$]" < 5.019 ) {    # needs 5.20 for function signature
+        die qq{$0 is not supported on Perl $] - needs Perl 5.20 or higher\n};
+    }
+}
+
 # __FATPACK__
 
 use strict;
 use warnings;
 
-use FindBin qw($Bin);    # Auto-removed
+use FindBin qw($Bin);        # Auto-removed
 use lib "$Bin/../lib", "$Bin/../fatlib";    # Auto-removed
-#use lib "$Bin/../fatpack-build/local/lib/perl5";  # Auto-removed FIXME
 
-use Simple::Accessor ();
-use App::cplay;
+use App::cplay::cli ();
 
 unless (caller) {
-    print qq[OK $0\n];
-
-    #my $app = App::cpanminus::script->new(name => "App::cpanminus");
-    #$app->parse_options(@ARGV);
-    #exit $app->doit;
+    exit( App::cplay::cli->new( name => "App::cplay" )->run(@ARGV) // 0 );
 }
+
+1;
+
+__END__
+
+TODO
+
+- support for cpanfile
+- support for sudo
