@@ -2,7 +2,7 @@ package App::cplay::cmd::version;
 
 use App::cplay::std;
 
-sub run($self) {
+sub run ( $self, @argv ) {
 
     say "cplay $App::cplay::VERSION ($0)";
 

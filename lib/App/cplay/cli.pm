@@ -20,6 +20,7 @@ use Cwd        ();
 
 # need to load all commands to fatpack them
 use App::cplay::cmd::help    ();
+use App::cplay::cmd::install ();
 use App::cplay::cmd::version ();
 
 #use Config;
@@ -180,8 +181,8 @@ sub normalize_mirror ( $self, $mirror ) {
     die qq[Invalid mirror: $mirror];
 }
 
-sub run ( $self, @argv ) {
-    my $cmd = shift @argv // 'help';
+sub get_cmd_sub_for ( $self, $cmd ) {
+    return unless defined $cmd;
 
     $cmd =~ s{^-+}{};
 
@@ -195,16 +196,34 @@ sub run ( $self, @argv ) {
 
     $cmd = $aliases->{$cmd} if defined $aliases->{$cmd};
 
-    die qq[Invalid subcommand '$cmd' try `$0 --help`\n] unless $cmd =~ m{^[A-Za-z0-9_]+$};
+    return unless $cmd =~ m{^[A-Za-z0-9_]+$};
+    return "App::cplay::cmd::$cmd"->can('run');
+}
 
-    my $run = "App::cplay::cmd::$cmd"->can('run');
+sub run ( $self, @argv ) {
+    my $cmd = '';
+
+    my $run;
+    if ( scalar @argv ) {
+        if ( $run = $self->get_cmd_sub_for( $argv[0] ) ) {
+            $cmd = shift @argv;
+        }
+        else {
+            $run = $self->get_cmd_sub_for('install');
+            $cmd = 'install';
+        }
+    }
+    else {
+        $run = $self->get_cmd_sub_for('help');
+        $cmd = 'help';
+    }
+
     die qq[Unknown subcommand '$cmd'] unless defined $run && ref $run eq 'CODE';
 
     $self->parse_options(@argv);
-
     ## maybe do an extra parse_options for every commands?
 
-    return $run->($self);
+    return $run->( $self, @argv );
 }
 
 # sub cmd_install {

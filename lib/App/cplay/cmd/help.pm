@@ -4,7 +4,7 @@ use App::cplay::std;
 
 use Pod::Text ();
 
-sub run($self) {
+sub run ( $self, @argv ) {
 
     my $out;
     open my $fh, ">", \$out;
