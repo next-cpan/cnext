@@ -47,6 +47,7 @@
          "requires" : {
             "App::FatPacker" : "0",
             "Carton::Snapshot" : "0",
+            "File::Slurper" : "0",
             "JSON" : "0",
             "Module::Build::Tiny" : "0.039",
             "Module::Install" : "0",
@@ -71,6 +72,9 @@
       },
       "App::cplay::cmd::version" : {
          "file" : "lib/App/cplay/cmd/version.pm"
+      },
+      "App::cplay::std" : {
+         "file" : "lib/App/cplay/std.pm"
       }
    },
    "release_status" : "stable",

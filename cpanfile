@@ -10,6 +10,7 @@ requires 'JSON';
 requires 'Module::Build::Tiny', '0.039';
 requires 'Module::Install';
 requires 'Test::Requires';
+requires 'File::Slurper';
 
 # for fatpacking
 requires 'App::FatPacker';

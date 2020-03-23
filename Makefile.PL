@@ -8,67 +8,60 @@ use ExtUtils::MakeMaker;
 
 # perl Makefile.PL (from git repo) copies 'cplay' -> 'bin/cplay'
 
-if (-e 'cplay') {
+if ( -e 'cplay' ) {
     for my $file ("bin/cplay") {
         print STDERR "Generating $file from cplay\n";
         open my $in,  "<cplay" or die $!;
         open my $out, ">$file" or die $!;
         while (<$in>) {
-            s|^#!/usr/bin/env perl|#!perl|; # so MakeMaker can fix it
+            s|^#!/usr/bin/env perl|#!perl|;    # so MakeMaker can fix it
             print $out $_;
         }
     }
 }
 
-
 my %WriteMakefileArgs = (
-  "ABSTRACT" => "CPAN client using pause-play indexes",
-  "AUTHOR" => "- Nicolas R.",
-  "CONFIGURE_REQUIRES" => {
-    "ExtUtils::MakeMaker" => 0
-  },
-  "DISTNAME" => "App-cplay",
-  "EXE_FILES" => [
-    "bin/cplay"
-  ],
-  "LICENSE" => "perl",
-  "MIN_PERL_VERSION" => "5.008001",
-  "NAME" => "App::cplay",
-  "PREREQ_PM" => {
-    "App::FatPacker" => 0,
-    "Carton::Snapshot" => 0,
-    "JSON" => 0,
-    "Module::Build::Tiny" => "0.039",
-    "Module::Install" => 0,
-    "Perl::Strip" => 0,
-    "Test::More" => 0,
-    "Test::Requires" => 0,
-    "Tie::File" => 0
-  },
-  "VERSION" => "0.0001",
-  "test" => {
-    "TESTS" => ""
-  }
+    "ABSTRACT"           => "CPAN client using pause-play indexes",
+    "AUTHOR"             => "- Nicolas R.",
+    "CONFIGURE_REQUIRES" => { "ExtUtils::MakeMaker" => 0 },
+    "DISTNAME"           => "App-cplay",
+    "EXE_FILES"          => ["bin/cplay"],
+    "LICENSE"            => "perl",
+    "MIN_PERL_VERSION"   => "5.008001",
+    "NAME"               => "App::cplay",
+    "PREREQ_PM"          => {
+        "App::FatPacker"      => 0,
+        "Carton::Snapshot"    => 0,
+        "File::Slurper"       => 0,
+        "JSON"                => 0,
+        "Module::Build::Tiny" => "0.039",
+        "Module::Install"     => 0,
+        "Perl::Strip"         => 0,
+        "Test::More"          => 0,
+        "Test::Requires"      => 0,
+        "Tie::File"           => 0
+    },
+    "VERSION" => "0.0001",
+    "test"    => { "TESTS" => "" }
 );
-
 
 my %FallbackPrereqs = (
-  "App::FatPacker" => 0,
-  "Carton::Snapshot" => 0,
-  "JSON" => 0,
-  "Module::Build::Tiny" => "0.039",
-  "Module::Install" => 0,
-  "Perl::Strip" => 0,
-  "Test::More" => 0,
-  "Test::Requires" => 0,
-  "Tie::File" => 0
+    "App::FatPacker"      => 0,
+    "Carton::Snapshot"    => 0,
+    "File::Slurper"       => 0,
+    "JSON"                => 0,
+    "Module::Build::Tiny" => "0.039",
+    "Module::Install"     => 0,
+    "Perl::Strip"         => 0,
+    "Test::More"          => 0,
+    "Test::Requires"      => 0,
+    "Tie::File"           => 0
 );
 
-
 unless ( eval { ExtUtils::MakeMaker->VERSION(6.63_03) } ) {
-  delete $WriteMakefileArgs{TEST_REQUIRES};
-  delete $WriteMakefileArgs{BUILD_REQUIRES};
-  $WriteMakefileArgs{PREREQ_PM} = \%FallbackPrereqs;
+    delete $WriteMakefileArgs{TEST_REQUIRES};
+    delete $WriteMakefileArgs{BUILD_REQUIRES};
+    $WriteMakefileArgs{PREREQ_PM} = \%FallbackPrereqs;
 }
 
 delete $WriteMakefileArgs{CONFIGURE_REQUIRES}

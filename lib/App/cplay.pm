@@ -4,6 +4,8 @@ our $VERSION = "0.0001";
 
 1;
 
+## __CPLAY_POD_MARKER__
+
 =encoding utf8
 
 =head1 NAME
