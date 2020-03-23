@@ -2,7 +2,11 @@
 
 BEGIN {
     if ( "$]" < 5.019 ) {    # needs 5.20 for function signature
-        die qq{$0 is not supported on Perl $] - needs Perl 5.20 or higher\n};
+        die <<"EOS";
+$0 is not supported on Perl $]
+	cplay needs Perl 5.20 or higher
+	please consider alternate solutions such as App::cpanminus or App::cpm
+EOS
     }
 }
 
@@ -11,7 +15,7 @@ BEGIN {
 use strict;
 use warnings;
 
-use FindBin qw($Bin);        # Auto-removed
+use FindBin qw($Bin);    # Auto-removed
 use lib "$Bin/../lib", "$Bin/../fatlib";    # Auto-removed
 
 use App::cplay::cli ();
