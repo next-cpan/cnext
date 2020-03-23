@@ -1,70 +1,115 @@
 package App::cplay::cli;
 
-use App::cplay::std;
-
-# use App::cpm::DistNotation;
-# use App::cpm::Distribution;
-# use App::cpm::Logger::File;
-# use App::cpm::Logger;
-# use App::cpm::Master;
-# use App::cpm::Requirement;
-# use App::cpm::Resolver::Cascade;
-# use App::cpm::Resolver::MetaCPAN;
-# use App::cpm::Resolver::MetaDB;
-# use App::cpm::Util qw(WIN32 determine_home maybe_abs);
-# use App::cpm::Worker;
-# use App::cpm::version;
+use App::cplay::std;    # import strict, warnings & features
 
 use App::cplay ();
 use App::cplay::Logger;
-use Cwd ();
+use App::cplay::Http;
 
 # need to load all commands to fatpack them
 use App::cplay::cmd::help    ();
 use App::cplay::cmd::install ();
 use App::cplay::cmd::version ();
 
-#use Config;
-# use File::Copy ();
-# use File::Path ();
-# use File::Spec;
+use App::cplay::Index::Repositories;
+use App::cplay::Index::Modules;
+use App::cplay::Index::ExplicitVersions;
+
+use Cwd ();
+
+use Simple::Accessor qw{
+  name
+  http
+  cwd homedir builddir
+  snapshot cpanfile
+  retry
+  configure_timeout build_timeout test_timeout
+
+  repositories_idx
+  modules_idx
+  explicit_versions_idx
+
+};
+
+use File::Path qw(mkpath rmtree);
+
 use Getopt::Long qw(:config no_auto_abbrev no_ignore_case bundling);
 use Pod::Text ();
 
 # use List::Util ();
 # use Parallel::Pipes;
 
-sub new ( $class, %options ) {
+sub build ( $self, %options ) {
 
-    return bless {
+    foreach my $k ( sort keys %options ) {
+        $self->{$k} = $options{$k};    # could also use the accessor
+    }
 
-        #home => determine_home,
-        cwd               => Cwd::cwd(),
-        snapshot          => "cpanfile.snapshot",
-        cpanfile          => "cpanfile",
-        local_lib         => "local",
-        retry             => 1,
-        configure_timeout => 60,
-        build_timeout     => 3600,
-        test_timeout      => 1800,
+    $self->cwd;                        # setup CWD asap
 
-        # with_requires => 1,
-        # with_recommends => 0,
-        # with_suggests => 0,
-        # with_configure => 0,
-        # with_build => 1,
-        # with_test => 1,
-        # with_runtime => 1,
-        # with_develop => 0,
+    return $self;
+}
 
-        # feature => [],
-        notest => 1,
+sub _build_cwd {
+    return Cwd::cwd();
+}
 
-        #        prebuilt => $] >= 5.012 && $prebuilt,
-        #        pureperl_only => 0,
-        #        static_install => 1,
-        %options
-    }, $class;
+sub _build_homedir {
+    $ENV{HOME} or die q[HOME environmenet variable not set];
+}
+
+sub _build_builddir($self) {
+    my $path = $self->cwd . '/.cpbuild';
+
+    return $path if -d $path;
+    mkpath($path) or die "fail to create .build directory at: $path";
+
+    return $path;
+}
+
+sub DESTROY($self) {
+    if ( ref $self && $self->{builddir} ) {
+        my $dir = $self->{builddir};
+        if ( -d $dir && !-l $dir ) {
+            File::Path::rmtree($dir);
+        }
+    }
+}
+
+sub _build_cpanfile {    # default cpanfile
+    return 'cpanfile';
+}
+
+sub _build_retry {
+    1;
+}
+
+sub _build_configure_timeout {
+    60;
+}
+
+sub _build_build_timeout {
+    3_600;
+}
+
+sub _build_test_timeout {
+    1_800;
+}
+
+sub _build_http {
+    App::cplay::Http->create;    # FIXME maybe some args
+}
+
+sub _build_repositories_idx($self) {
+    App::cplay::Index::Repositories->new( cli => $self );
+}
+
+sub _build_modules_idx($self) {
+    App::cplay::Index::Modules->new( cli => $self );
+}
+
+sub _build_explicit_versions_idx($self) {
+    App::cplay::Index::ExplicitVersions->new( cli => $self );
 }
 
 sub parse_options ( $self, @opts ) {
@@ -77,42 +122,43 @@ sub parse_options ( $self, @opts ) {
     };
 
     GetOptions(
-        "L|local-lib-contained=s"   => \( $self->{local_lib} ),
-        "color!"                    => \( $self->{color} ),
-        "g|global"                  => \( $self->{global} ),
-        "mirror=s"                  => \$mirror,
-        "v|verbose"                 => \( $self->{verbose} ),
-        "w|workers=i"               => \( $self->{workers} ),
-        "target-perl=s"             => \my $target_perl,
-        "test!"                     => sub { $self->{notest} = $_[1] ? 0 : 1 },
-        "cpanfile=s"                => \( $self->{cpanfile} ),
-        "snapshot=s"                => \( $self->{snapshot} ),
-        "sudo"                      => \( $self->{sudo} ),
-        "r|resolver=s@"             => \@resolver,
-        "mirror-only"               => \( $self->{mirror_only} ),
-        "dev"                       => \( $self->{dev} ),
-        "man-pages"                 => \( $self->{man_pages} ),
-        "home=s"                    => \( $self->{home} ),
-        "retry!"                    => \( $self->{retry} ),
-        "exclude-vendor!"           => \( $self->{exclude_vendor} ),
-        "configure-timeout=i"       => \( $self->{configure_timeout} ),
-        "build-timeout=i"           => \( $self->{build_timeout} ),
-        "test-timeout=i"            => \( $self->{test_timeout} ),
-        "show-progress!"            => \( $self->{show_progress} ),
-        "prebuilt!"                 => \( $self->{prebuilt} ),
-        "reinstall"                 => \( $self->{reinstall} ),
-        "pp|pureperl|pureperl-only" => \( $self->{pureperl_only} ),
-        "static-install!"           => \( $self->{static_install} ),
+
+        # used
+        "color!"    => \( $self->{color} ),
+        'cleanup'   => \( $self->{cleanup} ),
+        "homedir=s" => \( $self->{homedir} ),
+
+        # not yet implemented
+        "cpanfile=s" => \( $self->{cpanfile} ),
+        "test!"      => sub { $self->{notest} = $_[1] ? 0 : 1 },
+
+        ### need to check
+        "L|local-lib-contained=s" => \( $self->{local_lib} ),
+
+        "g|global"  => \( $self->{global} ),
+        "mirror=s"  => \$mirror,
+        "v|verbose" => \( $self->{verbose} ),
+
+        "snapshot=s"  => \( $self->{snapshot} ),
+        "sudo"        => \( $self->{sudo} ),
+        "mirror-only" => \( $self->{mirror_only} ),
+        "dev"         => \( $self->{dev} ),
+
+        "retry!"              => \( $self->{retry} ),
+        "exclude-vendor!"     => \( $self->{exclude_vendor} ),
+        "configure-timeout=i" => \( $self->{configure_timeout} ),
+        "build-timeout=i"     => \( $self->{build_timeout} ),
+        "test-timeout=i"      => \( $self->{test_timeout} ),
+        "show-progress!"      => \( $self->{show_progress} ),
+        "prebuilt!"           => \( $self->{prebuilt} ),
+        "reinstall"           => \( $self->{reinstall} ),
+        "static-install!"     => \( $self->{static_install} ),
         ( map $with_option->($_), qw(requires recommends suggests) ),
         ( map $with_option->($_), qw(configure build test runtime develop) ),
-        "feature=s@"                => \@feature,
-        "show-build-log-on-failure" => \( $self->{show_build_log_on_failure} ),
     ) or exit 1;
 
     #$self->{local_lib} = maybe_abs($self->{local_lib}, $self->{cwd}) unless $self->{global};
-    #$self->{home} = maybe_abs($self->{home}, $self->{cwd});
-    $self->{resolver}      = \@resolver;
-    $self->{feature}       = \@feature if @feature;
+    $self->{homedir}       = Cwd::abs_path( $self->homedir );
     $self->{mirror}        = $self->normalize_mirror($mirror) if $mirror;
     $self->{color}         = 1 if !defined $self->{color} && -t STDOUT;
     $self->{show_progress} = 1 if !defined $self->{show_progress} && -t STDOUT;
@@ -229,7 +275,7 @@ sub run ( $self, @argv ) {
         App::cplay::Logger->INFO("Running action '$cmd'");
     }
 
-    return $run->( $self, @argv );
+    return $run->( $self, $self->{argv}->@* );
 }
 
 # sub cmd_install {
