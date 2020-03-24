@@ -8,14 +8,12 @@ use App::cplay::Installer;
 use Test::More;            # Auto-removed
 
 sub run ( $self, @modules ) {
-
-    # get or update indexes files
-
-    #bless $self, __PACKAGE__; # attempt
-
-    $self->{installing} //= { module => {}, repository => {} };    # used to detect loop dependencies
+    return unless scalar @modules;
 
     my $installer = App::cplay::Installer->new( cli => $self );
+
+    # guarantee that ExtUtils::MakeMaker is >= 6.64
+    return unless $installer->check_makemaker();
 
     foreach my $module (@modules) {
         INFO("Looking for module: $module");
