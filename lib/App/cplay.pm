@@ -22,6 +22,8 @@ App::cplay -  CPAN client using pause-play indexes
     cplay install Cwd
     cplay install Cwd File::Copy
 
+    cplay install --no-cleanup --verbose A1z::Html
+
     # install distributions from a cpanfile
 
     cplay cpanfile

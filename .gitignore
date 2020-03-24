@@ -8,3 +8,4 @@ blib/
 pm_to_blib
 MANIFEST
 /fatpack-build/local
+.cpbuild

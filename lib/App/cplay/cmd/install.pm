@@ -2,15 +2,29 @@ package App::cplay::cmd::install;
 
 use App::cplay::std;
 
-use Pod::Text ();
+use App::cplay::Logger;    # import all
+use App::cplay::Installer;
 
-sub run ( $self, @argv ) {
+use Test::More;            # Auto-removed
 
-    say "install: ", @argv;
+sub run ( $self, @modules ) {
 
-    $self->modules_idx;    # get or update indexes files
+    # get or update indexes files
 
-    return 0;
+    #bless $self, __PACKAGE__; # attempt
+
+    $self->{installing} //= { module => {}, repository => {} };    # used to detect loop dependencies
+
+    my $installer = App::cplay::Installer->new( cli => $self );
+
+    foreach my $module (@modules) {
+        INFO("Looking for module: $module");
+        return unless $installer->install_single_module($module);
+    }
+
+    return 1;
 }
 
 1;
+
+__END__

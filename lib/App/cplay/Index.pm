@@ -34,7 +34,7 @@ sub setup_once($cli) {
     #				except when using the --no-cache arguement
 
     my @files = (
-        [    # local / remote
+        [    # local / remote -- FIXME reverse order
             $_MODULES_IX_FILE,
             BASE_URL . '/' . MODULES_IX_BASENAME,
         ],
@@ -50,7 +50,7 @@ sub setup_once($cli) {
 
     my $http = $cli->http;
 
-    App::cplay::Logger->INFO("Check and refresh index files.");
+    INFO("Check and refresh cplay index files.");
     foreach my $list (@files) {
         my ( $local, $remote ) = @$list;
         $http->mirror( $remote, $local );

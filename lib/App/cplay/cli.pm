@@ -3,7 +3,7 @@ package App::cplay::cli;
 use App::cplay::std;    # import strict, warnings & features
 
 use App::cplay ();
-use App::cplay::Logger;
+use App::cplay::Logger;    # import all
 use App::cplay::Http;
 
 # need to load all commands to fatpack them
@@ -68,9 +68,12 @@ sub _build_builddir($self) {
 }
 
 sub DESTROY($self) {
-    if ( ref $self && $self->{builddir} ) {
+
+    # use on purpose the hash accessor to avoid creating the directory on DESTROY
+    if ( ref $self && $self->{builddir} && $self->{cleanup} ) {
         my $dir = $self->{builddir};
         if ( -d $dir && !-l $dir ) {
+            DEBUG("rmtree .build directory: $dir");
             File::Path::rmtree($dir);
         }
     }
@@ -125,7 +128,7 @@ sub parse_options ( $self, @opts ) {
 
         # used
         "color!"    => \( $self->{color} ),
-        'cleanup'   => \( $self->{cleanup} ),
+        'cleanup!'  => \( $self->{cleanup} ),
         "homedir=s" => \( $self->{homedir} ),
 
         # not yet implemented
@@ -166,6 +169,8 @@ sub parse_options ( $self, @opts ) {
     if ( $self->{sudo} ) {
         !system "sudo", $^X, "-e1" or exit 1;
     }
+
+    $self->{cleanup} //= 1;
 
     $App::cplay::Logger::COLOR         = 1 if $self->{color};
     $App::cplay::Logger::VERBOSE       = 1 if $self->{verbose};
@@ -272,7 +277,7 @@ sub run ( $self, @argv ) {
     $cmd =~ s{^-+}{} if $cmd;
     ## maybe do an extra parse_options for every commands?
     if ( $cmd && $cmd !~ m{^(?:help|version)$} ) {
-        App::cplay::Logger->INFO("Running action '$cmd'");
+        INFO("Running action '$cmd'");
     }
 
     return $run->( $self, $self->{argv}->@* );

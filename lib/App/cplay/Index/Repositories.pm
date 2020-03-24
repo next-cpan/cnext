@@ -3,13 +3,76 @@ package App::cplay::Index::Repositories;
 use App::cplay::std;    # import strict, warnings & features
 use App::cplay::Index;
 
-use Simple::Accessor qw{file cli};
+use App::cplay::Helpers qw{read_file zip};
+use App::cplay::Logger;    # import all
+
+use JSON::PP ();
+use Simple::Accessor qw{file cli cache json columns template_url};
 
 sub build ( $self, %opts ) {
 
     $self->{file} = App::cplay::Index::get_repositories_ix_file( $self->cli );
 
     return $self;
+}
+
+# naive solution for now read the whole cache
+sub _build_cache($self) {
+    return $self->json->decode( read_file( $self->file ) );
+}
+
+sub _build_json($self) {
+    return JSON::PP->new->utf8->allow_nonref;
+}
+
+sub _build_template_url($self) {
+    $self->cache->{template_url} or die;
+}
+
+sub _build_columns($self) {
+
+    # FIXME ould also do a quick read of the file to get them
+    my $columns = {};
+    my $ix      = 0;
+    foreach my $name ( $self->cache->{columns}->@* ) {
+        $columns->{$name} = $ix++;
+    }
+
+    return $columns;
+}
+
+## maybe do a fast search...
+sub search ( $self, $repository, $version = undef ) {
+
+    #return unless defined $module;
+
+    INFO( "search repository $repository / " . ( $version // 'undef' ) );
+
+    return unless my $cache = $self->cache;
+
+    my $repository_ix = $self->columns->{repository};
+    my $version_ix    = $self->columns->{version};
+
+    foreach my $raw ( $cache->{data}->@* ) {
+        next unless $raw->[$repository_ix] eq $repository;
+
+        # we found it, let's check the version
+        if ( !defined $version || $version eq $raw->[$version_ix] ) {
+            return { zip( $cache->{columns}->@*, $raw->@* ) };
+        }
+        return;
+    }
+
+    return;
+}
+
+sub get_tarball_url ( $self, $repository ) {
+    die unless ref $repository;
+
+    my $url = $self->template_url;
+    $url =~ s{:([a-z0-9]+)}{$repository->{$1}}g;
+
+    return $url;
 }
 
 1;
