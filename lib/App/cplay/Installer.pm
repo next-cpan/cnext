@@ -117,10 +117,12 @@ sub install_repository ( $self, $repository_info ) {
 
 sub do_install ( $self, $name ) {
 
+    my $make = App::cplay::Helpers::make_binary();
+
     {
         install("Running make for $name");
 
-        my ( $status, $out, $err ) = run3("make");    # FIXME which make gmake...
+        my ( $status, $out, $err ) = run3("$make");    # FIXME which make gmake...
         if ( $status != 0 ) {
             ERROR("Fail to build $name");
             WARN($out)    if defined $out;
@@ -131,9 +133,9 @@ sub do_install ( $self, $name ) {
     }
 
     {
-        install("Running Tests for $name");           # FIXME unless test are disabled
+        install("Running Tests for $name");            # FIXME unless test are disabled
 
-        my ( $status, $out, $err ) = run3("make test");
+        my ( $status, $out, $err ) = run3("$make test");
         if ( $status != 0 ) {
             ERROR("Test failure from $name");
             WARN($out)    if defined $out;
@@ -147,7 +149,7 @@ sub do_install ( $self, $name ) {
     {
         install("succeeds for $name");
 
-        my ( $status, $out, $err ) = run3("make install");
+        my ( $status, $out, $err ) = run3("$make install");
         if ( $status != 0 ) {
             ERROR("Fail to install $name");
             WARN($out)    if defined $out;

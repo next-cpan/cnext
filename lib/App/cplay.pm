@@ -164,7 +164,7 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] ability to download a custom version Module@1.3
 
-=item * [ ] better detection of make / gmake
+=item * [X] better detection of make / gmake
 
 =item * [ ] check tarball signature
 
