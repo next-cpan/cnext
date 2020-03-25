@@ -252,7 +252,7 @@ my %WriteMakefileArgs = (
   },
   'VERSION' => '~VERSION~',
   'test' => {
-    'TESTS' => 't/*.t'
+    'TESTS' => '~TESTS~'
   }
 );
 
@@ -280,12 +280,15 @@ EOS
     my %v = (
         CPLAY_VERSION => $App::cplay::VERSION,
         ##
-        ABSTRACT      => _sanity( $BUILD->{abstract} ),
-        AUTHOR        => _sanity( $BUILD->{maintainers}->[0] ),
-        DISTNAME      => _sanity( $BUILD->{name} ),
-        LICENSE       => _sanity( $BUILD->{license} ),
-        PRIMARY       => _sanity( $BUILD->{primary} ),
-        VERSION       => _sanity( $BUILD->{version} ),
+        ABSTRACT => _sanity( $BUILD->{abstract} ),
+        AUTHOR   => _sanity( $BUILD->{maintainers}->[0] ),
+        DISTNAME => _sanity( $BUILD->{name} ),
+        LICENSE  => _sanity( $BUILD->{license} ),
+        PRIMARY  => _sanity( $BUILD->{primary} ),
+        VERSION  => _sanity( $BUILD->{version} ),
+
+        TESTS => 't/*.t',    # FIXME read the BUILD.json file to get the list [ default to t/*.t ]
+
         PREREQ_PM     => $PMs{requires_runtime},
         TEST_REQUIRES => $PMs{requires_build},
     );
