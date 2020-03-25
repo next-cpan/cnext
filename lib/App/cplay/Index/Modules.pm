@@ -37,14 +37,10 @@ sub _build_columns($self) {    # Factorize ??
 }
 
 ## maybe do a fast search...
-sub search ( $self, $module ) {
+sub search ( $self, $module, $version = undef ) {
+    FATAL("Missing module") unless defined $module;
 
-    #return unless defined $module;
-
-    INFO("search $module");
-
-    # use Test::More;
-    # note explain
+    INFO("search module $module");
 
     return unless my $cache = $self->cache;
 
@@ -52,6 +48,13 @@ sub search ( $self, $module ) {
     my $ix = $self->columns->{module};
     foreach my $raw ( $cache->{data}->@* ) {
         if ( $raw->[$ix] eq $module ) {
+            if ( defined $version ) {
+                my $v_ix = $self->columns->{version};
+                if ( $raw->[$v_ix] ne $version ) {
+                    DEBUG( "requested $module version $version ; latest is " . $raw->[$v_ix] );
+                    return;
+                }
+            }
             return { zip( $cache->{columns}->@*, $raw->@* ) };
         }
     }

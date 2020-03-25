@@ -56,7 +56,7 @@ sub check_makemaker($self) {
     WARN("Trying to update ExtUtils::MakeMaker");
 
     # install the last available version
-    my $ok = $self->install_single_module($module);
+    my $ok = $self->install_single_module_or_repository($module);
 
     if ( !$ok ) {
         ERROR("Please update ExtUtils::MakeMaker to $version or later");
@@ -67,22 +67,65 @@ sub check_makemaker($self) {
 }
 
 sub install_single_module ( $self, $module ) {
+    return $self->install_single_module_or_repository( $module, 0 );
+}
+
+sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_repo = 1 ) {
 
     # are we already trying to install this module?
-    return 1 if $self->tracking_module($module);
+    return 1 if $self->tracking_module($module_or_repository);
 
     my $cli = $self->cli or die;
 
-    my $module_info = $cli->modules_idx->search($module);
-    if ( !$module_info ) {
-        FAIL("Cannot find module '$module'");
+    my $custom_requested_version;
+    if ( $module_or_repository =~ s{\@(.+)$}{} ) {
+        $custom_requested_version = $1;
+
+        #DEBUG("requested $module_or_repository version $custom_requested_version");
+    }
+
+    # search the latest module from modules.ix file
+    # 1 - lookup for module
+    my $module_info = $cli->modules_idx->search( $module_or_repository, $custom_requested_version );
+    my $repository_info;
+
+    # 2 - lookup for distribution
+    if ( !$module_info && index( $module_or_repository, ':' ) == -1 && $can_be_repo ) {
+        $repository_info = $cli->repositories_idx->search( $module_or_repository, $custom_requested_version );
+    }
+
+    # 3 - lookup in the explicitversons file if needed
+    if ( !$module_info && !$repository_info && defined $custom_requested_version ) {
+        my $raw = $cli->explicit_versions_idx->search( $module_or_repository, $custom_requested_version, $can_be_repo );
+
+        if ( !defined $raw ) {
+            FAIL("Cannot find module or distribution for $module_or_repository\@$custom_requested_version");
+            return;
+        }
+
+        # check if module is already installed
+        return 1 if has_module_version( $raw->{module}, $raw->{version} );
+
+        # convert the result from explicit_versions to repository
+        $repository_info = {
+            repository => $raw->{repository},
+            version    => $raw->{repository_version},
+            sha        => $raw->{sha},
+            signature  => $raw->{signature},
+        };
+    }
+
+    if ( !$module_info && !$repository_info ) {
+        FAIL("Cannot find module or distribution '$module_or_repository'");
         return;
     }
 
     # check if we already have the module available
-    return 1 if has_module_version( $module_info->{module}, $module_info->{version} );
+    if ($module_info) {
+        return 1 if has_module_version( $module_info->{module}, $module_info->{version} );
+        $repository_info //= $cli->repositories_idx->search( $module_info->{repository}, $module_info->{repository_version} );
+    }
 
-    my $repository_info = $cli->repositories_idx->search( $module_info->{repository}, $module_info->{repository_version} );
     if ( !$repository_info ) {
         FAIL( "Cannot find repository for " . $module_info->{repository} );
         return;
@@ -340,6 +383,7 @@ sub download_repository ( $self, $repository_info ) {
 
 sub tracking_module ( $self, $module ) {
     die unless defined $module;
+    $module =~ s{\@.+$}{};    # strip the version
     return 1 if $self->{_tracked_modules}->{$module};
     $self->{_tracked_modules}->{$module} = 1;
     return;
@@ -347,6 +391,7 @@ sub tracking_module ( $self, $module ) {
 
 sub tracking_repository ( $self, $repository ) {
     die unless defined $repository;
+    $repository =~ s{\@.+$}{};    # strip the version
     return 1 if $self->{_tracked_repositories}->{$repository};
     $self->{_tracked_repositories}->{$repository} = 1;
     return;

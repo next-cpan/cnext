@@ -168,6 +168,8 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] check tarball signature
 
+=item * [ ] option to disable tests
+
 =back
 
 =head1 DEPENDENCIES

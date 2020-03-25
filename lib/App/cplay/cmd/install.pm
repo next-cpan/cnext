@@ -17,7 +17,7 @@ sub run ( $self, @modules ) {
 
     foreach my $module (@modules) {
         INFO("Looking for module: $module");
-        if ( !$installer->install_single_module($module) ) {
+        if ( !$installer->install_single_module_or_repository($module) ) {
             FAIL("Fail to install $module or its dependencies.");
             return 1;
         }
