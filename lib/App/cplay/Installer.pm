@@ -36,7 +36,7 @@ sub _build_unpacker($self) {
 }
 
 sub _build_json($self) {
-    return JSON::PP->new->utf8->allow_nonref;
+    JSON::PP->new->utf8->allow_nonref;
 }
 
 # FIXME to improve: logfile and output...
@@ -67,7 +67,7 @@ sub check_makemaker($self) {
 }
 
 sub install_single_module ( $self, $module ) {
-    return $self->install_single_module_or_repository( $module, 0 );
+    $self->install_single_module_or_repository( $module, 0 );
 }
 
 sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_repo = 1 ) {

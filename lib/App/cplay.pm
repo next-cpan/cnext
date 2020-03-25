@@ -170,6 +170,14 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] option to disable tests
 
+=item * [ ] check builder type play for cplay, Build.PL and Makefile.PL...
+
+=item * [ ] check builder_API_version = 1
+
+=item * [ ] look at AcePerl and Acme BUILD.PL - configure_requires
+
+=item * [ ] test default to t/*.t if not there
+
 =back
 
 =head1 DEPENDENCIES
