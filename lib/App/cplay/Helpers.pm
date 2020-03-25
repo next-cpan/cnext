@@ -40,4 +40,31 @@ sub make_binary {
     FATAL("Cannot find make binary");
 }
 
+sub prove_binary {
+    my $prove;
+    my @prefixes = qw{bin installbin sitebin vendorbin};
+
+    foreach my $prefix (@prefixes) {
+        next unless $Config{$prefix};
+        $prove = $Config{$prefix} . '/prove';
+        last if -x $prove;
+    }
+
+    if ( !-x $prove ) {
+        my $perldoc = $^X . "doc";    # perldoc
+        $prove = qx{$perldoc -l prove};
+        $prove = undef if $? != 0;
+
+        #$prove = File::Which::which( $Config{sitebin} );
+    }
+
+    if ( defined $prove && -x $prove ) {
+        no warnings 'redefine';
+        *prove_binary = sub { $prove };
+        return $prove;
+    }
+
+    FATAL("Cannot find 'prove' binary");
+}
+
 1;
