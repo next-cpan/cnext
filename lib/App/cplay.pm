@@ -160,9 +160,9 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] improve IPC::run3 and isolate it to its own module
 
-=item * [ ] ability to download trial version    Module@1.1_0001
+=item * [X] ability to download trial version    Module@1.1_0001
 
-=item * [ ] ability to download a custom version Module@1.3
+=item * [X] ability to download a custom version Module@1.3
 
 =item * [X] better detection of make / gmake
 
@@ -172,11 +172,17 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] check builder type play for cplay, Build.PL and Makefile.PL...
 
-=item * [ ] check builder_API_version = 1
+=item * [X] check builder_API_version = 1
 
 =item * [ ] look at AcePerl and Acme BUILD.PL - configure_requires
 
 =item * [ ] test default to t/*.t if not there
+
+=item * [ ] find best location for .cpbuild root [local dir or home dir, ... ]
+
+=item * [ ] not @version for a module, only for a distro
+
+=item * [ ] cplay::Index cannot find version in file bug
 
 =back
 

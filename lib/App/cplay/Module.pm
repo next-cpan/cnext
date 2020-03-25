@@ -71,6 +71,8 @@ sub module_updated ( $module, $version ) {
     ### FIXME
     ## idea clear the module cache once we have install a module
     ## do this for all provides
+    die("Missing module name") unless defined $module;
+
 }
 
 sub clear_cache {

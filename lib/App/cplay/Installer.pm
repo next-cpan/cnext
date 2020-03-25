@@ -167,10 +167,19 @@ sub install_repository ( $self, $repository_info ) {
     return 1;
 }
 
+=pod
+## play builder workflow
+
+- prove t/*.t
+- cp lib/* -> Config{sitelib}# or soemthing else on demand --args
+
+=cut
+
 sub do_install ( $self, $name ) {
 
     my $make = App::cplay::Helpers::make_binary();
 
+    ## perl Makefile.PL move there
     {
         install("Running make for $name");
 
@@ -319,8 +328,9 @@ sub _sanity($str) {
 sub resolve_dependencies ( $self, $name ) {
     my $BUILD = $self->BUILD->{$name} or die;
 
-    # FIXME is the list complete ?
+    # FIXME is the list complete ? more .. maybe some conditionals
     my @order = qw{requires_build requires_runtime};
+    ## --no-tests -n requires_test
 
     foreach my $type (@order) {
         my $requires_list = $BUILD->{$type} // {};
@@ -384,7 +394,7 @@ sub download_repository ( $self, $repository_info ) {
     my $cli = $self->cli                                                or die;
     my $url = $cli->repositories_idx->get_tarball_url($repository_info) or die;
 
-    fetch("$url");
+    fetch($url);
     my $name = $repository_info->{repository};
     my $sha  = $repository_info->{sha};
 

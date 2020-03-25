@@ -65,7 +65,7 @@ sub setup_once ( $cli, $attempt = 1 ) {
             }
         }
 
-        $http->mirror( $remote, $local );
+        $http->mirror( $remote, $local );    # downloading files if needed
     }
 
     my @all_ix_files = ( $_MODULES_IX_FILE, $_REPOSITORIES_IX_FILE, $_EXPLICIT_VERSIONS_IX_FILE );
@@ -91,6 +91,8 @@ sub _check_file_versions(@files) {
     my $use_version;
     foreach my $file (@files) {
         if ( open( my $fh, '<', $file ) ) {
+
+            # FIXME cannot find version in file...
             while ( my $line = <$fh> ) {
 
                 #DEBUG($line);
