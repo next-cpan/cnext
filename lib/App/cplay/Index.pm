@@ -59,7 +59,7 @@ sub setup_once ( $cli, $attempt = 1 ) {
 
         if ( -e $local ) {
             my $mtime = ( stat($local) )[9];
-            if ( $cli->refresh || ( $now - $mtime ) < REFRESH_TIMEOUT ) {
+            if ( $cli->refresh || ( $now - $mtime ) > REFRESH_TIMEOUT ) {
                 DEBUG("clearing index file $local");
                 unlink($local);
             }
