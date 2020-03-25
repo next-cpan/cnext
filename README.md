@@ -1,88 +1,119 @@
-# NAME
+# Introduction
 
-App::cplay -  CPAN client using pause-play indexes
+This repository provides the `cplay` client to install Perl modules without using PAUSE.
+This is using the `pause-play` GitHub repositories indexed by `pause-index`
 
-# SYNOPSIS
+[https://pause-play.github.io/pause-index/](https://pause-play.github.io/pause-index/)
 
-    # install one ore more distribution
+Rather than using distribution tarball from PAUSE itself, `play` is relying on GitHub infrastructure to download distributions.
 
-    cplay Cwd
-    cplay Cwd File::Copy
+The repo `pause-index` host some index files which can be consumed to download and install most Perl modules.
 
-    cplay install Cwd
-    cplay install Cwd File::Copy
+`cplay` is the recommended CPAN client using these indexes and GitHub repositories.
+You can read more about cplay client on the [cplay website](https://pause-play.github.io/cplay/).
 
-    # install distributions from a cpanfile
+# How to install cplay
 
-    cplay cpanfile
+# How to use cplay
 
-    cplay --version
-    cplay --help
+## Install a Perl Module
 
-Run `cplay -h` or `perldoc cplay` for more options.
+```
+   # install a single module
+   cplay A1z::Html
+   cplay install A1z::Html
+   cplay install --verbose A1z::Html
 
-# DESCRIPTION
+   # install multiple modules
+   cplay First::Module Second::Module ...
 
-....
+   # install a custom version
+   cplay A1z::Html@0.04
 
-# INSTALLATION
+   # install a trial version
+   cplay Devel::PPPort@3.57_02
+```
 
-....
+## Install a Perl distribution
 
-## Package management system
+You could use either a module name or a distribution name.
 
-...
+```
+   # install a single distribution
+   cplay A1z-Html
+   cplay install A1z-Html
+   cplay install --verbose A1z-Html
 
-## Installing to system perl
+   # install multiple modules
+   cplay First-Distribution Second-Distribution
 
-...
+   # install a custom version
+   cplay A1z-Html@0.04
 
-# DEPENDENCIES
+   # install a trial version
+   cplay Devel-PPPort@3.57_02
+```
 
-...
+## Mix Perl modules and distributions
 
-# QUESTIONS
+You can provide to the install command a mix of modules or distributions
+```
+	cplay Module::Name Distribution-Name ...
+```
 
-## Something?
+## Install Perl Modules from a cpanfile
 
-Answer
+```
+    cplay cpanfile .
+    cplay cpanfile ~/path-to/my-custom.cpanfile
+```
 
-# COPYRIGHT
+## Install a development or TRIAL version
 
-Copyright 2020 - Nicolas R.
+```
+   # install a trial version
+   cplay Devel::PPPort@3.57_02
+   cplay Devel-PPPort@3.57_02
+```
 
-The standalone executable contains the following modules embedded.
+## Install a module from a custom repository
 
-- [HTTP::Tiny](https://metacpan.org/pod/HTTP%3A%3ATiny) Copyright 2011 Christian Hansen
-- [JSON::PP](https://metacpan.org/pod/JSON%3A%3APP) Copyright 2007-2011 by Makamaka Hannyaharamitu
-- [File::pushd](https://metacpan.org/pod/File%3A%3Apushd) Copyright 2012 David Golden
-- [parent](https://metacpan.org/pod/parent) Copyright (c) 2007-10 Max Maischein
+```
+   cplay --from-tarball ./path-to/custom.tar.gz
+   # where :owner, :repository and :sha are replaced with the accurate values
+   cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
+```
 
-# LICENSE
+# Developer guide
 
-This software is licensed under the same terms as Perl.
+## Install dependencies
 
-# CREDITS
+## Build the fatpack version
 
-## CONTRIBUTORS
+# See Also
 
-Patches and code improvements were contributed by:
+Also consider using traditional CPAN Clients, relying on PAUSE index:
 
-...
+- [cplay](https://pause-play.github.io/cplay/) - CPAN client using pause-play indexes
+- cpan
+- [App::cpanminus](https://metacpan.org/pod/App::cpanminus) - get, unpack, build and install modules from CPAN
+- [App::cpm](https://metacpan.org/pod/App::cpm) - a fast CPAN moduler installer
 
-## ACKNOWLEDGEMENTS
+# Known issues
 
-Bug reports, suggestions and feedbacks were sent by, or general
-acknowledgement goes to:
+# TODO
 
-....
-
-# NO WARRANTY
-
-This software is provided "as-is," without any express or implied
-warranty. In no event shall the author be held liable for any damages
-arising from the use of the software.
-
-# SEE ALSO
-
-[CPAN](https://metacpan.org/pod/CPAN) [CPANPLUS](https://metacpan.org/pod/CPANPLUS) [pip](https://metacpan.org/pod/pip) [App::cpm](https://metacpan.org/pod/App%3A%3Acpm) [App:cpanminus](App:cpanminus)
+- [ ] setup GitHub pages
+- [ ] support for cpanfiles
+- [ ] write some pod/doc
+- [ ] write some tests
+- [ ] download the .idx tarball rather than the files themselves
+- [ ] check the .idx signature
+- [ ] purge .idx older than X hours
+- [ ] prefer a quick file read/scan?
+- [ ] log output to file
+- [ ] improve IPC::run3 and isolate it to its own module
+- [ ] ability to download trial version    Module@1.1_0001
+- [ ] ability to download a custom version Module@1.3
+- [ ] better detection of make / gmake
+- [ ] check tarball signature
