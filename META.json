@@ -64,6 +64,9 @@
          "file" : "lib/App/cplay.pm",
          "version" : "0.0001"
       },
+      "App::cplay::Helpers" : {
+         "file" : "lib/App/cplay/Helpers.pm"
+      },
       "App::cplay::Http" : {
          "file" : "lib/App/cplay/Http.pm"
       },
@@ -79,8 +82,17 @@
       "App::cplay::Index::Repositories" : {
          "file" : "lib/App/cplay/Index/Repositories.pm"
       },
+      "App::cplay::Installer" : {
+         "file" : "lib/App/cplay/Installer.pm"
+      },
+      "App::cplay::Installer::Unpacker" : {
+         "file" : "lib/App/cplay/Installer/Unpacker.pm"
+      },
       "App::cplay::Logger" : {
          "file" : "lib/App/cplay/Logger.pm"
+      },
+      "App::cplay::Module" : {
+         "file" : "lib/App/cplay/Module.pm"
       },
       "App::cplay::cli" : {
          "file" : "lib/App/cplay/cli.pm"
