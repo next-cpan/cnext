@@ -25,6 +25,8 @@ use Simple::Accessor qw{
   retry
   configure_timeout build_timeout test_timeout
 
+  refresh debug
+
   repositories_idx
   modules_idx
   explicit_versions_idx
@@ -131,6 +133,9 @@ sub parse_options ( $self, @opts ) {
         'cleanup!'  => \( $self->{cleanup} ),
         "homedir=s" => \( $self->{homedir} ),
 
+        "refresh" => \( $self->{refresh} ),
+        "debug"   => \( $self->{debug} ),
+
         # not yet implemented
         "cpanfile=s" => \( $self->{cpanfile} ),
         "test!"      => sub { $self->{notest} = $_[1] ? 0 : 1 },
@@ -169,6 +174,10 @@ sub parse_options ( $self, @opts ) {
     if ( $self->{sudo} ) {
         !system "sudo", $^X, "-e1" or exit 1;
     }
+
+    # for now this is the same thing
+    $self->{debug}   = 1 if $self->{verbose};
+    $self->{verbose} = 1 if $self->{debug};
 
     $self->{cleanup} //= 1;
 

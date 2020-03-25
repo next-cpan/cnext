@@ -10,6 +10,8 @@ use constant MODULES_IX_BASENAME           => 'module.idx';
 use constant REPOSITORIES_IX_BASENAME      => 'repositories.idx';
 use constant EXPLICIT_VERSIONS_IX_BASENAME => 'explicit_versions.idx';
 
+use constant REFRESH_TIMEOUT => 24 * 3_600;    # X hours
+
 my $_MODULES_IX_FILE;
 my $_REPOSITORIES_IX_FILE;
 my $_EXPLICIT_VERSIONS_IX_FILE;
@@ -17,7 +19,7 @@ my $_EXPLICIT_VERSIONS_IX_FILE;
 # FIXME improve download the tarball from the repo & extract it
 sub setup_once($cli) {
     no warnings 'redefine';
-    *setup_once = sub { };    # do it once
+    *setup_once = sub { };                     # do it once
 
     ref $cli eq 'App::cplay::cli' or die "cli is not one App::cplay: $cli";
 
@@ -34,25 +36,36 @@ sub setup_once($cli) {
     #				except when using the --no-cache arguement
 
     my @files = (
-        [    # local / remote -- FIXME reverse order
-            $_MODULES_IX_FILE,
+        [    # remote / local
             BASE_URL . '/' . MODULES_IX_BASENAME,
+            $_MODULES_IX_FILE,
         ],
-        [    # local / remote
-            $_REPOSITORIES_IX_FILE,
+        [    # remote / local
             BASE_URL . '/' . REPOSITORIES_IX_BASENAME,
+            $_REPOSITORIES_IX_FILE,
         ],
-        [    # local / remote
-            $_EXPLICIT_VERSIONS_IX_FILE,
+        [    # remote / local
             BASE_URL . '/' . EXPLICIT_VERSIONS_IX_BASENAME,
+            $_EXPLICIT_VERSIONS_IX_FILE,
         ],
     );
 
     my $http = $cli->http;
 
+    my $now = time;
+
     INFO("Check and refresh cplay index files.");
     foreach my $list (@files) {
-        my ( $local, $remote ) = @$list;
+        my ( $remote, $local ) = @$list;
+
+        if ( -e $local ) {
+            my $mtime = ( stat($local) )[9];
+            if ( $cli->refresh || ( $now - $mtime ) < REFRESH_TIMEOUT ) {
+                DEBUG("clearing index file $local");
+                unlink($local);
+            }
+        }
+
         $http->mirror( $remote, $local );
     }
 

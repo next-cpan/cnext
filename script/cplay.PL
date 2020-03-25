@@ -82,7 +82,7 @@ You can read more about cplay client on the [cplay website](https://pause-play.g
 
 =head2 Installing to system perl
 
-...
+    curl -L https://cplay.us | perl - App::cplay
 
 =head1 How to use cplay
 
@@ -146,6 +146,7 @@ You could use either a module name or a distribution name.
    --no-cleanup     preserve the .cpbuild directory
    --verbose        display more output
    --debug
+   --refresh        force refresh the index files
 
 
 =head1 Developer guide

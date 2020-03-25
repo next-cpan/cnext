@@ -51,7 +51,9 @@ You can read more about cplay client on the \[cplay website\](https://pause-play
 
 ## Installing to system perl
 
-...
+```
+curl -L https://cplay.us | perl - App::cplay
+```
 
 # How to use cplay
 
@@ -128,6 +130,7 @@ cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
 --no-cleanup     preserve the .cpbuild directory
 --verbose        display more output
 --debug
+--refresh        force refresh the index files
 ```
 
 # Developer guide
