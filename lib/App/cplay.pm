@@ -150,9 +150,9 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] download the .idx tarball rather than the files themselves
 
-=item * [ ] check the .idx signature
+=item * [X] check the .idx version
 
-=item * [ ] purge .idx older than X hours
+=item * [X] purge .idx older than X hours
 
 =item * [ ] prefer a quick file read/scan?
 

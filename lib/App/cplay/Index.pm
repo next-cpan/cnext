@@ -17,9 +17,8 @@ my $_REPOSITORIES_IX_FILE;
 my $_EXPLICIT_VERSIONS_IX_FILE;
 
 # FIXME improve download the tarball from the repo & extract it
-sub setup_once($cli) {
+sub setup_once ( $cli, $attempt = 1 ) {
     no warnings 'redefine';
-    *setup_once = sub { };                     # do it once
 
     ref $cli eq 'App::cplay::cli' or die "cli is not one App::cplay: $cli";
 
@@ -69,7 +68,48 @@ sub setup_once($cli) {
         $http->mirror( $remote, $local );
     }
 
+    my @all_ix_files = ( $_MODULES_IX_FILE, $_REPOSITORIES_IX_FILE, $_EXPLICIT_VERSIONS_IX_FILE );
+    if ( !_check_file_versions(@all_ix_files) ) {
+        if ( $attempt >= 2 ) {
+            FATAL("index files versions mismatch");
+        }
+        else {
+            map { unlink $_ } @all_ix_files;
+            return setup_once( $cli, $attempt + 1 );
+        }
+    }
+
+    *setup_once = sub { };    # do it once : only remove it at the very end, we are calling it twice...
+
     return;
+}
+
+sub _check_file_versions(@files) {
+
+    FATAL("Need at least two files") if scalar @files < 2;
+
+    my $use_version;
+    foreach my $file (@files) {
+        if ( open( my $fh, '<', $file ) ) {
+            while ( my $line = <$fh> ) {
+
+                #DEBUG($line);
+                if ( $line =~ m{"version"\s*:\s*(\w+)\s*,} ) {
+                    my $v = $1;
+                    if ( !defined $use_version ) {
+                        $use_version = $v;
+                    }
+                    elsif ( $v ne $use_version ) {
+                        WARN("file version mismatch: $file");
+                        return;
+                    }
+                    last;
+                }
+            }
+        }
+    }
+
+    return 1;
 }
 
 # requesting the path to any .ix file, autorefresh the files and set the PATH to all of them

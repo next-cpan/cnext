@@ -6,7 +6,7 @@ use List::Util 'max';
 
 use Exporter 'import';
 
-our @EXPORT    = qw{DONE FAIL WARN INFO DEBUG};
+our @EXPORT    = qw{DONE FAIL WARN INFO DEBUG FATAL};
 our @EXPORT_OK = ( @EXPORT, qw(fetch resolve install configure) );
 
 our $COLOR;
@@ -31,6 +31,7 @@ my %color = (
     configure => COLOR_PURPLE,
     install   => COLOR_CYAN,
     FAIL      => COLOR_RED,
+    FATAL     => COLOR_RED,
     DONE      => COLOR_GREEN,
     WARN      => COLOR_YELLOW,
     INFO      => COLOR_GREEN,
@@ -95,6 +96,11 @@ sub DEBUG ( $msg, @args ) {
 
 sub FAIL ( $msg, @args ) {
     return __PACKAGE__->log( type => 'FAIL', message => $msg, @args );
+}
+
+sub FATAL ( $msg, @args ) {
+    __PACKAGE__->log( type => 'FATAL', message => $msg, @args );
+    die $msg;
 }
 
 sub WARN ( $msg, @args ) {

@@ -7,7 +7,9 @@ our @EXPORT_OK = qw(read_file zip);
 
 sub read_file($file) {
     local $/;
-    open( my $fh, '<:utf8', $file ) or die "Fail to open file: $!";
+
+    open( my $fh, '<:utf8', $file )
+      or die "Fail to open file: $! " . join( ' ', ( caller(1) )[ 0, 1, 2, 3 ] ) . "\n";
     return readline($fh);
 }
 

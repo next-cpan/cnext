@@ -8,19 +8,24 @@ use App::cplay::Installer;
 use Test::More;            # Auto-removed
 
 sub run ( $self, @modules ) {
-    return unless scalar @modules;
+    return 1 unless scalar @modules;
 
     my $installer = App::cplay::Installer->new( cli => $self );
 
     # guarantee that ExtUtils::MakeMaker is >= 6.64
-    return unless $installer->check_makemaker();
+    return 1 unless $installer->check_makemaker();
 
     foreach my $module (@modules) {
         INFO("Looking for module: $module");
-        return unless $installer->install_single_module($module);
+        if ( !$installer->install_single_module($module) ) {
+            FAIL("Fail to install $module or its dependencies.");
+            return 1;
+        }
     }
 
-    return 1;
+    DONE("install cmd succeeds");
+
+    return 0;
 }
 
 1;
