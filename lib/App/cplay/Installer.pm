@@ -143,9 +143,18 @@ sub install_repository ( $self, $repository_info ) {
     INFO("Installing Distribution $name");
 
     return unless $self->setup_tarball($repository_info);
+
+    # check BUILD sanity state
+    my $BUILD = $self->BUILD->{$name} or FATAL("Cannot find a BUILD entry for $name");
+    if ( ( $BUILD->{'builder_API_version'} // 0 ) != 1 ) {
+
+        #... we would like to redirect to Install/Builder/v1.pm, ...
+        FATAL("Only know how to handle builder_API_version == 1");
+    }
+
     return unless $self->resolve_dependencies($name);
 
-    my $BUILD = $self->BUILD->{$name} or die;
+    # move to the tmp directory for the next actions
     my $indir = pushd( $BUILD->{_rootdir} );
 
     return unless $self->do_configure($name);
@@ -331,6 +340,7 @@ sub resolve_dependencies ( $self, $name ) {
     return 1;
 }
 
+# this sets the BUILD entry for the repository
 sub setup_tarball ( $self, $repository_info ) {
 
     my $name = $repository_info->{repository};
