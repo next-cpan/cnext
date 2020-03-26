@@ -13,8 +13,8 @@ sub find_version {
     return;
 }
 
-my $new_ver = shift @ARGV;
+my $new_ver     = shift @ARGV           or die "missing version use: $0 VERSION";
 my $current_ver = find_version("cplay") or die;
 
-system('perl-reversion', '-current', $current_ver, '-set', $new_ver, 'cplay') == 0 or die $?;
+system( 'perl-reversion', '-current', $current_ver, '-set', $new_ver, 'cplay' ) == 0 or die $?;
 chmod 0755, 'cplay';
