@@ -218,7 +218,7 @@ sub do_install ( $self, $name ) {
         DEBUG("make output:\n$out");
     }
 
-    {
+    if ( $self->cli->run_tests ) {
         install("Running Tests for $name");            # FIXME unless test are disabled
 
         my ( $status, $out, $err ) = run3("$make test");

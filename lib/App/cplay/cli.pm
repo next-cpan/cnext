@@ -26,6 +26,7 @@ use Simple::Accessor qw{
   configure_timeout build_timeout test_timeout
 
   refresh debug
+  run_tests
 
   repositories_idx
   modules_idx
@@ -133,12 +134,14 @@ sub parse_options ( $self, @opts ) {
         'cleanup!'  => \( $self->{cleanup} ),
         "homedir=s" => \( $self->{homedir} ),
 
+        'test!'  => \( $self->{run_tests} ),
+        'tests!' => \( $self->{run_tests} ),    # allow typo?
+
         "refresh" => \( $self->{refresh} ),
         "debug"   => \( $self->{debug} ),
 
         # not yet implemented
         "cpanfile=s" => \( $self->{cpanfile} ),
-        "test!"      => sub { $self->{notest} = $_[1] ? 0 : 1 },
 
         ### need to check
         "L|local-lib-contained=s" => \( $self->{local_lib} ),
@@ -171,6 +174,8 @@ sub parse_options ( $self, @opts ) {
     $self->{mirror}        = $self->normalize_mirror($mirror) if $mirror;
     $self->{color}         = 1 if !defined $self->{color} && -t STDOUT;
     $self->{show_progress} = 1 if !defined $self->{show_progress} && -t STDOUT;
+
+    $self->run_tests(1) unless defined $self->{run_tests};
 
     if ( $self->{sudo} ) {
         !system "sudo", $^X, "-e1" or exit 1;

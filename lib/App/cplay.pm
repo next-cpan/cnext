@@ -114,12 +114,14 @@ You could use either a module name or a distribution name.
    # where :owner, :repository and :sha are replaced with the accurate values
    cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
 
-=head1 Available options when installing a distribution
+=head1 OPTIONS
 
-   --no-cleanup     preserve the .cpbuild directory
-   --verbose        display more output
-   --debug          enable --verbose and display some additional informations
-   --refresh        force refresh the index files
+   --no-cleanup         preserve the .cpbuild directory
+   -v, --verbose        display more output
+   -d, --debug          enable --verbose and display some additional informations
+   --refresh            force refresh the index files
+   --color, --no-color  turn on/off color output, default: on
+   --test, --no-test    run test cases, default: on
 
 
 =head1 Developer guide
@@ -164,7 +166,7 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] check tarball signature
 
-=item * [ ] option to disable tests
+=item * [X] option to disable tests
 
 =item * [ ] check builder type play for cplay, Build.PL and Makefile.PL...
 
@@ -179,6 +181,8 @@ Probably a lot at this point this is still in active development.
 =item * [X] not @version for a module, only for a distro
 
 =item * [ ] cplay::Index cannot find version in file bug
+
+=item * [ ] implement timeouts
 
 =back
 
