@@ -10,8 +10,6 @@ use App::cplay::Installer::Unpacker ();
 
 use App::cplay::Helpers qw{read_file};
 
-use Test::More;            # Auto-removed
-
 use File::pushd;
 use IPC::Run3 ();
 

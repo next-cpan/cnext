@@ -19,6 +19,7 @@ my $core_version = "5.008001";
 my $plenv_version = "5.8.5";
 
 sub run_command {
+
     #local $ENV{PLENV_VERSION} = $plenv_version;
     system @_;
 }
@@ -27,10 +28,10 @@ sub rewrite_version_pm {
     my $file = shift;
 
     die "$file: $!" unless -e $file;
-    
+
     tie my @file, 'Tie::File', $file or die $!;
-    for (0..$#file) {
-        if ($file[$_] =~ /^\s*eval "use version::vxs.*/) {
+    for ( 0 .. $#file ) {
+        if ( $file[$_] =~ /^\s*eval "use version::vxs.*/ ) {
             splice @file, $_, 2, "    if (1) { # always pretend there's no XS";
             last;
         }
@@ -43,38 +44,32 @@ sub build_snapshot {
     {
         my $pushd = pushd $dir;
 
-#         open my $fh, ">>cpanfile" or die $!;
-#         print $fh <<EOF;
-# requires 'Exporter', '5.59'; # only need 5.57, but force it in Carton for 5.8.5
-# EOF
-#         close $fh;
-    
         my $out = qx{carton install};
 
         $? == 0 or die $out;
     }
 
-    my $snapshot = Carton::Snapshot->new(path => "$dir/cpanfile.snapshot");
+    my $snapshot = Carton::Snapshot->new( path => "$dir/cpanfile.snapshot" );
     $snapshot->load;
 
     return $snapshot;
 }
 
 sub required_modules {
-    my($snapshot, $dir) = @_;
-    
+    my ( $snapshot, $dir ) = @_;
+
     my $requires = CPAN::Meta::Requirements->new;
 
     my $finder;
     $finder = sub {
         my $prereqs = shift;
 
-        my $reqs = $prereqs->requirements_for('runtime' => 'requires');
+        my $reqs = $prereqs->requirements_for( 'runtime' => 'requires' );
         for my $module ( $reqs->required_modules ) {
             next if $module eq 'perl';
 
             my $core = $Module::CoreList::version{$core_version}{$module};
-            next if $core && $reqs->accepts_module($module, $core);
+            next if $core && $reqs->accepts_module( $module, $core );
 
             $requires->add_string_requirement( $module => $reqs->requirements_for_module($module) );
 
@@ -83,7 +78,7 @@ sub required_modules {
                 my $name = $dist->name;
                 my $path = "$dir/local/lib/perl5/$Config{archname}/.meta/$name/MYMETA.json";
                 my $meta = CPAN::Meta->load_file($path);
-                $finder->($meta->effective_prereqs);
+                $finder->( $meta->effective_prereqs );
             }
         }
     };
@@ -97,7 +92,7 @@ sub required_modules {
 }
 
 sub pack_modules {
-    my($dir, @modules) = @_;
+    my ( $dir, @modules ) = @_;
 
     my $stdout = capture_stdout {
         local $ENV{PERL5LIB} = cwd . "/$dir/local/lib/perl5";
@@ -113,23 +108,22 @@ sub pack_modules {
 }
 
 sub run {
-    my($fresh) = @_;
+    my ($fresh) = @_;
 
     my $dir = "fatpack-build";
     mkdir $dir, 0777;
-    
+
     if ($fresh) {
         rmtree $dir;
         mkpath $dir;
     }
 
     my $snapshot = build_snapshot($dir);
-    my @modules  = required_modules($snapshot, $dir);
+    my @modules  = required_modules( $snapshot, $dir );
 
-use Test::More;
-note explain \@modules;
+    #use Test::More; note explain \@modules;
 
-    pack_modules($dir, @modules);
+    pack_modules( $dir, @modules );
 
     mkpath "fatlib/version";
 
@@ -138,7 +132,7 @@ note explain \@modules;
         glob("fatlib/$Config{archname}/version/*.pm"),
     ) {
         next if $file =~ /\bvxs\.pm$/;
-        (my $target = $file) =~ s!^fatlib/$Config{archname}/!fatlib/!;
+        ( my $target = $file ) =~ s!^fatlib/$Config{archname}/!fatlib/!;
         rename $file => $target or die "$file => $target: $!";
     }
 
@@ -147,7 +141,7 @@ note explain \@modules;
     rmtree("fatlib/$Config{archname}");
     rmtree("fatlib/POD2");
 
-    find({ wanted => \&want, no_chdir => 1 }, "fatlib");
+    find( { wanted => \&want, no_chdir => 1 }, "fatlib" );
 }
 
 sub want {

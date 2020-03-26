@@ -12,8 +12,6 @@ sub run ( $self, @argv ) {
     my $f = $INC{'App/cplay.pm'};
     $f = $0 unless -e $f;
 
-    print STDERR "### $f\n";
-
     Pod::Text->new->parse_from_file( $f, $fh );
 
     if ( defined $out ) {

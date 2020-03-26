@@ -5,8 +5,6 @@ use App::cplay::std;
 use App::cplay::Logger;    # import all
 use App::cplay::Installer;
 
-use Test::More;            # Auto-removed
-
 sub run ( $self, @modules ) {
     return 1 unless scalar @modules;
 
