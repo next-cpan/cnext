@@ -63,7 +63,9 @@ sub _build_sorted_columns($self) {
     return $sorted;
 }
 
-sub search ( $self, $repository_or_module, $version = undef, $can_be_repo = 1 ) {
+sub search ( $self, $repository_or_module, $version = undef, $can_be_module = 1, $can_be_repo = 1, ) {
+
+    return unless $can_be_repo || $can_be_module;
 
     #return unless defined $module;
 
@@ -92,7 +94,7 @@ sub search ( $self, $repository_or_module, $version = undef, $can_be_repo = 1 ) 
         eval { $raw = $self->json->decode($line) };
 
         my $found;
-        if ( $raw->[$module_ix] eq $repository_or_module ) {
+        if ( $can_be_module && $raw->[$module_ix] eq $repository_or_module ) {
             if ( !defined $version || $version eq $raw->[$version_ix] ) {
                 $found = 1;
             }

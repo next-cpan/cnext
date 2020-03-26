@@ -77,29 +77,39 @@ sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_
 
     my $cli = $self->cli or die;
 
+    my $name_as_column_char = index( $module_or_repository, ':' ) == -1 ? 0 : 1;
+
     my $custom_requested_version;
     if ( $module_or_repository =~ s{\@(.+)$}{} ) {
         $custom_requested_version = $1;
 
-        #DEBUG("requested $module_or_repository version $custom_requested_version");
+        if ($name_as_column_char) {
+            $module_or_repository =~ s{::}{-}g;
+            FAIL("Cannot request a specific version for a module: try $module_or_repository\@$custom_requested_version");
+            return;
+        }
     }
 
     # search the latest module from modules.ix file
     # 1 - lookup for module
-    my $module_info = $cli->modules_idx->search( $module_or_repository, $custom_requested_version );
+    my $module_info;
     my $repository_info;
 
+    if ( !defined $custom_requested_version ) {    # Module@version is invalid request
+        $module_info = $cli->modules_idx->search( $module_or_repository, $custom_requested_version );
+    }
+
     # 2 - lookup for distribution
-    if ( !$module_info && index( $module_or_repository, ':' ) == -1 && $can_be_repo ) {
+    if ( !$module_info && !$name_as_column_char && $can_be_repo ) {
         $repository_info = $cli->repositories_idx->search( $module_or_repository, $custom_requested_version );
     }
 
     # 3 - lookup in the explicitversons file if needed
     if ( !$module_info && !$repository_info && defined $custom_requested_version ) {
-        my $raw = $cli->explicit_versions_idx->search( $module_or_repository, $custom_requested_version, $can_be_repo );
+        my $raw = $cli->explicit_versions_idx->search( $module_or_repository, $custom_requested_version, 0, $can_be_repo );
 
         if ( !defined $raw ) {
-            FAIL("Cannot find module or distribution for $module_or_repository\@$custom_requested_version");
+            FAIL("Cannot find distribution $module_or_repository\@$custom_requested_version");
             return;
         }
 

@@ -17,12 +17,15 @@ App::cplay -  CPAN client using pause-play indexes
     # Install one ore more distribution [using module or distribution names]
     cplay Cwd
     cplay Cwd File::Copy
-    cplay Path-Tools
 
     cplay install Cwd
     cplay install Cwd File::Copy
 
-    # install a custom or trial version
+    cplay install --verbose Cwd  # more output
+    cplay install --debug Cwd    # additional debug informations
+
+    # install a specific version or trial version
+    cplay install Devel-PPPort@3.57
     cplay install Devel-PPPort@3.57_02
 
     # preserve .cpbuild directory to preserve cache and debug
@@ -73,12 +76,6 @@ You can read more about cplay client on the [cplay website](https://pause-play.g
    # install multiple modules
    cplay First::Module Second::Module ...
 
-   # install a custom version
-   cplay A1z::Html@0.04
-
-   # install a trial version
-   cplay Devel::PPPort@3.57_02
-
 =head2 Install a Perl distribution
 
 You could use either a module name or a distribution name.
@@ -109,7 +106,6 @@ You could use either a module name or a distribution name.
 =head2 Install a development or TRIAL version
 
    # install a trial version
-   cplay Devel::PPPort@3.57_02
    cplay Devel-PPPort@3.57_02
 
 =head2 Install a module from a custom repository
@@ -180,7 +176,7 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] find best location for .cpbuild root [local dir or home dir, ... ]
 
-=item * [ ] not @version for a module, only for a distro
+=item * [X] not @version for a module, only for a distro
 
 =item * [ ] cplay::Index cannot find version in file bug
 
