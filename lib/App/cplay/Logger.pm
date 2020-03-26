@@ -6,11 +6,12 @@ use List::Util 'max';
 
 use Exporter 'import';
 
-our @EXPORT    = qw{DONE FAIL WARN INFO DEBUG FATAL};
+our @EXPORT    = qw{OK DONE FAIL WARN INFO DEBUG FATAL};
 our @EXPORT_OK = ( @EXPORT, qw(fetch resolve install configure) );
 
 our $COLOR;
 our $VERBOSE;
+our $DEBUG;
 our $SHOW_PROGRESS;
 
 BEGIN {
@@ -33,6 +34,7 @@ my %color = (
     FAIL      => COLOR_RED,
     FATAL     => COLOR_RED,
     DONE      => COLOR_GREEN,
+    OK        => COLOR_GREEN,
     WARN      => COLOR_YELLOW,
     INFO      => COLOR_GREEN,
     DEBUG     => COLOR_WHITE,
@@ -54,7 +56,7 @@ sub log ( $self_or_class, %options ) {
     my $verbose       = ref $self_or_class ? $self_or_class->{verbose} : $VERBOSE;
     my $show_progress = ref $self_or_class ? $self_or_class->{show_progress} : $SHOW_PROGRESS;
 
-    if ( !$result ) {
+    if ( !$result && $VERBOSE ) {
         my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst ) = localtime(time);
         $year += 1900;
         $mon++;
@@ -79,18 +81,26 @@ sub log ( $self_or_class, %options ) {
         warn $r . sprintf "%d %s %s %s%s\n", $options{pid} || $$, $result, $type, $message, $optional;
     }
     else {
-        warn $r . join( " ", $result, $type ? $type : (), $message . $optional ) . "\n";
+        warn $r . join( " ", map { defined $_ ? $_ : () } $result, $type, $message . $optional ) . "\n";
     }
 
     return;
 }
 
+# only informations with errors displayed when not using --verbose
+sub OK ( $msg, @args ) {
+
+    # always displayed
+    return __PACKAGE__->log( type => 'OK', message => $msg, @args );
+}
+
 sub DONE ( $msg, @args ) {
+    return unless $VERBOSE;
     return __PACKAGE__->log( type => 'DONE', message => $msg, @args );
 }
 
 sub DEBUG ( $msg, @args ) {
-    return unless $VERBOSE;
+    return unless $DEBUG;
     return __PACKAGE__->log( type => 'DEBUG', message => $msg, @args );
 }
 
@@ -104,26 +114,32 @@ sub FATAL ( $msg, @args ) {
 }
 
 sub WARN ( $msg, @args ) {
+    return unless $VERBOSE;
     return __PACKAGE__->log( type => 'WARN', message => $msg, @args );
 }
 
 sub INFO ( $msg, @args ) {
+    return unless $VERBOSE;
     return __PACKAGE__->log( type => 'INFO', message => $msg, @args );
 }
 
 sub fetch ( $msg, @args ) {
+    return unless $VERBOSE;
     return __PACKAGE__->log( type => 'fetch', message => $msg, @args );
 }
 
 sub resolve ( $msg, @args ) {
+    return unless $VERBOSE;
     return __PACKAGE__->log( type => 'resolve', message => $msg, @args );
 }
 
 sub configure ( $msg, @args ) {
+    return unless $VERBOSE;
     return __PACKAGE__->log( type => 'configure', message => $msg, @args );
 }
 
 sub install ( $msg, @args ) {
+    return unless $VERBOSE;
     return __PACKAGE__->log( type => 'install', message => $msg, @args );
 }
 

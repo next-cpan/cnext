@@ -103,8 +103,8 @@ sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_
             return;
         }
 
-        # check if module is already installed
-        return 1 if has_module_version( $raw->{module}, $raw->{version} );
+        # will check if module is already installed
+        $module_info = { module => $raw->{module}, version => $raw->{version} };
 
         # convert the result from explicit_versions to repository
         $repository_info = {
@@ -122,7 +122,11 @@ sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_
 
     # check if we already have the module available
     if ($module_info) {
-        return 1 if has_module_version( $module_info->{module}, $module_info->{version} );
+        if ( has_module_version( $module_info->{module}, $module_info->{version} ) ) {
+            my ( $m, $v ) = ( $module_info->{module}, $module_info->{version} );
+            OK("$m is up to date. ($v)");
+            return 1;
+        }
         $repository_info //= $cli->repositories_idx->search( $module_info->{repository}, $module_info->{repository_version} );
     }
 
@@ -140,6 +144,8 @@ sub install_repository ( $self, $repository_info ) {
     my $name = $repository_info->{repository};
     return 1 if $self->tracking_repository($name);
 
+    my $version = $repository_info->{version};
+
     INFO("Installing Distribution $name");
 
     return unless $self->setup_tarball($repository_info);
@@ -152,6 +158,15 @@ sub install_repository ( $self, $repository_info ) {
         FATAL("Only know how to handle builder_API_version == 1");
     }
 
+    # check if distribution is already installed
+    if ( my $primary = $BUILD->{primary} ) {
+        my $module_v = $BUILD->{provides}->{$primary}->{version};    # should not raise warnings?
+        if ( has_module_version( $primary, $module_v ) ) {
+            OK("$name-$version is up to date.");
+            return 1;
+        }
+    }
+
     return unless $self->resolve_dependencies($name);
 
     # move to the tmp directory for the next actions
@@ -162,7 +177,7 @@ sub install_repository ( $self, $repository_info ) {
 
     # ... FIXME also flag all new provided modules
 
-    DONE("Installed Distribution $name");
+    OK("Installed distribution $name-$version");
 
     return 1;
 }

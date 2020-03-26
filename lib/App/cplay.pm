@@ -122,7 +122,7 @@ You could use either a module name or a distribution name.
 
    --no-cleanup     preserve the .cpbuild directory
    --verbose        display more output
-   --debug
+   --debug          enable --verbose and display some additional informations
    --refresh        force refresh the index files
 
 

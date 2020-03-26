@@ -146,6 +146,7 @@ sub parse_options ( $self, @opts ) {
         "g|global"  => \( $self->{global} ),
         "mirror=s"  => \$mirror,
         "v|verbose" => \( $self->{verbose} ),
+        "d|debug"   => \( $self->{debug} ),
 
         "snapshot=s"  => \( $self->{snapshot} ),
         "sudo"        => \( $self->{sudo} ),
@@ -175,14 +176,14 @@ sub parse_options ( $self, @opts ) {
         !system "sudo", $^X, "-e1" or exit 1;
     }
 
-    # for now this is the same thing
-    $self->{debug}   = 1 if $self->{verbose};
+    # debug enable verbose
     $self->{verbose} = 1 if $self->{debug};
 
     $self->{cleanup} //= 1;
 
     $App::cplay::Logger::COLOR         = 1 if $self->{color};
     $App::cplay::Logger::VERBOSE       = 1 if $self->{verbose};
+    $App::cplay::Logger::DEBUG         = 1 if $self->{debug};
     $App::cplay::Logger::SHOW_PROGRESS = 1 if $self->{show_progress};
 
     if ( @ARGV && $ARGV[0] eq "-" ) {
