@@ -8,12 +8,15 @@ App::cplay -  CPAN client using pause-play indexes
 # Install one ore more distribution [using module or distribution names]
 cplay Cwd
 cplay Cwd File::Copy
-cplay Path-Tools
 
 cplay install Cwd
 cplay install Cwd File::Copy
 
-# install a custom or trial version
+cplay install --verbose Cwd  # more output
+cplay install --debug Cwd    # additional debug informations
+
+# install a specific version or trial version
+cplay install Devel-PPPort@3.57
 cplay install Devel-PPPort@3.57_02
 
 # preserve .cpbuild directory to preserve cache and debug
@@ -67,12 +70,6 @@ cplay install --verbose A1z::Html
 
 # install multiple modules
 cplay First::Module Second::Module ...
-
-# install a custom version
-cplay A1z::Html@0.04
-
-# install a trial version
-cplay Devel::PPPort@3.57_02
 ```
 
 ## Install a Perl distribution
@@ -104,15 +101,28 @@ cplay Module::Name Distribution-Name ...
 ## Install Perl Modules from a cpanfile
 
 ```perl
+# by default use ./cpanfile
+cplay cpanfile
 cplay cpanfile .
-cplay cpanfile ~/path-to/my-custom.cpanfile
+cplay cpanfile ~/cpanfile.custom
+
+# use one or more cpanfiles
+cplay cpanfile ~/cpanfile.1 ~/cpanfile.2 ...
+
+# set some feature with cpanfile
+cplay cpanfile --feature one --feature two
+
+# set some types/phases
+cplay cpanfile --with-requires --with-build --with-runtime --with-test
+
+# shortcut to enable all
+cplay cpanfile --with-all
 ```
 
 ## Install a development or TRIAL version
 
 ```
 # install a trial version
-cplay Devel::PPPort@3.57_02
 cplay Devel-PPPort@3.57_02
 ```
 
@@ -124,13 +134,36 @@ cplay --from-tarball ./path-to/custom.tar.gz
 cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
 ```
 
-# Available options when installing a distribution
+# OPTIONS
+
+## Generic options
 
 ```
---no-cleanup     preserve the .cpbuild directory
---verbose        display more output
---debug
---refresh        force refresh the index files
+    --no-cleanup         preserve the .cpbuild directory
+-v, --verbose            display more output
+-d, --debug              enable --verbose and display some additional informations
+    --refresh            force refresh the index files
+    --color, --no-color  turn on/off color output, default: on
+    --test, --no-test    run test cases, default: on
+```
+
+## cpanfile options
+
+```perl
+   --feature=identifier
+     specify the feature to enable in cpanfile; you can use --feature multiple times
+   --with-requires,   --without-requires   (default: with)
+   --with-recommends, --without-recommends (default: without)
+   --with-suggests,   --without-suggests   (default: without)
+   --with-configure,  --without-configure  (default: without)
+   --with-build,      --without-build      (default: with)
+   --with-test,       --without-test       (default: with)
+   --with-runtime,    --without-runtime    (default: with)
+   --with-develop,    --without-develop    (default: without)
+   --with-all         shortcut for
+                      --with-requires --with-recommends --with-suggests \
+                      --with-configure --with-build --with-test --with-runtime --with-develop
+     specify types/phases of dependencies in cpanfile to be installed
 ```
 
 # Developer guide
@@ -146,19 +179,28 @@ Probably a lot at this point this is still in active development.
 # TODO
 
 - \[ \] setup GitHub pages
-- \[ \] support for cpanfiles
+- \[X\] support for cpanfiles
 - \[ \] write some pod/doc
 - \[ \] write some tests
 - \[ \] download the .idx tarball rather than the files themselves
-- \[ \] check the .idx signature
-- \[ \] purge .idx older than X hours
+- \[X\] check the .idx version
+- \[X\] purge .idx older than X hours
 - \[ \] prefer a quick file read/scan?
 - \[ \] log output to file
 - \[ \] improve IPC::run3 and isolate it to its own module
-- \[ \] ability to download trial version    Module@1.1\_0001
-- \[ \] ability to download a custom version Module@1.3
-- \[ \] better detection of make / gmake
+- \[X\] ability to download trial version    Module@1.1\_0001
+- \[X\] ability to download a custom version Module@1.3
+- \[X\] better detection of make / gmake
 - \[ \] check tarball signature
+- \[X\] option to disable tests
+- \[ \] check builder type play for cplay, Build.PL and Makefile.PL...
+- \[X\] check builder\_API\_version = 1
+- \[ \] look at AcePerl and Acme BUILD.PL - configure\_requires
+- \[ \] test default to t/\*.t if not there
+- \[ \] find best location for .cpbuild root \[local dir or home dir, ... \]
+- \[X\] not @version for a module, only for a distro
+- \[ \] cplay::Index cannot find version in file bug
+- \[ \] implement timeouts
 
 # DEPENDENCIES
 

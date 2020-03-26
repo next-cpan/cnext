@@ -40,12 +40,15 @@ App::cplay -  CPAN client using pause-play indexes
     # Install one ore more distribution [using module or distribution names]
     cplay Cwd
     cplay Cwd File::Copy
-    cplay Path-Tools
 
     cplay install Cwd
     cplay install Cwd File::Copy
 
-    # install a custom or trial version
+    cplay install --verbose Cwd  # more output
+    cplay install --debug Cwd    # additional debug informations
+
+    # install a specific version or trial version
+    cplay install Devel-PPPort@3.57
     cplay install Devel-PPPort@3.57_02
 
     # preserve .cpbuild directory to preserve cache and debug
@@ -96,12 +99,6 @@ You can read more about cplay client on the [cplay website](https://pause-play.g
    # install multiple modules
    cplay First::Module Second::Module ...
 
-   # install a custom version
-   cplay A1z::Html@0.04
-
-   # install a trial version
-   cplay Devel::PPPort@3.57_02
-
 =head2 Install a Perl distribution
 
 You could use either a module name or a distribution name.
@@ -126,13 +123,27 @@ You could use either a module name or a distribution name.
 
 =head2 Install Perl Modules from a cpanfile
 
+    # by default use ./cpanfile
+    cplay cpanfile
     cplay cpanfile .
-    cplay cpanfile ~/path-to/my-custom.cpanfile
+    cplay cpanfile ~/cpanfile.custom
+
+    # use one or more cpanfiles
+    cplay cpanfile ~/cpanfile.1 ~/cpanfile.2 ...
+
+    # set some feature with cpanfile
+    cplay cpanfile --feature one --feature two
+
+    # set some types/phases
+    cplay cpanfile --with-requires --with-build --with-runtime --with-test
+
+    # shortcut to enable all
+    cplay cpanfile --with-all
+
 
 =head2 Install a development or TRIAL version
 
    # install a trial version
-   cplay Devel::PPPort@3.57_02
    cplay Devel-PPPort@3.57_02
 
 =head2 Install a module from a custom repository
@@ -141,13 +152,33 @@ You could use either a module name or a distribution name.
    # where :owner, :repository and :sha are replaced with the accurate values
    cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
 
-=head1 Available options when installing a distribution
+=head1 OPTIONS
 
-   --no-cleanup     preserve the .cpbuild directory
-   --verbose        display more output
-   --debug
-   --refresh        force refresh the index files
+=head2 Generic options
 
+       --no-cleanup         preserve the .cpbuild directory
+   -v, --verbose            display more output
+   -d, --debug              enable --verbose and display some additional informations
+       --refresh            force refresh the index files
+       --color, --no-color  turn on/off color output, default: on
+       --test, --no-test    run test cases, default: on
+
+=head2 cpanfile options
+
+       --feature=identifier
+         specify the feature to enable in cpanfile; you can use --feature multiple times
+       --with-requires,   --without-requires   (default: with)
+       --with-recommends, --without-recommends (default: without)
+       --with-suggests,   --without-suggests   (default: without)
+       --with-configure,  --without-configure  (default: without)
+       --with-build,      --without-build      (default: with)
+       --with-test,       --without-test       (default: with)
+       --with-runtime,    --without-runtime    (default: with)
+       --with-develop,    --without-develop    (default: without)
+       --with-all         shortcut for
+                          --with-requires --with-recommends --with-suggests \
+                          --with-configure --with-build --with-test --with-runtime --with-develop
+         specify types/phases of dependencies in cpanfile to be installed
 
 =head1 Developer guide
 
@@ -165,7 +196,7 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] setup GitHub pages
 
-=item * [ ] support for cpanfiles
+=item * [X] support for cpanfiles
 
 =item * [ ] write some pod/doc
 
@@ -173,9 +204,9 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] download the .idx tarball rather than the files themselves
 
-=item * [ ] check the .idx signature
+=item * [X] check the .idx version
 
-=item * [ ] purge .idx older than X hours
+=item * [X] purge .idx older than X hours
 
 =item * [ ] prefer a quick file read/scan?
 
@@ -183,13 +214,31 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] improve IPC::run3 and isolate it to its own module
 
-=item * [ ] ability to download trial version    Module@1.1_0001
+=item * [X] ability to download trial version    Module@1.1_0001
 
-=item * [ ] ability to download a custom version Module@1.3
+=item * [X] ability to download a custom version Module@1.3
 
-=item * [ ] better detection of make / gmake
+=item * [X] better detection of make / gmake
 
 =item * [ ] check tarball signature
+
+=item * [X] option to disable tests
+
+=item * [ ] check builder type play for cplay, Build.PL and Makefile.PL...
+
+=item * [X] check builder_API_version = 1
+
+=item * [ ] look at AcePerl and Acme BUILD.PL - configure_requires
+
+=item * [ ] test default to t/*.t if not there
+
+=item * [ ] find best location for .cpbuild root [local dir or home dir, ... ]
+
+=item * [X] not @version for a module, only for a distro
+
+=item * [ ] cplay::Index cannot find version in file bug
+
+=item * [ ] implement timeouts
 
 =back
 

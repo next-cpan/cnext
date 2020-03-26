@@ -97,6 +97,9 @@
       "App::cplay::cli" : {
          "file" : "lib/App/cplay/cli.pm"
       },
+      "App::cplay::cmd::cpanfile" : {
+         "file" : "lib/App/cplay/cmd/cpanfile.pm"
+      },
       "App::cplay::cmd::help" : {
          "file" : "lib/App/cplay/cmd/help.pm"
       },
