@@ -67,7 +67,7 @@ sub check_makemaker($self) {
 }
 
 sub install_single_module ( $self, $module ) {
-    $self->install_single_module_or_repository( $module, 0 );
+    return $self->install_single_module_or_repository( $module, 0 );
 }
 
 sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_repo = 1 ) {

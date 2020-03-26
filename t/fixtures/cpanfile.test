@@ -1,0 +1,24 @@
+# this is a simple test
+
+requires 'perl', '5.008001';
+
+on test => sub {
+	requires 'Test::More';
+};
+
+on develop => sub {
+	requires 'JSON:PP';
+	requires 'Module::Build::Tiny', '0.039';
+	requires 'Module::Install';
+	requires 'Test::Requires';
+	requires 'File::Slurper';
+	requires 'App::FatPacker';
+
+	recommends 'Archive::Tar';
+	recommends 'Archive::Zip';
+};
+
+recommends 'Compress::Zlib';
+
+requires 'A1z::Html';
+requires 'A1z::Html' => '0.03';

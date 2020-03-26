@@ -100,8 +100,23 @@ You could use either a module name or a distribution name.
 
 =head2 Install Perl Modules from a cpanfile
 
+    # by default use ./cpanfile
+    cplay cpanfile
     cplay cpanfile .
-    cplay cpanfile ~/path-to/my-custom.cpanfile
+    cplay cpanfile ~/cpanfile.custom
+
+    # use one or more cpanfiles
+    cplay cpanfile ~/cpanfile.1 ~/cpanfile.2 ...
+
+    # set some feature with cpanfile
+    cplay cpanfile --feature one --feature two
+
+    # set some types/phases
+    cplay cpanfile --with-requires --with-build --with-runtime --with-test
+
+    # shortcut to enable all
+    cplay cpanfile --with-all
+
 
 =head2 Install a development or TRIAL version
 
@@ -116,13 +131,31 @@ You could use either a module name or a distribution name.
 
 =head1 OPTIONS
 
-   --no-cleanup         preserve the .cpbuild directory
-   -v, --verbose        display more output
-   -d, --debug          enable --verbose and display some additional informations
-   --refresh            force refresh the index files
-   --color, --no-color  turn on/off color output, default: on
-   --test, --no-test    run test cases, default: on
+=head2 Generic options
 
+       --no-cleanup         preserve the .cpbuild directory
+   -v, --verbose            display more output
+   -d, --debug              enable --verbose and display some additional informations
+       --refresh            force refresh the index files
+       --color, --no-color  turn on/off color output, default: on
+       --test, --no-test    run test cases, default: on
+
+=head2 cpanfile options
+
+       --feature=identifier
+         specify the feature to enable in cpanfile; you can use --feature multiple times
+       --with-requires,   --without-requires   (default: with)
+       --with-recommends, --without-recommends (default: without)
+       --with-suggests,   --without-suggests   (default: without)
+       --with-configure,  --without-configure  (default: without)
+       --with-build,      --without-build      (default: with)
+       --with-test,       --without-test       (default: with)
+       --with-runtime,    --without-runtime    (default: with)
+       --with-develop,    --without-develop    (default: without)
+       --with-all         shortcut for
+                          --with-requires --with-recommends --with-suggests \
+                          --with-configure --with-build --with-test --with-runtime --with-develop
+         specify types/phases of dependencies in cpanfile to be installed
 
 =head1 Developer guide
 
@@ -140,7 +173,7 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] setup GitHub pages
 
-=item * [ ] support for cpanfiles
+=item * [X] support for cpanfiles
 
 =item * [ ] write some pod/doc
 
