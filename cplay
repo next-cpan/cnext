@@ -398,17 +398,11 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] setup GitHub pages
 
-=item * [X] support for cpanfiles
-
 =item * [ ] write some pod/doc
 
 =item * [ ] write some tests
 
 =item * [ ] download the .idx tarball rather than the files themselves
-
-=item * [X] check the .idx version
-
-=item * [X] purge .idx older than X hours
 
 =item * [ ] prefer a quick file read/scan?
 
@@ -416,27 +410,15 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] improve IPC::run3 and isolate it to its own module
 
-=item * [X] ability to download trial version    Module@1.1_0001
-
-=item * [X] ability to download a custom version Module@1.3
-
-=item * [X] better detection of make / gmake
-
 =item * [ ] check tarball signature
 
-=item * [X] option to disable tests
-
 =item * [ ] check builder type play for cplay, Build.PL and Makefile.PL...
-
-=item * [X] check builder_API_version = 1
 
 =item * [ ] look at AcePerl and Acme BUILD.PL - configure_requires
 
 =item * [ ] test default to t/*.t if not there
 
 =item * [ ] find best location for .cpbuild root [local dir or home dir, ... ]
-
-=item * [X] not @version for a module, only for a distro
 
 =item * [ ] cplay::Index cannot find version in file bug
 
