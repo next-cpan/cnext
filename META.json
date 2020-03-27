@@ -94,6 +94,9 @@
       "App::cplay::Module" : {
          "file" : "lib/App/cplay/Module.pm"
       },
+      "App::cplay::Signature" : {
+         "file" : "lib/App/cplay/Signature.pm"
+      },
       "App::cplay::cli" : {
          "file" : "lib/App/cplay/cli.pm"
       },

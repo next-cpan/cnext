@@ -170,6 +170,7 @@ You could use either a module name or a distribution name.
        --reinstall          reinstall the distribution(s)/module(s) even if you already have the latest version installed
                             do not apply to dependencies
        --cache-dir, --cache specify an alternate cache directory (default: ~/.cplay)
+       --no-check-signature disable signature check (default: on)
 
 =head2 cpanfile options
 
@@ -216,7 +217,7 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] improve IPC::run3 and isolate it to its own module
 
-=item * [ ] check tarball signature
+=item * [X] check tarball signature
 
 =item * [ ] check builder type play for cplay, Build.PL and Makefile.PL...
 
@@ -224,9 +225,9 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] test default to t/*.t if not there
 
-=item * [ ] use a single ~/.cplay directory for the cache ~/.cplay/
+=item * [X] use a single ~/.cplay directory for the cache ~/.cplay/
 
-=item * [ ] cplay::Index cannot find version in file bug
+=item * [X] cplay::Index cannot find version in file bug
 
 =item * [ ] implement timeouts
 
