@@ -201,9 +201,9 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] test default to t/*.t if not there
 
-=item * [ ] use a single ~/.cplay directory for the cache ~/.cplay/
+=item * [X] use a single ~/.cplay directory for the cache ~/.cplay/
 
-=item * [ ] cplay::Index cannot find version in file bug
+=item * [X] cplay::Index cannot find version in file bug
 
 =item * [ ] implement timeouts
 

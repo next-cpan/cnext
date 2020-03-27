@@ -87,12 +87,10 @@ sub _check_file_versions(@files) {
     my $use_version;
     foreach my $file (@files) {
         if ( open( my $fh, '<', $file ) ) {
-
-            # FIXME cannot find version in file...
+            my $has_version;
             while ( my $line = <$fh> ) {
-
-                #DEBUG($line);
                 if ( $line =~ m{"version"\s*:\s*(\w+)\s*,} ) {
+                    $has_version = 1;
                     my $v = $1;
                     if ( !defined $use_version ) {
                         $use_version = $v;
@@ -104,6 +102,7 @@ sub _check_file_versions(@files) {
                     last;
                 }
             }
+            FATAL(qq[Cannot find "version" in index file: $file]) unless $has_version;
         }
     }
 
