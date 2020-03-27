@@ -57,7 +57,7 @@ sub log ( $self_or_class, %options ) {
     my $verbose       = ref $self_or_class ? $self_or_class->{verbose} : $VERBOSE;
     my $show_progress = ref $self_or_class ? $self_or_class->{show_progress} : $SHOW_PROGRESS;
 
-    if ( !$result && $VERBOSE ) {
+    if ( !$result && $DEBUG ) {
         my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst ) = localtime(time);
         $year += 1900;
         $mon++;
@@ -67,6 +67,7 @@ sub log ( $self_or_class, %options ) {
             $hour, $min, $sec,                    # .
         );
     }
+    $result //= '';
 
     if ($is_color) {
         $type   = "\e[$color{$type}m$type\e[m"     if $type   && $color{$type};
@@ -79,7 +80,7 @@ sub log ( $self_or_class, %options ) {
 
         # type -> 5 + 9 + 3
         $type = $is_color && $type ? sprintf( "%-17s", $type ) : sprintf( "%-9s", $type || "" );
-        warn $r . sprintf "%d %s %s %s%s\n", $options{pid} || $$, $result, $type, $message, $optional;
+        warn $r . sprintf "%s %s %s%s\n", $result, $type, $message, $optional;
     }
     else {
         warn $r . join( " ", map { defined $_ ? $_ : () } $result, $type, $message . $optional ) . "\n";
