@@ -48,14 +48,21 @@ You can read more about cplay client on the \[cplay website\](https://pause-play
 
 # INSTALLATION
 
-## Package management system
-
-...
-
 ## Installing to system perl
 
+This is using cplay to install itself.
+
+```perl
+curl -L https://github.com/pause-play/cplay/raw/master/cplay | perl - App::cplay
+curl -L https://git.io/cplay | perl - App::cplay
 ```
-curl -L https://cplay.us | perl - App::cplay
+
+## Local installation
+
+```perl
+curl -fsSL --compressed https://github.com/pause-play/cplay/raw/master/cplay > cplay
+chmod +x cplay
+./cplay --version
 ```
 
 # How to use cplay
@@ -145,6 +152,8 @@ cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
     --refresh            force refresh the index files
     --color, --no-color  turn on/off color output, default: on
     --test, --no-test    run test cases, default: on
+    --reinstall          reinstall the distribution(s)/module(s) even if you already have the latest version installed
+                         do not apply to dependencies
 ```
 
 ## cpanfile options
@@ -192,6 +201,8 @@ Probably a lot at this point this is still in active development.
 - \[ \] find best location for .cpbuild root \[local dir or home dir, ... \]
 - \[ \] cplay::Index cannot find version in file bug
 - \[ \] implement timeouts
+- \[X\] update installed modules: also flag all new provided modules
+- \[X\] --force to force reinstalling an existing module
 
 # DEPENDENCIES
 

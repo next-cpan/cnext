@@ -79,13 +79,18 @@ You can read more about cplay client on the [cplay website](https://pause-play.g
 
 =head1 INSTALLATION
 
-=head2 Package management system
-
-...
-
 =head2 Installing to system perl
 
-    curl -L https://cplay.us | perl - App::cplay
+This is using cplay to install itself.
+
+    curl -L https://github.com/pause-play/cplay/raw/master/cplay | perl - App::cplay
+    curl -L https://git.io/cplay | perl - App::cplay
+
+=head2 Local installation
+
+   curl -fsSL --compressed https://github.com/pause-play/cplay/raw/master/cplay > cplay
+   chmod +x cplay
+   ./cplay --version
 
 =head1 How to use cplay
 
@@ -162,6 +167,8 @@ You could use either a module name or a distribution name.
        --refresh            force refresh the index files
        --color, --no-color  turn on/off color output, default: on
        --test, --no-test    run test cases, default: on
+       --reinstall          reinstall the distribution(s)/module(s) even if you already have the latest version installed
+                            do not apply to dependencies
 
 =head2 cpanfile options
 
@@ -221,6 +228,10 @@ Probably a lot at this point this is still in active development.
 =item * [ ] cplay::Index cannot find version in file bug
 
 =item * [ ] implement timeouts
+
+=item * [X] update installed modules: also flag all new provided modules
+
+=item * [X] --force to force reinstalling an existing module
 
 =back
 
