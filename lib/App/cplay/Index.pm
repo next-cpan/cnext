@@ -86,7 +86,7 @@ sub _check_file_versions(@files) {
 
     my $use_version;
     foreach my $file (@files) {
-        if ( open( my $fh, '<', $file ) ) {
+        if ( open( my $fh, '<:utf8', $file ) ) {
             my $has_version;
             while ( my $line = <$fh> ) {
                 if ( $line =~ m{"version"\s*:\s*(\w+)\s*,} ) {

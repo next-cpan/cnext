@@ -2,6 +2,7 @@ package App::cplay::std;
 
 use strict;
 use warnings;
+use utf8;
 
 =pod
 
@@ -23,6 +24,8 @@ sub import {
     require feature;
     feature->import(':5.20');
     feature->import('signatures');
+
+    utf8->import();
 
     warnings->unimport('experimental::signatures');
 
