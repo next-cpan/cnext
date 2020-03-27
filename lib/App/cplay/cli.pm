@@ -169,6 +169,8 @@ sub parse_options ( $self, @opts ) {
         "v|verbose" => \( $self->{verbose} ),
         "d|debug"   => \( $self->{debug} ),
 
+        "show-progress!" => \( $self->{show_progress} ),
+
         # used for cpanfile
         "feature=s@" => \@feature,
 

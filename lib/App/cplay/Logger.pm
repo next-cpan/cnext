@@ -6,6 +6,8 @@ use List::Util 'max';
 
 use Exporter 'import';
 
+$| = 1;
+
 our @EXPORT    = qw{OK DONE FAIL ERROR WARN INFO DEBUG FATAL};
 our @EXPORT_OK = ( @EXPORT, qw(fetch resolve install configure) );
 
@@ -75,15 +77,17 @@ sub log ( $self_or_class, %options ) {
         $optional = "\e[1;37m$optional\e[m" if $optional;
     }
 
-    my $r = $show_progress ? "\r" : "";
+    my $eol = $show_progress && !$options{no_progress} ? ""         : "\n";
+    my $r   = $show_progress                           ? "\r\033[K" : "";
+
     if ($verbose) {
 
         # type -> 5 + 9 + 3
         $type = $is_color && $type ? sprintf( "%-17s", $type ) : sprintf( "%-9s", $type || "" );
-        warn $r . sprintf "%s %s %s%s\n", $result, $type, $message, $optional;
+        print STDERR $r . sprintf "%s %s %s%s$eol", $result, $type, $message, $optional;
     }
     else {
-        warn $r . join( " ", map { defined $_ ? $_ : () } $result, $type, $message . $optional ) . "\n";
+        warn $r . join( " ", map { defined $_ ? $_ : () } $result, $type, $message . $optional ) . $eol;
     }
 
     return;
@@ -93,12 +97,12 @@ sub log ( $self_or_class, %options ) {
 sub OK ( $msg, @args ) {
 
     # always displayed
-    return __PACKAGE__->log( type => 'OK', message => $msg, @args );
+    return __PACKAGE__->log( type => 'OK', message => $msg, no_progress => 1, @args );
 }
 
 sub DONE ( $msg, @args ) {
     return unless $VERBOSE;
-    return __PACKAGE__->log( type => 'DONE', message => $msg, @args );
+    return __PACKAGE__->log( type => 'DONE', message => $msg, no_progress => 1, @args );
 }
 
 sub DEBUG ( $msg, @args ) {
@@ -107,21 +111,21 @@ sub DEBUG ( $msg, @args ) {
 }
 
 sub FAIL ( $msg, @args ) {
-    return __PACKAGE__->log( type => 'FAIL', message => $msg, @args );
+    return __PACKAGE__->log( type => 'FAIL', message => $msg, no_progress => 1, @args );
 }
 
 sub ERROR ( $msg, @args ) {
-    return __PACKAGE__->log( type => 'ERROR', message => $msg, @args );
+    return __PACKAGE__->log( type => 'ERROR', message => $msg, no_progress => 1, @args );
 }
 
 sub FATAL ( $msg, @args ) {
-    __PACKAGE__->log( type => 'FATAL', message => $msg, @args );
+    __PACKAGE__->log( type => 'FATAL', message => $msg, no_progress => 1, @args );
     die $msg;
 }
 
 sub WARN ( $msg, @args ) {
     return unless $VERBOSE;
-    return __PACKAGE__->log( type => 'WARN', message => $msg, @args );
+    return __PACKAGE__->log( type => 'WARN', message => $msg, no_progress => 1, @args );
 }
 
 sub INFO ( $msg, @args ) {

@@ -149,6 +149,8 @@ cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
     --no-cleanup         preserve the .cpbuild directory
 -v, --verbose            Turns on chatty output
 -d, --debug              enable --verbose and display some additional informations
+    --show-progress --no-show-progress
+                         show progress, default: on      
     --refresh            force refresh the index files
     --color, --no-color  turn on/off color output, default: on
     --test, --no-test    run test cases, default: on
