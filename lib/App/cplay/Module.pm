@@ -68,11 +68,21 @@ sub get_module_version( $module ) {
 }
 
 sub module_updated ( $module, $version ) {
-    ### FIXME
-    ## idea clear the module cache once we have install a module
-    ## do this for all provides
     die("Missing module name") unless defined $module;
 
+    # version can be undef to fake an uninstalled module
+
+    delete $CACHE{$module};
+    $GOT{$module} = $version;    # cache the version
+
+    return;
+}
+
+sub clear_module( $module ) {
+    delete $CACHE{$module};
+    delete $GOT{$module};
+
+    return;
 }
 
 sub clear_cache {

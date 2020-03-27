@@ -204,6 +204,10 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] implement timeouts
 
+=item * [ ] update installed modules: also flag all new provided modules
+
+=item * [ ] --force to force reinstalling an existing module
+
 =back
 
 =head1 DEPENDENCIES

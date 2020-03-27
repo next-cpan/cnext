@@ -183,11 +183,25 @@ sub install_repository ( $self, $repository_info ) {
     return unless $self->do_configure($name);
     return unless $self->do_install($name);
 
-    # ... FIXME also flag all new provided modules
+    $self->advertise_installed_modules($BUILD);
 
     OK("Installed distribution $name-$version");
 
     return 1;
+}
+
+sub advertise_installed_modules ( $self, $BUILD ) {
+
+    return unless ref $BUILD && ref $BUILD->{provides};
+
+    foreach my $module ( sort keys $BUILD->{provides}->%* ) {
+        my $v = $BUILD->{provides}->{$module}->{version};
+
+        #DEBUG( "$module -> $v");
+        App::cplay::Module::module_updated( $module, $v );
+    }
+
+    return;
 }
 
 =pod
