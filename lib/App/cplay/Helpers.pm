@@ -9,11 +9,12 @@ use App::cplay::Logger;
 use Exporter 'import';
 our @EXPORT_OK = qw(read_file zip);
 
-sub read_file($file) {
+sub read_file ( $file, $mode = ':utf8' ) {
     local $/;
 
-    open( my $fh, '<:utf8', $file )
+    open( my $fh, '<' . $mode, $file )
       or die "Fail to open file: $! " . join( ' ', ( caller(1) )[ 0, 1, 2, 3 ] ) . "\n";
+
     return readline($fh);
 }
 

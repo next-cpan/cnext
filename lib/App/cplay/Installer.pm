@@ -429,7 +429,8 @@ sub setup_tarball ( $self, $repository_info ) {
     # load BUILD.json
     my $BUILD;
     if ( -e 'BUILD.json' ) {
-        eval { $BUILD = $self->json->decode( read_file('BUILD.json') ); 1 }
+        eval      { $BUILD = $self->json->decode( read_file( 'BUILD.json', ':utf8' ) ); 1 }
+          or eval { $BUILD = $self->json->decode( read_file( 'BUILD.json', '' ) );      1 }
           or DEBUG("Fail to read BUILD.json $@");
     }
     else {
