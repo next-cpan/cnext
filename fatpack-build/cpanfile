@@ -9,3 +9,5 @@ requires 'JSON::PP'         => 0;
 requires 'Exporter'         => '5.59';
 requires 'HTTP::Tinyish'    => 0;
 requires 'File::pushd'      => 0;
+
+requires 'Digest::Perl::MD5' => 0; # embed method to check tarball signature

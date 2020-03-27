@@ -1,5 +1,12 @@
 # carton snapshot format: version 1.0
 DISTRIBUTIONS
+  Digest-Perl-MD5-1.9
+    pathname: D/DE/DELTA/Digest-Perl-MD5-1.9.tar.gz
+    provides:
+      Digest::Perl::MD5 1.9
+    requirements:
+      Exporter 0
+      ExtUtils::MakeMaker 0
   File-Which-1.23
     pathname: P/PL/PLICEASE/File-Which-1.23.tar.gz
     provides:
