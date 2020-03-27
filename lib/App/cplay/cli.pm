@@ -26,6 +26,8 @@ use Simple::Accessor qw{
   retry
   configure_timeout build_timeout test_timeout
 
+  check_signature
+
   refresh
   run_tests
 
@@ -57,6 +59,9 @@ sub build ( $self, %options ) {
 
     # defaults values
     my $defaults = {
+        check_signature => 1,
+
+        # --with
         with_requires   => 1,
         with_recommends => 0,
         with_suggests   => 0,
@@ -152,6 +157,8 @@ sub parse_options ( $self, @opts ) {
         "color!"            => \( $self->{color} ),
         'cleanup!'          => \( $self->{cleanup} ),
         "cache|cache-dir=s" => \( $self->{cache_dir} ),
+
+        "check-signature!" => \( $self->{check_signature} ),
 
         'test!'  => \( $self->{run_tests} ),
         'tests!' => \( $self->{run_tests} ),    # allow typo?

@@ -5,6 +5,7 @@ use App::cplay::std;
 use App::cplay;
 use App::cplay::Logger;    # import all
 use App::cplay::Module ();
+use App::cplay::Signature qw{check_signature};
 
 use App::cplay::Installer::Unpacker ();
 
@@ -414,8 +415,8 @@ sub setup_tarball ( $self, $repository_info ) {
 
     # download & extract tarball
     my $tarball = $self->download_repository($repository_info);
+    return unless defined $tarball;
 
-    ## FIXME check signature... ??
     my $relative_path = $self->unpacker->unpack($tarball);
     my $full_path     = $self->cli->build_dir . '/' . $relative_path;
     if ( !defined $relative_path || !-d $full_path ) {
@@ -455,10 +456,22 @@ sub download_repository ( $self, $repository_info ) {
     my $name = $repository_info->{repository};
     my $sha  = $repository_info->{sha};
 
-    my $local = $cli->build_dir . "/${name}.tar.gz";
-    $cli->http->mirror( $url, $local );
+    my $tarball = "${name}.tar.gz";
+    my $path    = $cli->build_dir . "/$tarball";
 
-    return $local;
+    $cli->http->mirror( $url, $path );
+
+    # check signature
+    my $signature = $repository_info->{signature};
+    if ( $self->cli->check_signature && defined $signature ) {
+        if ( !check_signature( $path, $signature ) ) {
+            ERROR("Signature mismatch for $tarball expect: $signature");
+            return;
+        }
+        DEBUG("signature OK for $tarball = $signature");
+    }
+
+    return $path;
 }
 
 sub tracking_module ( $self, $module ) {
