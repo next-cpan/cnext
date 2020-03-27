@@ -31,7 +31,7 @@ sub build ( $self, %opts ) {
 }
 
 sub _build_unpacker($self) {
-    App::cplay::Installer::Unpacker->new( tmproot => $self->cli->builddir );
+    App::cplay::Installer::Unpacker->new( tmproot => $self->cli->build_dir );
 }
 
 sub _build_json($self) {
@@ -417,7 +417,7 @@ sub setup_tarball ( $self, $repository_info ) {
 
     ## FIXME check signature... ??
     my $relative_path = $self->unpacker->unpack($tarball);
-    my $full_path     = $self->cli->builddir . '/' . $relative_path;
+    my $full_path     = $self->cli->build_dir . '/' . $relative_path;
     if ( !defined $relative_path || !-d $full_path ) {
         FAIL("fail to extract tarball $tarball");
         return;
@@ -455,7 +455,7 @@ sub download_repository ( $self, $repository_info ) {
     my $name = $repository_info->{repository};
     my $sha  = $repository_info->{sha};
 
-    my $local = $cli->builddir . "/${name}.tar.gz";
+    my $local = $cli->build_dir . "/${name}.tar.gz";
     $cli->http->mirror( $url, $local );
 
     return $local;

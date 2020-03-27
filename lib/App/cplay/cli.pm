@@ -21,7 +21,7 @@ use Cwd ();
 use Simple::Accessor qw{
   name
   http
-  cwd homedir builddir
+  cwd homedir build_dir cache_dir
   snapshot
   retry
   configure_timeout build_timeout test_timeout
@@ -83,11 +83,20 @@ sub _build_homedir {
     $ENV{HOME} or die q[HOME environmenet variable not set];
 }
 
-sub _build_builddir($self) {
-    my $path = $self->cwd . '/.cpbuild';
+# we are storing everythink in that directory
+#   can be customized using --cache-dir
+sub _build_cache_dir($self) {
+    my $path = $self->homedir . '/.cplay';
+    return $path if -d $path;
+    mkpath($path) or FATAL("Fail to create ~/.cplay cache directory directory at: $path");
+    return $path;
+}
+
+sub _build_build_dir($self) {
+    my $path = $self->cache_dir . '/build';
 
     return $path if -d $path;
-    mkpath($path) or die "fail to create .build directory at: $path";
+    mkpath($path) or die "fail to create build directory at: $path";
 
     return $path;
 }
@@ -140,9 +149,9 @@ sub parse_options ( $self, @opts ) {
     GetOptions(
 
         # used
-        "color!"    => \( $self->{color} ),
-        'cleanup!'  => \( $self->{cleanup} ),
-        "homedir=s" => \( $self->{homedir} ),
+        "color!"            => \( $self->{color} ),
+        'cleanup!'          => \( $self->{cleanup} ),
+        "cache|cache-dir=s" => \( $self->{cache_dir} ),
 
         'test!'  => \( $self->{run_tests} ),
         'tests!' => \( $self->{run_tests} ),    # allow typo?
@@ -177,10 +186,8 @@ sub parse_options ( $self, @opts ) {
         ( map $with_option->($_), @with_phases ),    # phase
     ) or exit 1;
 
-    #$self->{local_lib} = maybe_abs($self->{local_lib}, $self->{cwd}) unless $self->{global};
-    $self->{homedir}       = Cwd::abs_path( $self->homedir );
-    $self->{mirror}        = $self->normalize_mirror($mirror) if $mirror;
-    $self->{color}         = 1 if !defined $self->{color} && -t STDOUT;
+    $self->{mirror} = $self->normalize_mirror($mirror) if $mirror;
+    $self->{color}         = 1 if !defined $self->{color}         && -t STDOUT;
     $self->{show_progress} = 1 if !defined $self->{show_progress} && -t STDOUT;
 
     $self->{features} = \@feature if @feature;
@@ -192,6 +199,12 @@ sub parse_options ( $self, @opts ) {
 
     if ( $self->{sudo} ) {
         !system "sudo", $^X, "-e1" or exit 1;
+    }
+
+    if ( defined $self->{cache_dir} ) {
+        $self->{cache_dir} = Cwd::abs_path( $self->cache_dir );
+        mkpath( $self->cache_dir ) unless -d $self->cache_dir;
+        FATAL( "Cannot find cache directory at " . $self->{cache_dir} ) unless -d $self->cache_dir;
     }
 
     # debug enable verbose

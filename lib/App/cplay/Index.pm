@@ -25,14 +25,10 @@ sub setup_once ( $cli, $attempt = 1 ) {
     # check if existing index files are available
     #	refresh them if needed
 
-    my $homedir = $cli->homedir;
-
-    $_MODULES_IX_FILE           = "$homedir/.cplay." . MODULES_IX_BASENAME;
-    $_REPOSITORIES_IX_FILE      = "$homedir/.cplay." . REPOSITORIES_IX_BASENAME;
-    $_EXPLICIT_VERSIONS_IX_FILE = "$homedir/.cplay." . EXPLICIT_VERSIONS_IX_BASENAME;
-
-    # FIXME ... skip if all .ix files are < X hours
-    #				except when using the --no-cache arguement
+    my $cache_dir = $cli->cache_dir;
+    $_MODULES_IX_FILE           = "$cache_dir/" . MODULES_IX_BASENAME;
+    $_REPOSITORIES_IX_FILE      = "$cache_dir/" . REPOSITORIES_IX_BASENAME;
+    $_EXPLICIT_VERSIONS_IX_FILE = "$cache_dir/" . EXPLICIT_VERSIONS_IX_BASENAME;
 
     my @files = (
         [    # remote / local
