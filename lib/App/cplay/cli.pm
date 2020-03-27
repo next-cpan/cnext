@@ -26,10 +26,12 @@ use Simple::Accessor qw{
   retry
   configure_timeout build_timeout test_timeout
 
-  refresh debug
+  refresh
   run_tests
 
   features
+
+  reinstall debug verbose
 
   repositories_idx
   modules_idx
@@ -145,35 +147,30 @@ sub parse_options ( $self, @opts ) {
         'test!'  => \( $self->{run_tests} ),
         'tests!' => \( $self->{run_tests} ),    # allow typo?
 
-        "refresh" => \( $self->{refresh} ),
-        "debug"   => \( $self->{debug} ),
+        "refresh"   => \( $self->{refresh} ),
+        "reinstall" => \( $self->{reinstall} ),
+
+        "v|verbose" => \( $self->{verbose} ),
+        "d|debug"   => \( $self->{debug} ),
 
         # used for cpanfile
         "feature=s@" => \@feature,
 
         ### need to check
-        "L|local-lib-contained=s" => \( $self->{local_lib} ),
+        #"L|local-lib-contained=s" => \( $self->{local_lib} ),
+        #"g|global"  => \( $self->{global} ),
 
-        "g|global"  => \( $self->{global} ),
-        "mirror=s"  => \$mirror,
-        "v|verbose" => \( $self->{verbose} ),
-        "d|debug"   => \( $self->{debug} ),
+        #"snapshot=s"  => \( $self->{snapshot} ),
+        "sudo" => \( $self->{sudo} ),
 
-        "snapshot=s"  => \( $self->{snapshot} ),
-        "sudo"        => \( $self->{sudo} ),
-        "mirror-only" => \( $self->{mirror_only} ),
-        "dev"         => \( $self->{dev} ),
+        "retry!"          => \( $self->{retry} ),
+        "exclude-vendor!" => \( $self->{exclude_vendor} ),
 
-        "retry!"              => \( $self->{retry} ),
-        "exclude-vendor!"     => \( $self->{exclude_vendor} ),
         "configure-timeout=i" => \( $self->{configure_timeout} ),
         "build-timeout=i"     => \( $self->{build_timeout} ),
         "test-timeout=i"      => \( $self->{test_timeout} ),
-        "show-progress!"      => \( $self->{show_progress} ),
-        "prebuilt!"           => \( $self->{prebuilt} ),
-        "reinstall"           => \( $self->{reinstall} ),
-        "static-install!"     => \( $self->{static_install} ),
-        "with-all"            => sub {
+
+        "with-all" => sub {
             map { $self->{"with_$_"} = 1 } @with_types, @with_phases;
         },
         ( map $with_option->($_), @with_types ),     # type

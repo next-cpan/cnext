@@ -4,7 +4,7 @@ use App::cplay::std;
 
 use App::cplay;
 use App::cplay::Logger;    # import all
-use App::cplay::Module;
+use App::cplay::Module ();
 
 use App::cplay::Installer::Unpacker ();
 
@@ -15,7 +15,7 @@ use IPC::Run3 ();
 
 App::cplay::Logger->import(qw{fetch configure install resolve});
 
-use Simple::Accessor qw{cli unpacker json BUILD};
+use Simple::Accessor qw{cli unpacker json BUILD depth};
 
 use constant EXTUTILS_MAKEMAKER_MIN_VERSION => '6.64';
 
@@ -23,6 +23,7 @@ sub build ( $self, %opts ) {
 
     $self->{_tracked_modules}      = {};
     $self->{_tracked_repositories} = {};
+    $self->{depth}                 = 0;    # starts at 1;
 
     $self->{BUILD} = {};
 
@@ -49,7 +50,7 @@ sub check_makemaker($self) {
     my $module  = 'ExtUtils::MakeMaker';
     my $version = EXTUTILS_MAKEMAKER_MIN_VERSION;
 
-    return 1 if has_module_version( $module, $version );
+    return 1 if App::cplay::Module::has_module_version( $module, $version );
 
     WARN("Trying to update ExtUtils::MakeMaker");
 
@@ -64,11 +65,30 @@ sub check_makemaker($self) {
     return $ok;
 }
 
+sub has_module_version ( $self, $module, $version ) {
+
+    if ( $self->depth == 1 && $self->cli->reinstall ) {
+        DEBUG("(re)installing module $module");
+        return;
+    }
+
+    return App::cplay::Module::has_module_version( $module, $version );
+}
+
 sub install_single_module ( $self, $module ) {
     return $self->install_single_module_or_repository( $module, 0 );
 }
 
 sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_repo = 1 ) {
+
+    $self->depth( $self->depth + 1 );
+    my $ok = $self->_install_single_module_or_repository( $module_or_repository, $can_be_repo );
+    $self->depth( $self->depth - 1 );
+
+    return $ok;
+}
+
+sub _install_single_module_or_repository ( $self, $module_or_repository, $can_be_repo = 1 ) {
 
     # are we already trying to install this module?
     return 1 if $self->tracking_module($module_or_repository);
@@ -130,7 +150,7 @@ sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_
 
     # check if we already have the module available
     if ($module_info) {
-        if ( has_module_version( $module_info->{module}, $module_info->{version} ) ) {
+        if ( $self->has_module_version( $module_info->{module}, $module_info->{version} ) ) {
             my ( $m, $v ) = ( $module_info->{module}, $module_info->{version} );
             OK("$m is up to date. ($v)");
             return 1;
@@ -169,7 +189,7 @@ sub install_repository ( $self, $repository_info ) {
     # check if distribution is already installed
     if ( my $primary = $BUILD->{primary} ) {
         my $module_v = $BUILD->{provides}->{$primary}->{version};    # should not raise warnings?
-        if ( has_module_version( $primary, $module_v ) ) {
+        if ( $self->has_module_version( $primary, $module_v ) ) {
             OK("$name-$version is up to date.");
             return 1;
         }
@@ -376,7 +396,7 @@ sub resolve_dependencies ( $self, $name ) {
         foreach my $module ( sort keys %$requires_list ) {
             my $version = $requires_list->{$module};
             resolve("\t$name $type $module v$version");
-            next if has_module_version( $module, $version );
+            next if App::cplay::Module::has_module_version( $module, $version );
             DEBUG("Module $module v$version is missing");
             return unless $self->install_single_module($module);
 

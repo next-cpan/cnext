@@ -144,6 +144,8 @@ You could use either a module name or a distribution name.
        --refresh            force refresh the index files
        --color, --no-color  turn on/off color output, default: on
        --test, --no-test    run test cases, default: on
+       --reinstall          reinstall the distribution(s)/module(s) even if you already have the latest version installed
+                            do not apply to dependencies
 
 =head2 cpanfile options
 
@@ -204,9 +206,9 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] implement timeouts
 
-=item * [ ] update installed modules: also flag all new provided modules
+=item * [X] update installed modules: also flag all new provided modules
 
-=item * [ ] --force to force reinstalling an existing module
+=item * [X] --force to force reinstalling an existing module
 
 =back
 
