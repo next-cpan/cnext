@@ -162,13 +162,14 @@ You could use either a module name or a distribution name.
 =head2 Generic options
 
        --no-cleanup         preserve the .cpbuild directory
-   -v, --verbose            display more output
+   -v, --verbose            Turns on chatty output
    -d, --debug              enable --verbose and display some additional informations
        --refresh            force refresh the index files
        --color, --no-color  turn on/off color output, default: on
        --test, --no-test    run test cases, default: on
        --reinstall          reinstall the distribution(s)/module(s) even if you already have the latest version installed
                             do not apply to dependencies
+       --cache-dir, --cache specify an alternate cache directory (default: ~/.cplay)
 
 =head2 cpanfile options
 
@@ -223,7 +224,7 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] test default to t/*.t if not there
 
-=item * [ ] find best location for .cpbuild root [local dir or home dir, ... ]
+=item * [ ] use a single ~/.cplay directory for the cache ~/.cplay/
 
 =item * [ ] cplay::Index cannot find version in file bug
 
