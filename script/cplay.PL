@@ -174,6 +174,12 @@ You could use either a module name or a distribution name.
        --cache-dir, --cache specify an alternate cache directory (default: ~/.cplay)
        --no-check-signature disable signature check (default: on)
 
+       --configure-timeout  Timeout for configuring a distibution  (default: 60)
+       --build-timeout      Timeout for building a distribution    (default: 3600)
+       --test-timeout       Timeout for running tests              (default: 1800)
+       --install-timeout    Timeout forinstalling files            (default: 60)
+       use a value of '0' to disable a timeout
+
 =head2 cpanfile options
 
        --feature=identifier
@@ -222,8 +228,6 @@ Probably a lot at this point this is still in active development.
 =item * [ ] look at AcePerl and Acme BUILD.PL - configure_requires
 
 =item * [ ] test default to t/*.t if not there
-
-=item * [ ] implement timeouts
 
 =back
 

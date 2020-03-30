@@ -145,7 +145,7 @@ cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
 
 ## Generic options
 
-```
+```perl
     --no-cleanup         preserve the .cpbuild directory
 -v, --verbose            Turns on chatty output
 -d, --debug              enable --verbose and display some additional informations
@@ -158,6 +158,12 @@ cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
                          do not apply to dependencies
     --cache-dir, --cache specify an alternate cache directory (default: ~/.cplay)
     --no-check-signature disable signature check (default: on)
+
+    --configure-timeout  Timeout for configuring a distibution  (default: 60)
+    --build-timeout      Timeout for building a distribution    (default: 3600)
+    --test-timeout       Timeout for running tests              (default: 1800)
+    --install-timeout    Timeout forinstalling files            (default: 60)
+    use a value of '0' to disable a timeout
 ```
 
 ## cpanfile options
@@ -200,7 +206,6 @@ Probably a lot at this point this is still in active development.
 - \[ \] check builder type play for cplay, Build.PL and Makefile.PL...
 - \[ \] look at AcePerl and Acme BUILD.PL - configure\_requires
 - \[ \] test default to t/\*.t if not there
-- \[ \] implement timeouts
 
 # DEPENDENCIES
 

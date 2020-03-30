@@ -85,6 +85,9 @@
       "App::cplay::Installer" : {
          "file" : "lib/App/cplay/Installer.pm"
       },
+      "App::cplay::Installer::Command" : {
+         "file" : "lib/App/cplay/Installer/Command.pm"
+      },
       "App::cplay::Installer::Unpacker" : {
          "file" : "lib/App/cplay/Installer/Unpacker.pm"
       },
@@ -96,6 +99,9 @@
       },
       "App::cplay::Signature" : {
          "file" : "lib/App/cplay/Signature.pm"
+      },
+      "App::cplay::Timeout" : {
+         "file" : "lib/App/cplay/Timeout.pm"
       },
       "App::cplay::cli" : {
          "file" : "lib/App/cplay/cli.pm"
