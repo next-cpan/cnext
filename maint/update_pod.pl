@@ -25,6 +25,10 @@ sub run {
     my ( $before, $pod ) = split( $marker, $txt_cplay_pm, 2 );
     length $pod or die q[cannot find pod];
 
+    # shortcut the pod
+    ( $pod, undef ) = split( m{^=head1 Developer}m, $pod, 2 );
+    length $pod or die q[cannot find pod];
+
     # update POD in .PL file
     # remove POD from .PL
     my ( $code, $old_pod, $end ) = split( $marker, $txt_cplay_PL, 3 );
