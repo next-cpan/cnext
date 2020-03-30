@@ -201,8 +201,19 @@ sub install_repository ( $self, $repository_info ) {
     # move to the tmp directory for the next actions
     my $indir = pushd( $BUILD->{_rootdir} );
 
-    return unless $self->do_configure($name);
-    return unless $self->do_install($name);
+    my $builder_type = lc( $BUILD->{builder} // 'play' );
+    if ( $builder_type eq 'play' ) {
+        return unless $self->_builder_play($name);
+    }
+    elsif ( $builder_type eq 'makefile.pl' ) {
+        return unless $self->_builder_Makefile_PL($name);
+    }
+    elsif ( $builder_type eq 'build' ) {
+        return unless $self->_builder_Build($name);
+    }
+    else {
+        FATAL("Unknown builder type '$builder_type' for distribution '$name'");
+    }
 
     $self->advertise_installed_modules($BUILD);
 
@@ -217,12 +228,72 @@ sub advertise_installed_modules ( $self, $BUILD ) {
 
     foreach my $module ( sort keys $BUILD->{provides}->%* ) {
         my $v = $BUILD->{provides}->{$module}->{version};
-
-        #DEBUG( "$module -> $v");
         App::cplay::Module::module_updated( $module, $v );
     }
 
     return;
+}
+
+sub _builder_play ( $self, $name ) {
+    return unless $self->do_configure($name);
+    return unless $self->do_install($name);
+
+    return 1;
+}
+
+sub _builder_Makefile_PL ( $self, $name ) {
+
+    # my $BUILD = $self->BUILD->{$name} or die;
+    my $make   = App::cplay::Helpers::make_binary();
+    my @to_run = (
+        "$^X Makefile.PL",
+        $make,
+    );
+    if ( $self->cli->run_tests ) {
+        push @to_run, "$make test";
+    }
+    push @to_run, "$make install";
+
+    foreach my $action (@to_run) {
+        install("running $action");
+        my ( $status, $out, $err ) = run3($action);
+        if ( $status != 0 ) {
+            ERROR("Fail to build $name: $action");
+            WARN($out)  if defined $out;
+            ERROR($err) if defined $err;
+            return;
+        }
+        DEBUG("$action output:\n$out");
+    }
+
+    return 1;
+}
+
+sub _builder_Build ( $self, $name ) {
+
+    # my $BUILD = $self->BUILD->{$name} or die;
+    my @to_run = (
+        "$^X Build.PL",
+        "./Build",
+    );
+    if ( $self->cli->run_tests ) {
+        push @to_run, "./Build test";
+    }
+    push @to_run, "./Build install";
+
+    foreach my $action (@to_run) {
+        install("running $action");
+        my ( $status, $out, $err ) = run3($action);
+        if ( $status != 0 ) {
+            ERROR("Fail to build $name: $action");
+            WARN($out)  if defined $out;
+            ERROR($err) if defined $err;
+            return;
+        }
+        DEBUG("$action output:\n$out");
+    }
+
+    return 1;
 }
 
 =pod
@@ -254,30 +325,29 @@ sub do_install ( $self, $name ) {
     {
         install("Running make for $name");
 
-        my ( $status, $out, $err ) = run3("$make");    # FIXME which make gmake...
+        my ( $status, $out, $err ) = run3("$make");
         if ( $status != 0 ) {
             ERROR("Fail to build $name");
             WARN($out)    if defined $out;
-            ERROR("$err") if defined $out;
+            ERROR("$err") if defined $err;
             return;
         }
         DEBUG("make output:\n$out");
     }
 
     if ( $self->cli->run_tests ) {
-        install("Running Tests for $name");            # FIXME unless test are disabled
+        install("Running Tests for $name");
 
         my ( $status, $out, $err ) = run3("$make test");
         if ( $status != 0 ) {
             ERROR("Test failure from $name");
             WARN($out)    if defined $out;
-            ERROR("$err") if defined $out;
+            ERROR("$err") if defined $err;
             return;
         }
         DEBUG("Test run $name output:\n$out");
     }
 
-    # FIXME use IPC view unpacker
     {
         install("succeeds for $name");
 
@@ -285,7 +355,7 @@ sub do_install ( $self, $name ) {
         if ( $status != 0 ) {
             ERROR("Fail to install $name");
             WARN($out)    if defined $out;
-            ERROR("$err") if defined $out;
+            ERROR("$err") if defined $err;
             return;
         }
         DEBUG("Make install output $name:\n$out");
@@ -304,7 +374,7 @@ sub do_configure ( $self, $name ) {
     configure("Running Makefile.PL for $name");
     my ( $status, $out, $err ) = run3("$^X Makefile.PL");
     if ( $status != 0 ) {
-        ERROR("$err");
+        ERROR($err) if defined $err;
         return;
     }
 
@@ -351,7 +421,6 @@ EOS
     my %PMs;
 
     {    # build the PMs list
-
         my @requires_type = qw{requires_build requires_runtime};
         foreach my $type (@requires_type) {
             my $requires_list = $BUILD->{$type} // {};
