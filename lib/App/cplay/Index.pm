@@ -4,7 +4,12 @@ use App::cplay::std;    # import strict, warnings & features
 
 use App::cplay::Logger;
 
-use constant BASE_URL => q[https://pause-play.github.io/pause-index/];
+use App::cplay::Installer::Unpacker ();
+
+use constant BASE_URL => q[https://pause-play.github.io/pause-index];
+
+# tarball containing all .ix files
+use constant IDX_TARBALL_URL => q[https://github.com/pause-play/pause-index/archive/p5.tar.gz];
 
 use constant MODULES_IX_BASENAME           => 'module.idx';
 use constant REPOSITORIES_IX_BASENAME      => 'repositories.idx';
@@ -25,46 +30,56 @@ sub setup_once ( $cli, $attempt = 1 ) {
     # check if existing index files are available
     #	refresh them if needed
 
-    my $cache_dir = $cli->cache_dir;
-    $_MODULES_IX_FILE           = "$cache_dir/" . MODULES_IX_BASENAME;
-    $_REPOSITORIES_IX_FILE      = "$cache_dir/" . REPOSITORIES_IX_BASENAME;
-    $_EXPLICIT_VERSIONS_IX_FILE = "$cache_dir/" . EXPLICIT_VERSIONS_IX_BASENAME;
+    my $root = $cli->cache_dir;
+    $_MODULES_IX_FILE           = "$root/" . MODULES_IX_BASENAME;
+    $_REPOSITORIES_IX_FILE      = "$root/" . REPOSITORIES_IX_BASENAME;
+    $_EXPLICIT_VERSIONS_IX_FILE = "$root/" . EXPLICIT_VERSIONS_IX_BASENAME;
 
-    my @files = (
-        [    # remote / local
-            BASE_URL . '/' . MODULES_IX_BASENAME,
-            $_MODULES_IX_FILE,
-        ],
-        [    # remote / local
-            BASE_URL . '/' . REPOSITORIES_IX_BASENAME,
-            $_REPOSITORIES_IX_FILE,
-        ],
-        [    # remote / local
-            BASE_URL . '/' . EXPLICIT_VERSIONS_IX_BASENAME,
-            $_EXPLICIT_VERSIONS_IX_FILE,
-        ],
-    );
-
-    my $http = $cli->http;
+    my @all_ix_files_basename = ( MODULES_IX_BASENAME, REPOSITORIES_IX_BASENAME, EXPLICIT_VERSIONS_IX_BASENAME );
+    my @all_ix_files          = ( $_MODULES_IX_FILE, $_REPOSITORIES_IX_FILE, $_EXPLICIT_VERSIONS_IX_FILE );
 
     my $now = time;
 
     INFO("Check and refresh cplay index files.");
-    foreach my $list (@files) {
-        my ( $remote, $local ) = @$list;
+    my $force_refresh = $cli->refresh;
+    if ( !$force_refresh ) {
+        foreach my $file (@all_ix_files) {
+            if ( !-e $file ) {
+                $force_refresh = 1;
+                last;
+            }
 
-        if ( -e $local ) {
-            my $mtime = ( stat($local) )[9];
-            if ( $cli->refresh || ( $now - $mtime ) > REFRESH_TIMEOUT ) {
-                DEBUG("clearing index file $local");
-                unlink($local);
+            my $mtime = ( stat($file) )[9];
+            if ( ( $now - $mtime ) > REFRESH_TIMEOUT ) {
+                DEBUG("clearing index file $file");
+                unlink($file);
+                $force_refresh = 1;
             }
         }
-
-        $http->mirror( $remote, $local );    # downloading files if needed
     }
 
-    my @all_ix_files = ( $_MODULES_IX_FILE, $_REPOSITORIES_IX_FILE, $_EXPLICIT_VERSIONS_IX_FILE );
+    if ($force_refresh) {
+        my $http       = $cli->http;
+        my $ix_tarball = $cli->cache_dir . '/p5.tar.gz';
+        unlink $ix_tarball if $attempt > 1;
+
+        App::cplay::Logger::fetch(IDX_TARBALL_URL);
+        $http->mirror( IDX_TARBALL_URL, $ix_tarball );
+        my $unpacker = App::cplay::Installer::Unpacker->new( tmproot => $cli->build_dir );
+
+        my $cd = $cli->cache_dir;
+
+        my $relative_path = $unpacker->unpack($ix_tarball);
+        FATAL( "Fail to extra index tarball: " . IDX_TARBALL_URL ) unless defined $relative_path;
+
+        require File::Copy;
+        foreach my $f (@all_ix_files_basename) {
+            my $tmp = $cli->build_dir . '/' . $relative_path . '/' . $f;
+            FATAL( "File '$f' is not part of tarball " . IDX_TARBALL_URL ) unless -f $tmp;
+            File::Copy::move( $tmp, "$root/$f" ) or FATAL("Fail to move index file '$f' to '$root/$f'");
+        }
+    }
+
     if ( !_check_file_versions(@all_ix_files) ) {
         if ( $attempt >= 2 ) {
             FATAL("index files versions mismatch");
