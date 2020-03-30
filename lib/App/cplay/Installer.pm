@@ -11,6 +11,8 @@ use App::cplay::Installer::Unpacker ();
 
 use App::cplay::Helpers qw{read_file};
 
+use App::cplay::Installer::Command ();
+
 use File::pushd;
 use IPC::Run3 ();
 
@@ -242,28 +244,41 @@ sub _builder_play ( $self, $name ) {
 }
 
 sub _builder_Makefile_PL ( $self, $name ) {
+    my $make = App::cplay::Helpers::make_binary();
 
-    # my $BUILD = $self->BUILD->{$name} or die;
-    my $make   = App::cplay::Helpers::make_binary();
-    my @to_run = (
-        "$^X Makefile.PL",
-        $make,
+    my @cmds;
+    push @cmds, App::cplay::Installer::Command->new(
+        type    => 'configure',
+        txt     => "perl Makefile.PL",
+        cmd     => "$^X Makefile.PL",
+        timeout => $self->cli->configure_timeout,
     );
-    if ( $self->cli->run_tests ) {
-        push @to_run, "$make test";
-    }
-    push @to_run, "$make install";
 
-    foreach my $action (@to_run) {
-        install("running $action");
-        my ( $status, $out, $err ) = run3($action);
-        if ( $status != 0 ) {
-            ERROR("Fail to build $name: $action");
-            WARN($out)  if defined $out;
-            ERROR($err) if defined $err;
-            return;
-        }
-        DEBUG("$action output:\n$out");
+    push @cmds, App::cplay::Installer::Command->new(
+        type    => 'build',
+        txt     => "make",
+        cmd     => $make,
+        timeout => $self->cli->build_timeout,
+    );
+
+    if ( $self->cli->run_tests ) {
+        push @cmds, App::cplay::Installer::Command->new(
+            type    => 'test',
+            txt     => "make test",
+            cmd     => "$make test",
+            timeout => $self->cli->test_timeout,
+        );
+    }
+
+    push @cmds, App::cplay::Installer::Command->new(
+        type    => 'install',
+        txt     => "make install",
+        cmd     => "$make install",
+        timeout => $self->cli->install_timeout,
+    );
+
+    foreach my $cmd (@cmds) {
+        return unless $cmd->run();
     }
 
     return 1;
@@ -271,26 +286,36 @@ sub _builder_Makefile_PL ( $self, $name ) {
 
 sub _builder_Build ( $self, $name ) {
 
-    # my $BUILD = $self->BUILD->{$name} or die;
-    my @to_run = (
-        "$^X Build.PL",
-        "./Build",
+    my @cmds;
+    push @cmds, App::cplay::Installer::Command->new(
+        type    => 'configure',
+        txt     => "perl Build.PL",
+        cmd     => "$^X Build.PL",
+        timeout => $self->cli->configure_timeout,
     );
-    if ( $self->cli->run_tests ) {
-        push @to_run, "./Build test";
-    }
-    push @to_run, "./Build install";
 
-    foreach my $action (@to_run) {
-        install("running $action");
-        my ( $status, $out, $err ) = run3($action);
-        if ( $status != 0 ) {
-            ERROR("Fail to build $name: $action");
-            WARN($out)  if defined $out;
-            ERROR($err) if defined $err;
-            return;
-        }
-        DEBUG("$action output:\n$out");
+    push @cmds, App::cplay::Installer::Command->new(
+        type    => 'build',
+        cmd     => "./Build",
+        timeout => $self->cli->configure_timeout,
+    );
+
+    if ( $self->cli->run_tests ) {
+        push @cmds, App::cplay::Installer::Command->new(
+            type    => 'test',
+            cmd     => "./Build test",
+            timeout => $self->cli->test_timeout,
+        );
+    }
+
+    push @cmds, App::cplay::Installer::Command->new(
+        type    => 'install',
+        cmd     => "./Build install",
+        timeout => $self->cli->install_timeout,
+    );
+
+    foreach my $cmd (@cmds) {
+        return unless $cmd->run();
     }
 
     return 1;

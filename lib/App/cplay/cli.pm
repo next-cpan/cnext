@@ -24,7 +24,7 @@ use Simple::Accessor qw{
   cwd homedir build_dir cache_dir
   snapshot
   retry
-  configure_timeout build_timeout test_timeout
+  configure_timeout build_timeout test_timeout install_timeout
 
   check_signature
 
@@ -120,6 +120,7 @@ sub DESTROY($self) {
 
 sub _build_retry             { 1 }
 sub _build_configure_timeout { 60 }
+sub _build_install_timeout   { 60 }
 sub _build_build_timeout     { 3_600 }
 sub _build_test_timeout      { 1_800 }
 
@@ -187,6 +188,7 @@ sub parse_options ( $self, @opts ) {
         "configure-timeout=i" => \( $self->{configure_timeout} ),
         "build-timeout=i"     => \( $self->{build_timeout} ),
         "test-timeout=i"      => \( $self->{test_timeout} ),
+        "install-timeout=i"   => \( $self->{install_timeout} ),
 
         "with-all" => sub {
             map { $self->{"with_$_"} = 1 } @with_types, @with_phases;

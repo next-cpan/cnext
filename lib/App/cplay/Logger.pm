@@ -9,7 +9,7 @@ use Exporter 'import';
 $| = 1;
 
 our @EXPORT    = qw{OK DONE FAIL ERROR WARN INFO DEBUG FATAL};
-our @EXPORT_OK = ( @EXPORT, qw(fetch resolve install configure) );
+our @EXPORT_OK = ( @EXPORT, qw(fetch resolve install configure build test) );
 
 our $COLOR;
 our $VERBOSE;
@@ -32,6 +32,8 @@ my %color = (
     resolve   => COLOR_YELLOW,
     fetch     => COLOR_BLUE,
     configure => COLOR_PURPLE,
+    build     => COLOR_PURPLE,
+    test      => COLOR_PURPLE,
     install   => COLOR_CYAN,
     FAIL      => COLOR_RED,
     ERROR     => COLOR_RED,      # maybe merge with FAIL ?
@@ -151,6 +153,16 @@ sub configure ( $msg, @args ) {
 sub install ( $msg, @args ) {
     return unless $VERBOSE;
     return __PACKAGE__->log( type => 'install', message => $msg, @args );
+}
+
+sub build ( $msg, @args ) {
+    return unless $VERBOSE;
+    return __PACKAGE__->log( type => 'build', message => $msg, @args );
+}
+
+sub test ( $msg, @args ) {
+    return unless $VERBOSE;
+    return __PACKAGE__->log( type => 'test', message => $msg, @args );
 }
 
 1;
