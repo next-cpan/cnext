@@ -211,15 +211,11 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] write some tests
 
-=item * [ ] download the .idx tarball rather than the files themselves
-
 =item * [ ] prefer a quick file read/scan?
 
 =item * [ ] log output to file
 
 =item * [ ] improve IPC::run3 and isolate it to its own module
-
-=item * [X] check tarball signature
 
 =item * [ ] check builder type play for cplay, Build.PL and Makefile.PL...
 
@@ -227,15 +223,7 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] test default to t/*.t if not there
 
-=item * [X] use a single ~/.cplay directory for the cache ~/.cplay/
-
-=item * [X] cplay::Index cannot find version in file bug
-
 =item * [ ] implement timeouts
-
-=item * [X] update installed modules: also flag all new provided modules
-
-=item * [X] --force to force reinstalling an existing module
 
 =back
 

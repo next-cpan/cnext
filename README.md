@@ -194,19 +194,13 @@ Probably a lot at this point this is still in active development.
 - \[ \] setup GitHub pages
 - \[ \] write some pod/doc
 - \[ \] write some tests
-- \[ \] download the .idx tarball rather than the files themselves
 - \[ \] prefer a quick file read/scan?
 - \[ \] log output to file
 - \[ \] improve IPC::run3 and isolate it to its own module
-- \[X\] check tarball signature
 - \[ \] check builder type play for cplay, Build.PL and Makefile.PL...
 - \[ \] look at AcePerl and Acme BUILD.PL - configure\_requires
 - \[ \] test default to t/\*.t if not there
-- \[X\] use a single ~/.cplay directory for the cache ~/.cplay/
-- \[X\] cplay::Index cannot find version in file bug
 - \[ \] implement timeouts
-- \[X\] update installed modules: also flag all new provided modules
-- \[X\] --force to force reinstalling an existing module
 
 # DEPENDENCIES
 
