@@ -31,14 +31,12 @@ sub run {
 
     # update POD in .PL file
     # remove POD from .PL
-    my ( $code, $old_pod, $end ) = split( $marker, $txt_cplay_PL, 3 );
-    die "nothing after POD in .PL file" unless length $end;
+    my ( $code, $old_pod ) = split( $marker, $txt_cplay_PL );
 
     my $txt = $code       # .
       . $marker . "\n"    # .
       . $pod . "\n"       # .
-      . "$marker\n"       # .
-      . $end;
+      ;
 
     File::Slurper::write_text( $cplay_PL, $txt );
 

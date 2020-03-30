@@ -198,13 +198,3 @@ You could use either a module name or a distribution name.
          specify types/phases of dependencies in cpanfile to be installed
 
 
-## __CPLAY_POD_MARKER__
-
-
-
-__END__
-
-TODO
-
-- support for cpanfile
-- support for sudo
