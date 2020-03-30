@@ -229,7 +229,20 @@ sub advertise_installed_modules ( $self, $BUILD ) {
 ## play builder workflow
 
 - prove t/*.t
+
+tests entries from
+    https://github.com/pause-play/Abstract-Meta-Class/blob/p5/BUILD.json
+
+- assume that t/boilerplate.t is banned.
+
 - cp lib/* -> Config{sitelib}# or soemthing else on demand --args
+
+
+BUILD.json
+- requires_develop ??
+- recommends ???
+    perl version ?
+
 
 =cut
 
@@ -388,6 +401,9 @@ sub resolve_dependencies ( $self, $name ) {
 
     # FIXME is the list complete ? more .. maybe some conditionals
     my @order = qw{requires_build requires_runtime};
+
+    # requires_develop recommends
+    # maybe --with-recommends
     ## --no-tests -n requires_test
 
     foreach my $type (@order) {
