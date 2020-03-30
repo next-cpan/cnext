@@ -199,6 +199,8 @@ sub parse_options ( $self, @opts ) {
     $self->{color}         = 1 if !defined $self->{color}         && -t STDOUT;
     $self->{show_progress} = 1 if !defined $self->{show_progress} && -t STDOUT;
 
+    $self->{show_progress} = 0 if $self->debug;      # no progress on debug
+
     $self->{features} = \@feature if @feature;
 
     $self->run_tests(1) unless defined $self->{run_tests};
