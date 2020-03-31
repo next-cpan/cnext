@@ -72,6 +72,41 @@ note "Testing cplay install for module $module";
 }
 
 {
+    note "requesting a specific version";
+    remove_module($module);
+    cplay(
+        args => [ $distribution . '@0.003' ],
+        exit => 0,
+        test => sub($out) {
+            my $lines = [ split( /\n/, $out->{output} ) ];
+            is $lines => array {
+                item match qr{OK Installed distribution A1z-Html};
+                end;
+            }, "distribution installed";
+        },
+    );
+    ok is_module_installed($module), "module is now installed";
+}
+
+{
+    note "requesting a specific version - missing";
+    remove_module($module);
+    cplay(
+        args => [ $distribution . '@0.00666' ],
+        exit => 256,
+        test => sub($out) {
+            my $lines = [ split( /\n/, $out->{output} ) ];
+            is $lines => array {
+                item match qr{FAIL\s+\QCannot find distribution A1z-Html@0.00666\E};
+                item match qr{FAIL\s+\QFail to install A1z-Html@0.00666\E};
+                end;
+            }, "distribution installed";
+        },
+    );
+    ok !is_module_installed($module), "module is not installed";
+}
+
+{
     remove_module($module);
     cplay(
         args => [$distribution],
