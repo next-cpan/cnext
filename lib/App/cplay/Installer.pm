@@ -242,7 +242,7 @@ sub _builder_Makefile_PL ( $self, $name ) {
     push @cmds, App::cplay::Installer::Command->new(
         type    => 'configure',
         txt     => "perl Makefile.PL",
-        cmd     => "$^X Makefile.PL",
+        cmd     => [ $^X, "Makefile.PL" ],
         timeout => $self->cli->configure_timeout,
     );
 
@@ -257,7 +257,7 @@ sub _builder_Makefile_PL ( $self, $name ) {
         push @cmds, App::cplay::Installer::Command->new(
             type    => 'test',
             txt     => "make test",
-            cmd     => "$make test",
+            cmd     => [ $make, "test" ],
             timeout => $self->cli->test_timeout,
         );
     }
@@ -265,7 +265,7 @@ sub _builder_Makefile_PL ( $self, $name ) {
     push @cmds, App::cplay::Installer::Command->new(
         type    => 'install',
         txt     => "make install",
-        cmd     => "$make install",
+        cmd     => [ $make, "install" ],
         timeout => $self->cli->install_timeout,
     );
 
@@ -282,7 +282,7 @@ sub _builder_Build ( $self, $name ) {
     push @cmds, App::cplay::Installer::Command->new(
         type    => 'configure',
         txt     => "perl Build.PL",
-        cmd     => "$^X Build.PL",
+        cmd     => [ $^X, "Build.PL" ],
         timeout => $self->cli->configure_timeout,
     );
 
@@ -295,14 +295,14 @@ sub _builder_Build ( $self, $name ) {
     if ( $self->cli->run_tests ) {
         push @cmds, App::cplay::Installer::Command->new(
             type    => 'test',
-            cmd     => "./Build test",
+            cmd     => [ "./Build", "test" ],
             timeout => $self->cli->test_timeout,
         );
     }
 
     push @cmds, App::cplay::Installer::Command->new(
         type    => 'install',
-        cmd     => "./Build install",
+        cmd     => [ "./Build", "install" ],
         timeout => $self->cli->install_timeout,
     );
 

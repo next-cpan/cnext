@@ -9,10 +9,15 @@ use Simple::Accessor qw{type txt cmd timeout};
 
 use App::cplay::IPC ();
 
-sub _build_type       { 'install' }
-sub _build_txt($self) { $self->cmd }
-sub _build_cmd        { FATAL("cmd not defined for Command") }
-sub _build_timeout    { 0 }
+sub _build_type    { 'install' }
+sub _build_cmd     { FATAL("cmd not defined for Command") }
+sub _build_timeout { 0 }
+
+sub _build_txt($self) {
+    return $self->cmd unless ref $self->cmd;
+
+    return join( ' ', $self->cmd->@* );
+}
 
 sub run($self) {
     my $type = $self->type;
