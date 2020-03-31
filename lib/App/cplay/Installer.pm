@@ -441,6 +441,13 @@ EOS
         }
     }
 
+    my $tests = 't/*.t';    # default tests to run
+    if (   defined $BUILD->{tests}
+        && ref $BUILD->{tests} eq 'ARRAY'
+        && scalar $BUILD->{tests}->@* ) {
+        $tests = join( ' ', $BUILD->{tests}->@* );
+    }
+
     open( my $fh, '>', 'Makefile.PL' ) or die "Fail to open Makefile.PL $!";
 
     my %v = (
@@ -453,7 +460,7 @@ EOS
         PRIMARY  => _sanity( $BUILD->{primary} ),
         VERSION  => _sanity( $BUILD->{version} ),
 
-        TESTS => 't/*.t',    # FIXME read the BUILD.json file to get the list [ default to t/*.t ]
+        TESTS => $tests,
 
         PREREQ_PM     => $PMs{requires_runtime},
         TEST_REQUIRES => $PMs{requires_build},
