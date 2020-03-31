@@ -4,18 +4,12 @@ package App::cplay::Installer::Unpacker;
 
 use App::cplay::std;
 
+use App::cplay::IPC ();
+
 use File::Basename ();
 use File::Temp     ();
 use File::Which    ();
-use IPC::Run3      ();
 use File::pushd;
-
-sub run3 ( $cmd, $outfile = undef ) {
-    my $out;
-    IPC::Run3::run3 $cmd, \undef, ( $outfile ? $outfile : \$out ), \my $err;
-
-    return ( $?, $out, $err );
-}
 
 sub new ( $class, %argv ) {
     my $self = bless \%argv, $class;
@@ -26,8 +20,6 @@ sub new ( $class, %argv ) {
 }
 
 sub unpack ( $self, $file ) {
-
-    #my $method = $file =~ /\.zip$/ ? $self->{method}{unzip} : $self->{method}{untar};
     my $method = $self->{method}{untar};
 
     my $dir;
@@ -36,19 +28,10 @@ sub unpack ( $self, $file ) {
     return $self->can($method)->( $self, $file );
 }
 
-# sub describe {
-#     my $self = shift;
-#     +{
-#         map { ($_, $self->{$_}) }
-#         grep $self->{$_},
-#         qw(tar gzip bzip2 Archive::Tar unzip Archive::Zip),
-#     };
-# }
-
 sub _init_untar($self) {
     my $tar = $self->{tar} = File::Which::which('gtar') || File::Which::which("tar");
     if ($tar) {
-        my ( $exit, $out, $err ) = run3 [ $tar, '--version' ];
+        my ( $exit, $out, $err ) = App::cplay::IPC::run3 [ $tar, '--version' ];
         $self->{tar_kind} = $out      =~ /bsdtar/ ? "bsd" : "gnu";
         $self->{tar_bad}  = 1 if $out =~ /GNU.*1\.13/i || $^O eq 'MSWin32' || $^O eq 'solaris' || $^O eq 'hpux';
     }
@@ -82,10 +65,10 @@ sub _untar ( $self, $file ) {
     my ( $exit, $out, $err );
     {
         my $ar = $file =~ /\.bz2$/ ? 'j' : 'z';
-        ( $exit, $out, $err ) = run3 [ $self->{tar}, "${ar}tf", $file ];
+        ( $exit, $out, $err ) = App::cplay::IPC::run3 [ $self->{tar}, "${ar}tf", $file ];
         last if $exit != 0;
         my $root = $self->_find_tarroot( split /\r?\n/, $out );
-        ( $exit, $out, $err ) = run3 [ $self->{tar}, "${ar}xf", $file, "-o" ];
+        ( $exit, $out, $err ) = App::cplay::IPC::run3 [ $self->{tar}, "${ar}xf", $file, "-o" ];
         return $root if $exit == 0 and -d $root;
     }
     return if !$wantarray;
@@ -98,15 +81,15 @@ sub _untar_bad ( $self, $file ) {
     {
         my $ar   = $file =~ /\.bz2$/ ? $self->{bzip2} : $self->{gzip};
         my $temp = File::Temp->new( SUFFIX => '.tar', EXLOCK => 0 );
-        ( $exit, $out, $err ) = run3 [ $ar, "-dc", $file ], $temp->filename;
+        ( $exit, $out, $err ) = App::cplay::IPC::run3 [ $ar, "-dc", $file ], $temp->filename;
         last if $exit != 0;
 
         # XXX /usr/bin/tar: Cannot connect to C: resolve failed
         my @opt = $^O eq 'MSWin32' && $self->{tar_kind} ne "bsd" ? ('--force-local') : ();
-        ( $exit, $out, $err ) = run3 [ $self->{tar}, @opt, "-tf", $temp->filename ];
+        ( $exit, $out, $err ) = App::cplay::IPC::run3 [ $self->{tar}, @opt, "-tf", $temp->filename ];
         last if $exit != 0 || !$out;
         my $root = $self->_find_tarroot( split /\r?\n/, $out );
-        ( $exit, $out, $err ) = run3 [ $self->{tar}, @opt, "-xf", $temp->filename, "-o" ];
+        ( $exit, $out, $err ) = App::cplay::IPC::run3 [ $self->{tar}, @opt, "-xf", $temp->filename, "-o" ];
         return $root if $exit == 0 and -d $root;
     }
     return if !$wantarray;

@@ -8,13 +8,13 @@ use App::cplay::Module ();
 use App::cplay::Signature qw{check_signature};
 
 use App::cplay::Installer::Unpacker ();
+use App::cplay::IPC                 ();
 
 use App::cplay::Helpers qw{read_file};
 
 use App::cplay::Installer::Command ();
 
 use File::pushd;
-use IPC::Run3 ();
 
 App::cplay::Logger->import(qw{fetch configure install resolve});
 
@@ -39,14 +39,6 @@ sub _build_unpacker($self) {
 
 sub _build_json($self) {
     JSON::PP->new->utf8->allow_nonref;
-}
-
-# FIXME to improve: logfile and output...
-sub run3 ( $cmd, $outfile = undef ) {    # FIXME maybe move to helpers
-    my $out;
-    IPC::Run3::run3 $cmd, \undef, ( $outfile ? $outfile : \$out ), \my $err;
-
-    return ( $?, $out, $err );
 }
 
 sub check_makemaker($self) {
@@ -350,7 +342,7 @@ sub do_install ( $self, $name ) {
     {
         install("Running make for $name");
 
-        my ( $status, $out, $err ) = run3("$make");
+        my ( $status, $out, $err ) = App::cplay::IPC::run3("$make");
         if ( $status != 0 ) {
             ERROR("Fail to build $name");
             WARN($out)    if defined $out;
@@ -363,7 +355,7 @@ sub do_install ( $self, $name ) {
     if ( $self->cli->run_tests ) {
         install("Running Tests for $name");
 
-        my ( $status, $out, $err ) = run3("$make test");
+        my ( $status, $out, $err ) = App::cplay::IPC::run3("$make test");
         if ( $status != 0 ) {
             ERROR("Test failure from $name");
             WARN($out)    if defined $out;
@@ -376,7 +368,7 @@ sub do_install ( $self, $name ) {
     {
         install("succeeds for $name");
 
-        my ( $status, $out, $err ) = run3("$make install");
+        my ( $status, $out, $err ) = App::cplay::IPC::run3("$make install");
         if ( $status != 0 ) {
             ERROR("Fail to install $name");
             WARN($out)    if defined $out;
@@ -397,7 +389,7 @@ sub do_configure ( $self, $name ) {
     $self->generate_makefile_pl($BUILD);
 
     configure("Running Makefile.PL for $name");
-    my ( $status, $out, $err ) = run3("$^X Makefile.PL");
+    my ( $status, $out, $err ) = App::cplay::IPC::run3("$^X Makefile.PL");
     if ( $status != 0 ) {
         ERROR($err) if defined $err;
         return;

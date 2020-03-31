@@ -7,7 +7,7 @@ use App::cplay::Timeout ();
 
 use Simple::Accessor qw{type txt cmd timeout};
 
-use IPC::Run3 ();       # FIXME our own IPC
+use App::cplay::IPC ();
 
 sub _build_type       { 'install' }
 sub _build_txt($self) { $self->cmd }
@@ -21,7 +21,7 @@ sub run($self) {
     $log_type->( "running " . $self->txt );
 
     my ( $status, $out, $err );
-    my $todo = sub { ( $status, $out, $err ) = run3( $self->cmd ) };
+    my $todo = sub { ( $status, $out, $err ) = App::cplay::IPC::run3( $self->cmd ) };
 
     if ( $self->timeout ) {
         App::cplay::Timeout->new(
@@ -44,14 +44,6 @@ sub run($self) {
     DEBUG( $self->txt . " output:\n$out" );
 
     return 1;
-}
-
-# FIXME to improve: logfile and output...
-sub run3 ( $cmd, $outfile = undef ) {    # FIXME maybe move to helpers
-    my $out;
-    IPC::Run3::run3 $cmd, \undef, ( $outfile ? $outfile : \$out ), \my $err;
-
-    return ( $?, $out, $err );
 }
 
 1;
