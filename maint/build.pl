@@ -54,6 +54,8 @@ my $fatpack_compact;
     find( { wanted => $want, no_chdir => 1 }, "fatlib", "lib" );
     system 'perlstrip', '--cache', '-v', @files;
 
+    unlink "lib/App/cplay/Tester.pm";    # remove Tester from fatpack
+
     $fatpack_compact = qx{fatpack file};
 }
 
@@ -61,7 +63,7 @@ generate_file( 'script/cplay.PL', "cplay", $fatpack_compact );
 chmod 0755, "cplay";
 
 my $perltidy = qx{which perltidy};
-if ( $? == 0 && length $perltidy ) {    # probably want to add a '# notidy file tag'
+if ( $? == 0 && length $perltidy ) {     # probably want to add a '# notidy file tag'
     chomp $perltidy if $perltidy;
     `$perltidy script/cplay.PL && mv script/cplay.PL.tdy script/cplay.PL`;
     `$perltidy cplay && mv cplay.tdy cplay`;

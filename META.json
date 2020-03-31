@@ -30,12 +30,6 @@
          }
       },
       "develop" : {
-         "requires" : {
-            "Dist::Milla" : "v1.0.20",
-            "Test::Pod" : "1.41"
-         }
-      },
-      "runtime" : {
          "recommends" : {
             "Archive::Tar" : "0",
             "Archive::Zip" : "0",
@@ -47,15 +41,29 @@
          "requires" : {
             "App::FatPacker" : "0",
             "Carton::Snapshot" : "0",
+            "Dist::Milla" : "v1.0.20",
             "File::Slurper" : "0",
             "JSON" : "0",
             "Module::Build::Tiny" : "0.039",
             "Module::Install" : "0",
             "Perl::Strip" : "0",
-            "Test::More" : "0",
+            "Test::Pod" : "1.41",
             "Test::Requires" : "0",
-            "Tie::File" : "0",
-            "perl" : "5.008001"
+            "Tie::File" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "perl" : "5.018"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test2::Bundle::Extended" : "0",
+            "Test2::Harness" : "1.000015",
+            "Test2::Plugin::NoWarnings" : "0",
+            "Test2::Tools::Explain" : "0",
+            "Test::More" : "0"
          }
       }
    },
@@ -102,6 +110,9 @@
       },
       "App::cplay::Signature" : {
          "file" : "lib/App/cplay/Signature.pm"
+      },
+      "App::cplay::Tester" : {
+         "file" : "lib/App/cplay/Tester.pm"
       },
       "App::cplay::Timeout" : {
          "file" : "lib/App/cplay/Timeout.pm"

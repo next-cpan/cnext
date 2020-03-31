@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use 5.008001;
+use 5.018;
 
 use ExtUtils::MakeMaker;
 
@@ -27,35 +27,26 @@ my %WriteMakefileArgs = (
     "DISTNAME"           => "App-cplay",
     "EXE_FILES"          => ["bin/cplay"],
     "LICENSE"            => "perl",
-    "MIN_PERL_VERSION"   => "5.008001",
+    "MIN_PERL_VERSION"   => "5.018",
     "NAME"               => "App::cplay",
-    "PREREQ_PM"          => {
-        "App::FatPacker"      => 0,
-        "Carton::Snapshot"    => 0,
-        "File::Slurper"       => 0,
-        "JSON"                => 0,
-        "Module::Build::Tiny" => "0.039",
-        "Module::Install"     => 0,
-        "Perl::Strip"         => 0,
-        "Test::More"          => 0,
-        "Test::Requires"      => 0,
-        "Tie::File"           => 0
+    "PREREQ_PM"          => {},
+    "TEST_REQUIRES"      => {
+        "Test2::Bundle::Extended"   => 0,
+        "Test2::Harness"            => "1.000015",
+        "Test2::Plugin::NoWarnings" => 0,
+        "Test2::Tools::Explain"     => 0,
+        "Test::More"                => 0
     },
     "VERSION" => "0.0001",
-    "test"    => { "TESTS" => "" }
+    "test"    => { "TESTS" => "t/integration/*.t" }
 );
 
 my %FallbackPrereqs = (
-    "App::FatPacker"      => 0,
-    "Carton::Snapshot"    => 0,
-    "File::Slurper"       => 0,
-    "JSON"                => 0,
-    "Module::Build::Tiny" => "0.039",
-    "Module::Install"     => 0,
-    "Perl::Strip"         => 0,
-    "Test::More"          => 0,
-    "Test::Requires"      => 0,
-    "Tie::File"           => 0
+    "Test2::Bundle::Extended"   => 0,
+    "Test2::Harness"            => "1.000015",
+    "Test2::Plugin::NoWarnings" => 0,
+    "Test2::Tools::Explain"     => 0,
+    "Test::More"                => 0
 );
 
 unless ( eval { ExtUtils::MakeMaker->VERSION(6.63_03) } ) {
