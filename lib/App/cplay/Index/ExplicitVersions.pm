@@ -20,8 +20,7 @@ sub _build_json($self) {
 }
 
 sub _build_template_url($self) {
-
-    #$self->cache->{template_url} or die;
+    ...;
 }
 
 sub _build_columns($self) {    # fast parse version
@@ -67,11 +66,7 @@ sub search ( $self, $repository_or_module, $version = undef, $can_be_module = 1,
 
     return unless $can_be_repo || $can_be_module;
 
-    #return unless defined $module;
-
     INFO( "explicit versions search for $repository_or_module / " . ( $version // 'undef' ) );
-
-    #return unless my $cache = $self->cache;
 
     my $module_ix             = $self->columns->{module};
     my $version_ix            = $self->columns->{version};
