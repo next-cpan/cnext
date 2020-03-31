@@ -16,6 +16,8 @@ use App::cplay::Tester;
 my $module       = q[A1z::Html];
 my $distribution = q[A1z-Html];
 
+note "Testing cplay install for module $module";
+
 {
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
