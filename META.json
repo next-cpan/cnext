@@ -108,6 +108,9 @@
       "App::cplay::Module" : {
          "file" : "lib/App/cplay/Module.pm"
       },
+      "App::cplay::Roles::JSON" : {
+         "file" : "lib/App/cplay/Roles/JSON.pm"
+      },
       "App::cplay::Signature" : {
          "file" : "lib/App/cplay/Signature.pm"
       },

@@ -18,7 +18,9 @@ use File::pushd;
 
 App::cplay::Logger->import(qw{fetch configure install resolve});
 
-use Simple::Accessor qw{cli unpacker json BUILD depth};
+use Simple::Accessor qw{cli unpacker BUILD depth};
+
+with 'App::cplay::Roles::JSON';
 
 use constant EXTUTILS_MAKEMAKER_MIN_VERSION => '6.64';
 
@@ -35,10 +37,6 @@ sub build ( $self, %opts ) {
 
 sub _build_unpacker($self) {
     App::cplay::Installer::Unpacker->new( tmproot => $self->cli->build_dir );
-}
-
-sub _build_json($self) {
-    JSON::PP->new->utf8->allow_nonref;
 }
 
 sub check_makemaker($self) {
@@ -382,7 +380,7 @@ sub do_configure ( $self, $name ) {
     configure("Running Makefile.PL for $name");
     my ( $status, $out, $err ) = App::cplay::IPC::run3( [ $^X, "Makefile.PL" ] );
     if ( $status != 0 ) {
-        ERROR($err) if defined $err;
+        ERROR($err) if defind $err;
         return;
     }
 

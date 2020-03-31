@@ -6,8 +6,9 @@ use App::cplay::Index;
 use App::cplay::Helpers qw{read_file zip};
 use App::cplay::Logger;    # import all
 
-use JSON::PP ();
-use Simple::Accessor qw{file cli cache json columns template_url};
+use Simple::Accessor qw{file cli cache columns template_url};
+
+with 'App::cplay::Roles::JSON';
 
 sub build ( $self, %opts ) {
 
@@ -19,10 +20,6 @@ sub build ( $self, %opts ) {
 # naive solution for now read the whole cache
 sub _build_cache($self) {
     return $self->json->decode( read_file( $self->file ) );
-}
-
-sub _build_json($self) {
-    return JSON::PP->new->utf8->allow_nonref;
 }
 
 sub _build_template_url($self) {
