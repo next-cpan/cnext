@@ -37,6 +37,7 @@ my %color = (
     install   => COLOR_CYAN,
     FAIL      => COLOR_RED,
     ERROR     => COLOR_RED,      # maybe merge with FAIL ?
+    STDERROR  => COLOR_RED,      # output from IPC
     FATAL     => COLOR_RED,
     DONE      => COLOR_GREEN,
     OK        => COLOR_GREEN,
@@ -118,6 +119,11 @@ sub FAIL ( $msg, @args ) {
 
 sub ERROR ( $msg, @args ) {
     return __PACKAGE__->log( type => 'ERROR', message => $msg, no_progress => 1, @args );
+}
+
+sub STDERROR ( $msg, @args ) {    # output from IPC run
+    return unless $VERBOSE;
+    return __PACKAGE__->log( type => 'STDERROR', message => $msg, no_progress => 1, @args );
 }
 
 sub FATAL ( $msg, @args ) {

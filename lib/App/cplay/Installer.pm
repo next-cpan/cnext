@@ -345,8 +345,6 @@ sub do_install ( $self, $name ) {
         my ( $status, $out, $err ) = App::cplay::IPC::run3("$make");
         if ( $status != 0 ) {
             ERROR("Fail to build $name");
-            WARN($out)    if defined $out;
-            ERROR("$err") if defined $err;
             return;
         }
         DEBUG("make output:\n$out");
@@ -355,11 +353,9 @@ sub do_install ( $self, $name ) {
     if ( $self->cli->run_tests ) {
         install("Running Tests for $name");
 
-        my ( $status, $out, $err ) = App::cplay::IPC::run3("$make test");
+        my ( $status, $out, $err ) = App::cplay::IPC::run3( [ $make, "test" ] );
         if ( $status != 0 ) {
             ERROR("Test failure from $name");
-            WARN($out)    if defined $out;
-            ERROR("$err") if defined $err;
             return;
         }
         DEBUG("Test run $name output:\n$out");
@@ -368,11 +364,9 @@ sub do_install ( $self, $name ) {
     {
         install("succeeds for $name");
 
-        my ( $status, $out, $err ) = App::cplay::IPC::run3("$make install");
+        my ( $status, $out, $err ) = App::cplay::IPC::run3( [ $make, "install" ] );
         if ( $status != 0 ) {
             ERROR("Fail to install $name");
-            WARN($out)    if defined $out;
-            ERROR("$err") if defined $err;
             return;
         }
         DEBUG("Make install output $name:\n$out");
@@ -389,7 +383,7 @@ sub do_configure ( $self, $name ) {
     $self->generate_makefile_pl($BUILD);
 
     configure("Running Makefile.PL for $name");
-    my ( $status, $out, $err ) = App::cplay::IPC::run3("$^X Makefile.PL");
+    my ( $status, $out, $err ) = App::cplay::IPC::run3( [ $^X, "Makefile.PL" ] );
     if ( $status != 0 ) {
         ERROR($err) if defined $err;
         return;
