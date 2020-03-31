@@ -202,7 +202,6 @@ Probably a lot at this point this is still in active development.
 - \[ \] write some tests
 - \[ \] prefer a quick file read/scan?
 - \[ \] log output to file
-- \[ \] improve IPC::run3 and isolate it to its own module
 - \[ \] check builder type play for cplay, Build.PL and Makefile.PL...
 - \[ \] look at AcePerl and Acme BUILD.PL - configure\_requires
 - \[ \] test default to t/\*.t if not there
