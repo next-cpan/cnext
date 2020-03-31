@@ -347,7 +347,6 @@ sub do_install ( $self, $name ) {
             ERROR("Fail to build $name");
             return;
         }
-        DEBUG("make output:\n$out");
     }
 
     if ( $self->cli->run_tests ) {
@@ -358,7 +357,6 @@ sub do_install ( $self, $name ) {
             ERROR("Test failure from $name");
             return;
         }
-        DEBUG("Test run $name output:\n$out");
     }
 
     {
@@ -369,7 +367,6 @@ sub do_install ( $self, $name ) {
             ERROR("Fail to install $name");
             return;
         }
-        DEBUG("Make install output $name:\n$out");
     }
 
     return 1;

@@ -198,8 +198,6 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] log output to file
 
-=item * [ ] improve IPC::run3 and isolate it to its own module
-
 =item * [ ] check builder type play for cplay, Build.PL and Makefile.PL...
 
 =item * [ ] look at AcePerl and Acme BUILD.PL - configure_requires
