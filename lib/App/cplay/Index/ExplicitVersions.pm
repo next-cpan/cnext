@@ -6,17 +6,15 @@ use App::cplay::Logger;
 
 use App::cplay::Helpers qw{zip};
 
-use Simple::Accessor qw{file cli json columns sorted_columns template_url};
+use Simple::Accessor qw{file cli columns sorted_columns template_url};
+
+with 'App::cplay::Roles::JSON';
 
 sub build ( $self, %opts ) {
 
     $self->{file} = App::cplay::Index::get_explicit_versions_ix_file( $self->cli );
 
     return $self;
-}
-
-sub _build_json($self) {
-    return JSON::PP->new->utf8->relaxed->allow_nonref;
 }
 
 sub _build_template_url($self) {
@@ -41,7 +39,7 @@ sub _build_columns($self) {    # fast parse version
     }
 
     if ( !$description || !$description->{columns} ) {
-        FATAL("Cannot read columns defintion for ExplicitVersions index file");
+        FATAL("Cannot read columns definition for ExplicitVersions index file");
     }
 
     foreach my $name ( $description->{columns}->@* ) {
