@@ -202,7 +202,9 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] look at AcePerl and Acme BUILD.PL - configure_requires
 
-=item * [ ] test default to t/*.t if not there
+=item * [ ] set timeout in cplay workflow
+
+=item * [ ] install to a custom location
 
 =back
 
