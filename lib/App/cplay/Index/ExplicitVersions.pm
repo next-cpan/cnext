@@ -6,9 +6,10 @@ use App::cplay::Logger;
 
 use App::cplay::Helpers qw{zip};
 
-use Simple::Accessor qw{file cli columns sorted_columns template_url};
+use Simple::Accessor qw{file cli template_url};
 
 with 'App::cplay::Roles::JSON';
+with 'App::cplay::Index::Role::Columns';    # provide columns and sorted_columns
 
 sub build ( $self, %opts ) {
 
@@ -19,45 +20,6 @@ sub build ( $self, %opts ) {
 
 sub _build_template_url($self) {
     ...;
-}
-
-sub _build_columns($self) {    # fast parse version
-
-    open( my $fh, '<:utf8', $self->file ) or die "Cannot open ExplicitVersions files: $!";
-
-    my $columns = {};
-    my $ix      = 0;
-
-    my $description;
-    while ( my $line = <$fh> ) {
-        next unless $line =~ m{^\s*"columns"};
-
-        $line =~ s{,\s*$}{};
-        $line = "{ $line }";
-        eval { $description = $self->json->decode($line) };
-        last;
-    }
-
-    if ( !$description || !$description->{columns} ) {
-        FATAL("Cannot read columns definition for ExplicitVersions index file");
-    }
-
-    foreach my $name ( $description->{columns}->@* ) {
-        $columns->{$name} = $ix++;
-    }
-
-    return $columns;
-}
-
-sub _build_sorted_columns($self) {
-    my $columns = $self->columns;
-
-    my $sorted = [];
-    foreach my $k ( keys %$columns ) {
-        $sorted->[ $columns->{$k} ] = $k;
-    }
-
-    return $sorted;
 }
 
 sub search ( $self, $repository_or_module, $version = undef, $can_be_module = 1, $can_be_repo = 1, ) {
