@@ -234,21 +234,17 @@ sub _setup_local_lib_env ( $self, $force = 0 ) {
 
     return unless my $local_lib = $self->cli->local_lib;
 
+    INFO("Using local-lib: $local_lib");
+
     require Cwd;
     require local::lib;
 
-    {
-        local $ENV{PERL5LIB} = '';    # detach existent local::lib
-        local *STDOUT;
-        local::lib->setup_local_lib_for($local_lib);
-    }
+    my $ll = local::lib->new( quiet => 1 )->activate($local_lib);
+    $ll->setup_local_lib;
+    $ll->setup_env_hash;
 
-    {
-        no warnings;                  # catch 'Attempting to write ...'
-        local::lib->setup_env_hash_for( $local_lib, 0 );
-        $ENV{PERL_MM_OPT} .= " INSTALLMAN1DIR=none INSTALLMAN3DIR=none";
-        $ENV{PERL_MM_USE_DEFAULT} = 1;
-    }
+    $ENV{PERL_MM_OPT} .= " INSTALLMAN1DIR=none INSTALLMAN3DIR=none";
+    $ENV{PERL_MM_USE_DEFAULT} = 1;
 
     return;
 }
