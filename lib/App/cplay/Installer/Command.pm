@@ -9,6 +9,8 @@ use Simple::Accessor qw{type txt cmd timeout};
 
 use App::cplay::IPC ();
 
+# maybe consider using Command::Runner
+
 sub _build_type    { 'install' }
 sub _build_cmd     { FATAL("cmd not defined for Command") }
 sub _build_timeout { 0 }

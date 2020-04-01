@@ -226,7 +226,37 @@ sub advertise_installed_modules ( $self, $BUILD ) {
     return;
 }
 
+# https://metacpan.org/release/App-cpanminus/source/lib/App/cpanminus/fatscript.pm#L1225
+sub _setup_local_lib_env ( $self, $force = 0 ) {
+    state $done;
+    return if $done && !$force;
+    $done = 1;
+
+    return unless my $local_lib = $self->cli->local_lib;
+
+    require Cwd;
+    require local::lib;
+
+    {
+        local $ENV{PERL5LIB} = '';    # detach existent local::lib
+        local *STDOUT;
+        local::lib->setup_local_lib_for($local_lib);
+    }
+
+    {
+        no warnings;                  # catch 'Attempting to write ...'
+        local::lib->setup_env_hash_for( $local_lib, 0 );
+        $ENV{PERL_MM_OPT} .= " INSTALLMAN1DIR=none INSTALLMAN3DIR=none";
+        $ENV{PERL_MM_USE_DEFAULT} = 1;
+    }
+
+    return;
+}
+
 sub _builder_play ( $self, $name ) {
+
+    $self->_setup_local_lib_env();
+
     return unless $self->do_configure($name);
     return unless $self->do_install($name);
 

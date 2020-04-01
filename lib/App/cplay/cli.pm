@@ -22,6 +22,7 @@ use Simple::Accessor qw{
   name
   http
   cwd homedir build_dir cache_dir
+  local_lib
   snapshot
   retry
   configure_timeout build_timeout test_timeout install_timeout
@@ -167,8 +168,9 @@ sub parse_options ( $self, @opts ) {
         "refresh"   => \( $self->{refresh} ),
         "reinstall" => \( $self->{reinstall} ),
 
-        "v|verbose" => \( $self->{verbose} ),
-        "d|debug"   => \( $self->{debug} ),
+        "v|verbose"     => \( $self->{verbose} ),
+        "d|debug"       => \( $self->{debug} ),
+        "L|local-lib=s" => \( $self->{local_lib} ),
 
         "show-progress!" => \( $self->{show_progress} ),
 
@@ -212,6 +214,11 @@ sub parse_options ( $self, @opts ) {
 
     if ( $self->{sudo} ) {
         !system "sudo", $^X, "-e1" or exit 1;
+    }
+
+    if ( defined $self->{local_lib} ) {
+        $self->{local_lib} =~ s{^=}{};
+        $self->{local_lib} = Cwd::abs_path( $self->local_lib );
     }
 
     if ( defined $self->{cache_dir} ) {

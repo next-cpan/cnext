@@ -134,6 +134,13 @@ You could use either a module name or a distribution name.
    # where :owner, :repository and :sha are replaced with the accurate values
    cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
 
+=head2 Install one distribution to a custom directory
+
+By default modules are install to the current @INC, but you can specify a custom directory
+where to install these modules using -L.
+
+   cplay -L ~/vendor Simple-Accessor
+
 =head1 OPTIONS
 
 =head2 Generic options
@@ -156,6 +163,7 @@ You could use either a module name or a distribution name.
        --test-timeout       Timeout for running tests              (default: 1800)
        --install-timeout    Timeout forinstalling files            (default: 60)
        use a value of '0' to disable a timeout
+   -L, --local-lib DIR      Specify the install base directory to install all modules.
 
 =head2 cpanfile options
 
