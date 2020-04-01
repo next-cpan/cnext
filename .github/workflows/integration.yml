@@ -37,7 +37,7 @@ jobs:
       - name: Install Dependencies
         run: cpm install -g --no-test --show-build-log-on-failure --cpanfile cpanfile
 
-      - name: integration test fatpack=${{ matrix.fatpack }}
+      - name: Running Tests with fatpack=${{ matrix.fatpack }}
         run: prove -vl t/integration/*.t
         env:
           USE_CPLAY_COMPILED: ${{ matrix.fatpack }}
