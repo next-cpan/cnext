@@ -22,6 +22,10 @@ sub has_module_version ( $module, $version ) {
     my $has_module  = 0;
     my $got_version = get_module_version($module);
 
+    if ( lc $module eq 'perl' && $version =~ m{^v?(\d+)\.(\d+)\.(\d+)$}ia ) {
+        $version = sprintf( "%d.%03d%03d", $1, $2, $3 );
+    }
+
     if ( defined $got_version ) {
         if ( $got_version eq $version ) {
 
@@ -50,6 +54,10 @@ sub has_module_version ( $module, $version ) {
 sub get_module_version( $module ) {
 
     return $GOT{$module} if defined $GOT{$module};
+
+    if ( lc $module eq 'perl' ) {
+        return "$]";
+    }
 
     my $version;
     my $out = qx|$^X -e 'eval { require $module; 1 } or die; print eval { \$${module}::VERSION } // 0' 2>&1|;
