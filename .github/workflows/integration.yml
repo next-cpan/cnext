@@ -38,4 +38,6 @@ jobs:
         run: cpm install -g --no-test --show-build-log-on-failure --cpanfile cpanfile
 
       - name: integration test fatpack=${{ matrix.fatpack }}
-        run: USE_CPLAY_COMPILED=${{ matrix.fatpack }} prove -vl t/integration/*.t
+        run: prove -vl t/integration/*.t
+        env:
+          USE_CPLAY_COMPILED: ${{ matrix.fatpack }}
