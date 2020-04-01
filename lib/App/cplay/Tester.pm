@@ -10,6 +10,7 @@ use Test2::Tools::Compare qw/is/;
 use Carp qw/croak/;
 use File::Spec;
 use File::Temp qw/tempfile tempdir/;
+use File::Basename qw(basename);
 use POSIX;
 use Fcntl qw/SEEK_CUR/;
 
@@ -23,16 +24,32 @@ our @EXPORT = qw/cplay/;
 my $apppath = find_cplay();
 
 sub find_cplay {
-    state $path;
+    state $cache;
 
-    if ( !defined $path ) {
+    if ( !defined $cache ) {
         require App::cplay;
-        $path = abs_path( $INC{'App/cplay.pm'} );
-        $path =~ s{\Qlib/App/cplay.pm\E$}{cplay};
-        -x $path or die "Cannot find cplay fatpack script";
+        my $path = abs_path( $INC{'App/cplay.pm'} );
+
+        if ( $ENV{USE_CPLAY_COMPILED} ) {
+            $path =~ s{\Qlib/App/cplay.pm\E$}{cplay};
+            -x $path or die "Cannot find cplay fatpack script";
+            $cache = [$path];
+        }
+        else {
+            my $base = $path;
+            $base =~ s{\Qlib/App/cplay.pm\E$}{};
+            $path = $base . 'script/cplay.PL';
+            my $lib = $base . 'lib';
+
+            die "script $path is missing"        unless -f $path;
+            die "lib directory is missing: $lib" unless -d $lib;
+
+            $cache = [ $path, "-I$lib" ];
+        }
     }
 
-    return $path;
+    return $cache->[0] unless wantarray;    # scalar context
+    return @$cache;
 }
 
 sub cplay(%params) {
@@ -59,9 +76,9 @@ sub cplay(%params) {
         $wh->autoflush(1);
     }
 
-    my $cplay    = find_cplay;
+    my ( $cplay, @lib ) = find_cplay;
     my @all_args = ( $cmd ? ($cmd) : (), @$cli );
-    my @cmd      = ( $^X, $cplay, @all_args );
+    my @cmd      = ( $^X, @lib, $cplay, @all_args );
 
     print "DEBUG: Command = " . join( ' ' => @cmd ) . "\n" if $debug;
 
@@ -107,7 +124,7 @@ sub cplay(%params) {
         $capture ? ( output => join( '', @lines ) ) : (),
     };
 
-    my $name = join( ' ', map { length($_) < 30 ? $_ : substr( $_, 0, 10 ) . "[...]" . substr( $_, -10 ) } grep { defined($_) } 'cplay', @all_args );
+    my $name = join( ' ', map { length($_) < 30 ? $_ : substr( $_, 0, 10 ) . "[...]" . substr( $_, -10 ) } grep { defined($_) } basename($cplay), @all_args );
     run_subtest(
         $name,
         sub {
