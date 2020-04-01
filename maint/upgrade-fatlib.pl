@@ -136,7 +136,7 @@ sub run {
         rename $file => $target or die "$file => $target: $!";
     }
 
-    rewrite_version_pm("fatlib/version.pm");
+    #rewrite_version_pm("fatlib/version.pm");
 
     rmtree("fatlib/$Config{archname}");
     rmtree("fatlib/POD2");
