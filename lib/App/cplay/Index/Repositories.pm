@@ -6,9 +6,10 @@ use App::cplay::Index;
 use App::cplay::Helpers qw{read_file zip};
 use App::cplay::Logger;    # import all
 
-use Simple::Accessor qw{file cli cache columns template_url};
+use Simple::Accessor qw{file cli cache template_url};
 
 with 'App::cplay::Roles::JSON';
+with 'App::cplay::Index::Role::Columns';    # provide columns and sorted_columns
 
 sub build ( $self, %opts ) {
 
@@ -24,18 +25,6 @@ sub _build_cache($self) {
 
 sub _build_template_url($self) {
     $self->cache->{template_url} or die;
-}
-
-sub _build_columns($self) {
-
-    # FIXME ould also do a quick read of the file to get them
-    my $columns = {};
-    my $ix      = 0;
-    foreach my $name ( $self->cache->{columns}->@* ) {
-        $columns->{$name} = $ix++;
-    }
-
-    return $columns;
 }
 
 ## maybe do a fast search...
