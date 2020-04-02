@@ -553,8 +553,6 @@ sub resolve_dependencies ( $self, $name ) {
             my $version = $requires_list->{$module};
             resolve("\t$name $type $module v$version");
             return unless $self->install_single_module( $module, $version );
-
-            # FIXME maybe do an extra check for the version ?
         }
     }
 

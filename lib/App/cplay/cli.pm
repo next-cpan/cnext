@@ -47,9 +47,6 @@ use File::Path qw(mkpath rmtree);
 use Getopt::Long qw(:config no_auto_abbrev no_ignore_case bundling);
 use Pod::Text ();
 
-# use List::Util ();
-# use Parallel::Pipes;
-
 sub build ( $self, %options ) {
 
     foreach my $k ( sort keys %options ) {
@@ -144,7 +141,7 @@ sub _build_explicit_versions_idx($self) {
 sub parse_options ( $self, @opts ) {
     local @ARGV = @opts;
 
-    my ( $mirror, @feature );
+    my (@feature);
     my $with_option = sub {
         my $n = shift;
         ( "with-$n", \$self->{"with_$n"}, "without-$n", sub { $self->{"with_$n"} = 0 } );
@@ -177,15 +174,7 @@ sub parse_options ( $self, @opts ) {
         # used for cpanfile
         "feature=s@" => \@feature,
 
-        ### need to check
-        #"L|local-lib-contained=s" => \( $self->{local_lib} ),
-        #"g|global"  => \( $self->{global} ),
-
-        #"snapshot=s"  => \( $self->{snapshot} ),
-        "sudo" => \( $self->{sudo} ),
-
-        "retry!"          => \( $self->{retry} ),
-        "exclude-vendor!" => \( $self->{exclude_vendor} ),
+        "retry!" => \( $self->{retry} ),
 
         "configure-timeout=i" => \( $self->{configure_timeout} ),
         "build-timeout=i"     => \( $self->{build_timeout} ),
@@ -199,7 +188,6 @@ sub parse_options ( $self, @opts ) {
         ( map $with_option->($_), @with_phases ),    # phase
     ) or exit 1;
 
-    $self->{mirror} = $self->normalize_mirror($mirror) if $mirror;
     $self->{color}         = 1 if !defined $self->{color}         && -t STDOUT;
     $self->{show_progress} = 1 if !defined $self->{show_progress} && -t STDOUT;
 
@@ -211,10 +199,6 @@ sub parse_options ( $self, @opts ) {
     $self->run_tests(1) unless defined $self->{run_tests};
     if ( !$self->run_tests ) {
         $self->{'with_test'} = 0;
-    }
-
-    if ( $self->{sudo} ) {
-        !system "sudo", $^X, "-e1" or exit 1;
     }
 
     if ( defined $self->{local_lib} ) {
@@ -262,14 +246,6 @@ sub read_argv_from_stdin {
     return \@argv;
 }
 
-sub normalize_mirror ( $self, $mirror ) {
-    $mirror =~ s{/*$}{/};
-
-    return $mirror if $mirror =~ m{^https?://};
-
-    die qq[Invalid mirror: $mirror];
-}
-
 sub get_cmd_sub_for ( $self, $cmd ) {
     return unless defined $cmd;
 
@@ -281,6 +257,7 @@ sub get_cmd_sub_for ( $self, $cmd ) {
         v => 'version',
         V => 'version',
         i => 'install',
+        c => 'cpanfile',
     };
 
     $cmd = $aliases->{$cmd} if defined $aliases->{$cmd};

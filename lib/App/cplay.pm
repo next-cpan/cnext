@@ -212,7 +212,7 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] set timeout in cplay workflow
 
-=item * [ ] install to a custom location
+=item * [ ] add git version on repo fatpack script
 
 =back
 
