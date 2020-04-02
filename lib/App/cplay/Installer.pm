@@ -43,6 +43,7 @@ sub check_makemaker($self) {
     my $module  = 'ExtUtils::MakeMaker';
     my $version = EXTUTILS_MAKEMAKER_MIN_VERSION;
 
+    # do not use the local helper has_module_version here
     return 1 if App::cplay::Module::has_module_version( $module, $version );
 
     WARN("Trying to update ExtUtils::MakeMaker");
@@ -65,17 +66,45 @@ sub has_module_version ( $self, $module, $version ) {
         return;
     }
 
-    return App::cplay::Module::has_module_version( $module, $version );
+    if ( $self->cli->local_lib ) {
+        return 1 if App::cplay::Module::has_module_version( $module, $version, $self->cli->local_lib );
+        if ( $self->depth > 1 ) {    # FIXME maybe implement --self-contained there ?? -- need to check for CORE
+            return 1 if App::cplay::Module::has_module_version( $module, $version );
+        }
+    }
+    else {
+        return App::cplay::Module::has_module_version( $module, $version );
+    }
+
+    return;
 }
 
-sub install_single_module ( $self, $module ) {
-    return $self->install_single_module_or_repository( $module, 0 );
+sub install_single_module ( $self, $module, $need_version = undef ) {
+    return $self->install_single_module_or_repository( $module, 0, $need_version );
 }
 
-sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_repo = 1 ) {
+sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_repo = 1, $need_version = undef ) {
 
     $self->depth( $self->depth + 1 );
-    my $ok = $self->_install_single_module_or_repository( $module_or_repository, $can_be_repo );
+
+    my $ok;
+    if ( defined $need_version ) {
+        $ok = $self->has_module_version( $module_or_repository, $need_version );
+        DEBUG("Module $module_or_repository v$need_version is missing") unless $ok;
+    }
+
+    if ( !$ok ) {
+        $ok = $self->_install_single_module_or_repository( $module_or_repository, $can_be_repo );
+        my $msg = $ok ? "install of $module_or_repository succeeded" : "install of $module_or_repository failed";
+        DEBUG($msg);
+
+        # perform an extra check to make sure the last available version match the requirements
+        if ( $ok && defined $need_version ) {
+            $ok = $self->has_module_version( $module_or_repository, $need_version );
+            DEBUG("Module $module_or_repository v$need_version is missing") unless $ok;
+        }
+    }
+
     $self->depth( $self->depth - 1 );
 
     return $ok;
@@ -521,9 +550,7 @@ sub resolve_dependencies ( $self, $name ) {
         foreach my $module ( sort keys %$requires_list ) {
             my $version = $requires_list->{$module};
             resolve("\t$name $type $module v$version");
-            next if App::cplay::Module::has_module_version( $module, $version );
-            DEBUG("Module $module v$version is missing");
-            return unless $self->install_single_module($module);
+            return unless $self->install_single_module( $module, $version );
 
             # FIXME maybe do an extra check for the version ?
         }

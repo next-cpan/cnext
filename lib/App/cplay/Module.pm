@@ -10,17 +10,21 @@ our @EXPORT_OK = ( @EXPORT, qw{get_module_version module_updated} );
 my %CACHE;              # check if we have a specific version of a module
 my %GOT;                # current install version of a module
 
-sub has_module_version ( $module, $version ) {
+sub has_module_version ( $module, $version, $local_lib = undef ) {
+    my $IN = _in($local_lib);
 
     # check the global cache
-    if ( defined $CACHE{$module} && defined $CACHE{$module}->{$version} ) {
-        return $CACHE{$module}->{$version};
+    if (   defined $CACHE{$module}
+        && defined $CACHE{$module}->{$IN}
+        && defined $CACHE{$module}->{$IN}->{$version} ) {
+        return $CACHE{$module}->{$IN}->{$version};
     }
 
     $CACHE{$module} //= {};
+    $CACHE{$module}->{$IN} //= {};
 
     my $has_module  = 0;
-    my $got_version = get_module_version($module);
+    my $got_version = get_module_version( $module, $local_lib );
 
     if ( lc $module eq 'perl' && $version =~ m{^v?(\d+)\.(\d+)\.(\d+)$}ia ) {
         $version = sprintf( "%d.%03d%03d", $1, $2, $3 );
@@ -45,29 +49,43 @@ sub has_module_version ( $module, $version ) {
 
     DEBUG( "has_module $module >= $version ? $has_module [got " . ( $got_version // '' ) . ']' );
 
-    $CACHE{$module}->{$version} = $has_module;
+    $CACHE{$module}->{$IN}->{$version} = $has_module;
     return $has_module;
 }
 
 # undef => we do not have the module
 # 0     => we do not know the version
-sub get_module_version( $module ) {
+sub get_module_version ( $module, $local_lib = undef ) {
+    my $IN = _in($local_lib);
 
-    return $GOT{$module} if defined $GOT{$module};
-
-    if ( lc $module eq 'perl' ) {
-        return "$]";
-    }
+    return $GOT{$module}->{$IN} if defined $GOT{$module} && defined $GOT{$module}->{$IN};
+    return "$]"                 if lc $module eq 'perl';                                    # no cache needed
 
     my $version;
-    my $out = qx|$^X -e 'eval { require $module; 1 } or die; print eval { \$${module}::VERSION } // 0' 2>&1|;
 
-    if ( $? == 0 ) {
-        $version = $out;
-        chomp $version if $version;
+    if ( !defined $local_lib ) {
+        my $out = qx|$^X -e 'eval { require $module; 1 } or die; print eval { \$${module}::VERSION } // 0' 2>&1|;
+        if ( $? == 0 ) {
+            $version = $out;
+            chomp $version if $version;
+        }
+    }
+    else {
+        local $ENV{PERL5LIB};                                                               # deactivate the current one
+
+        my $pp = $module;
+        $pp =~ s{::}{/}g;
+        $pp .= '.pm';
+
+        my $out = qx|$^X -mlocal::lib=--no-create,$local_lib -e 'eval { require $module; 1 } or die; die unless \$INC{"$pp"} =~ m{^\Q$local_lib\E}; print eval { \$${module}::VERSION } // 0' 2>&1|;
+        if ( $? == 0 ) {
+            $version = $out;
+            chomp $version if $version;
+        }
     }
 
-    $GOT{$module} = $version;    # cache the version
+    $GOT{$module} //= {};
+    $GOT{$module}->{$IN} = $version;    # cache the version
 
     DEBUG( "get_module_version $module = " . ( $version // '' ) );
 
@@ -75,15 +93,23 @@ sub get_module_version( $module ) {
 
 }
 
-sub module_updated ( $module, $version ) {
+# could also clear it with local_lib
+sub module_updated ( $module, $version, $local_lib = undef ) {
     die("Missing module name") unless defined $module;
+    my $IN = _in($local_lib);
 
     # version can be undef to fake an uninstalled module
 
     delete $CACHE{$module};
-    $GOT{$module} = $version;    # cache the version
+    $GOT{$module} //= {};
+    $GOT{$module}->{$IN} = $version;    # cache the version
 
     return;
+}
+
+# where are we searching for this module: returns a key used for the cache
+sub _in ( $local_lib = undef ) {
+    return $local_lib // 'default';
 }
 
 sub clear_module( $module ) {
