@@ -141,6 +141,15 @@ cplay --from-tarball ./path-to/custom.tar.gz
 cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
 ```
 
+## Install one distribution to a custom directory
+
+By default modules are install to the current @INC, but you can specify a custom directory
+where to install these modules using -L.
+
+```
+cplay -L ~/vendor Simple-Accessor
+```
+
 # OPTIONS
 
 ## Generic options
@@ -164,6 +173,7 @@ cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
     --test-timeout       Timeout for running tests              (default: 1800)
     --install-timeout    Timeout forinstalling files            (default: 60)
     use a value of '0' to disable a timeout
+-L, --local-lib DIR      Specify the install base directory to install all modules.
 ```
 
 ## cpanfile options
@@ -204,7 +214,8 @@ Probably a lot at this point this is still in active development.
 - \[ \] log output to file
 - \[ \] check builder type play for cplay, Build.PL and Makefile.PL...
 - \[ \] look at AcePerl and Acme BUILD.PL - configure\_requires
-- \[ \] test default to t/\*.t if not there
+- \[ \] set timeout in cplay workflow
+- \[ \] install to a custom location
 
 # DEPENDENCIES
 
