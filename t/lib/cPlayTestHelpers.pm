@@ -2,14 +2,18 @@ package cPlayTestHelpers;    # inspired by App::Yath::Tester
 
 use App::cplay::std;
 
+use App::cplay::IPC;
+
 use Test::More;
 
 use Exporter 'import';
 our @EXPORT = qw/remove_module is_module_installed is_module_installed_to_local_lib/;
 
+use constant PERLDOC => $^X . 'doc';
+
 sub remove_module($module) {
-    my $out = qx[$^Xdoc -lm $module];
-    if ( $? == 0 ) {
+    my ( $status, $out, $err ) = App::cplay::IPC::run3( [ PERLDOC, '-lm', $module ] );
+    if ( $status == 0 ) {
         note "$module is already installed, removing it";
         chomp $out;
         ok unlink($out), "unlink $out" or die;
@@ -20,8 +24,8 @@ sub remove_module($module) {
 }
 
 sub is_module_installed($module) {
-    my $out = qx[$^Xdoc -lm $module 2>&1];
-    return $? == 0;
+    my ( $status, $out, $err ) = App::cplay::IPC::run3( [ PERLDOC, '-lm', $module ] );
+    return $status == 0;
 }
 
 sub is_module_installed_to_local_lib ( $module, $local_lib ) {
@@ -31,9 +35,15 @@ sub is_module_installed_to_local_lib ( $module, $local_lib ) {
 
     local $ENV{PERL5LIB};
     _check_local_lib_once();
-    my $out = qx|$^X -mlocal::lib=--no-create,$local_lib -e 'eval { require $module; 1 } or die; die unless \$INC{"$pp"} =~ m{^\Q$local_lib\E}; print 1' 2>&1|;
 
-    if ( $? == 0 ) {
+    my $oneliner = <<"EOS";
+eval { require $module; 1 } or die;
+die unless \$INC{"$pp"} =~ m{^\Q$local_lib\E};
+print 1;
+EOS
+
+    my ( $status, $out, $err ) = App::cplay::IPC::run3( [ $^X, "-mlocal::lib=--no-create,$local_lib", '-e', $oneliner ] );
+    if ( $status == 0 ) {
         chomp $out if defined $out;
         return 1   if $out == 1;
     }
