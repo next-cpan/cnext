@@ -42,14 +42,8 @@ sub run($self) {
 
     if ( $status != 0 ) {
         ERROR( "Fail to run " . $self->txt );
-
-        #WARN($out)  if defined $out;
-        #ERROR($err) if defined $err;
         return;
     }
-
-    #$out //= '';
-    #DEBUG( $self->txt . " output:\n$out" );
 
     return 1;
 }

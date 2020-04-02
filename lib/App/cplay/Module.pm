@@ -3,6 +3,8 @@ package App::cplay::Module;
 use App::cplay::std;    # import strict, warnings & features
 use App::cplay::Logger;
 
+use App::cplay::IPC;
+
 use Exporter 'import';
 our @EXPORT    = qw(has_module_version);
 our @EXPORT_OK = ( @EXPORT, qw{get_module_version module_updated} );
@@ -64,21 +66,27 @@ sub get_module_version ( $module, $local_lib = undef ) {
     my $version;
 
     if ( !defined $local_lib ) {
-        my $out = qx|$^X -e 'eval { require $module; 1 } or die; print eval { \$${module}::VERSION } // 0' 2>&1|;
-        if ( $? == 0 ) {
+        my $oneliner = qq|eval { require $module; 1 } or die; print eval { \$${module}::VERSION } // 0|;
+        my ( $status, $out, $err ) = App::cplay::IPC::run3( [ $^X, '-e', $oneliner ] );
+        if ( $status == 0 ) {
             $version = $out;
             chomp $version if $version;
         }
     }
     else {
-        local $ENV{PERL5LIB};                                                               # deactivate the current one
+        local $ENV{PERL5LIB};    # deactivate the current one
 
         my $pp = $module;
         $pp =~ s{::}{/}g;
         $pp .= '.pm';
 
-        my $out = qx|$^X -mlocal::lib=--no-create,$local_lib -e 'eval { require $module; 1 } or die; die unless \$INC{"$pp"} =~ m{^\Q$local_lib\E}; print eval { \$${module}::VERSION } // 0' 2>&1|;
-        if ( $? == 0 ) {
+        my $oneliner = <<"EOS";
+eval { require $module; 1 } or die; 
+die unless \$INC{"$pp"} =~ m{^\Q$local_lib\E}; 
+print eval { \$${module}::VERSION } // 0;
+EOS
+        my ( $status, $out, $err ) = App::cplay::IPC::run3( [ $^X, "-mlocal::lib=--no-create,$local_lib", '-e', $oneliner ] );
+        if ( $status == 0 ) {
             $version = $out;
             chomp $version if $version;
         }
