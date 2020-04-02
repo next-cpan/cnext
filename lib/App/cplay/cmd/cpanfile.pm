@@ -48,19 +48,8 @@ sub run ( $self, @files ) {
         foreach my $module ( sort keys %$reqs ) {
             my $version_range = $reqs->{$module};
 
-            if ( !$self->reinstall ) {
-                INFO("checking $module at $version_range");
-                my $current_version = get_module_version($module);
-                if ( defined $current_version ) {    # module is installed
-                    if ( $current_version >= $version_range ) {
-                        OK("Module $module is using $current_version (>=$version_range)");
-                        next;
-                    }
-                }
-            }
-
             DEBUG("installing last version of $module");
-            return 1 unless $installer->install_single_module($module);
+            return 1 unless $installer->install_single_module( $module, $version_range );
         }
     }
 

@@ -204,6 +204,7 @@ sub parse_options ( $self, @opts ) {
     $self->{show_progress} = 1 if !defined $self->{show_progress} && -t STDOUT;
 
     $self->{show_progress} = 0 if $self->debug;      # no progress on debug
+    $self->{show_progress} = 0 unless -t STDIN;
 
     $self->{features} = \@feature if @feature;
 

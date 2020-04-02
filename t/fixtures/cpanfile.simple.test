@@ -1,0 +1,21 @@
+# this is a simple test
+
+requires 'perl', '5.008001';
+
+on test => sub {
+	requires 'Test::More';
+	requires 'ABI';
+};
+
+on develop => sub {
+	# CORE modules as the index is pretty short right now
+	requires 'B';
+	requires 'Carp';
+	requires 'Cwd';
+	requires 'XSLoader';
+};
+
+recommends 'Do::Not::Exist';
+
+requires 'A1z::Html' => '0.003';
+requires 'A1z::HTML5::Template';
