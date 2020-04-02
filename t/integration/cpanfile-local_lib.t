@@ -49,16 +49,8 @@ ok -e $cpanfile, "cpanfile exists";
 
     foreach my $module (@requires_modules) {
         ok !is_module_installed($module), "module $module is not installed to default INC";
+        ok is_module_installed_to_local_lib( $module, $localdir ), "module $module is installed to local lib";
     }
-
-    {
-        local %ENV;
-        local::lib->setup_env_hash_for($localdir);
-        foreach my $module (@requires_modules) {
-            ok is_module_installed($module), "module $module is installed to local lib";
-        }
-    }
-
 }
 
 done_testing;
