@@ -100,7 +100,7 @@ sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_
         DEBUG($msg);
 
         # perform an extra check to make sure the last available version match the requirements
-        if ( $ok && !$can_be_repo && defined $need_version ) {    # FIXME...
+        if ( $ok && !$can_be_repo && defined $need_version ) {
             $ok = $self->has_module_version( $module_or_repository, $need_version );
             DEBUG("Module $module_or_repository v$need_version is missing") unless $ok;
         }

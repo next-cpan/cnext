@@ -29,6 +29,7 @@ sub is_module_installed_to_local_lib ( $module, $local_lib ) {
     $pp =~ s{::}{/}g;
     $pp .= '.pm';
 
+    local $ENV{PERL5LIB};
     _check_local_lib_once();
     my $out = qx|$^X -mlocal::lib=--no-create,$local_lib -e 'eval { require $module; 1 } or die; die unless \$INC{"$pp"} =~ m{^\Q$local_lib\E}; print 1' 2>&1|;
 

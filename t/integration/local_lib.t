@@ -44,12 +44,7 @@ note "Testing cplay install for module $module";
     );
     ok !is_module_installed($module), "module is not installed to the default INC";
     ok -d $localdir, "localdir was created";
-
-    {
-        local %ENV;
-        local::lib->setup_env_hash_for($localdir);
-        ok is_module_installed($module), "module is installed to local lib";
-    }
+    ok is_module_installed_to_local_lib( $module, $localdir ), "module is installed to local lib";
 
     note "try re-installing to local::lib";
     cplay(
@@ -114,12 +109,7 @@ note "Testing cplay install for module $module";
     );
     ok is_module_installed($module), "module is installed to the default INC";
     ok -d $localdir, "localdir was created";
-
-    {
-        local %ENV;
-        local::lib->setup_env_hash_for($localdir);
-        ok is_module_installed($module), "module is installed to local lib";
-    }
+    ok is_module_installed_to_local_lib( $module, $localdir ), "module is installed to local lib";
 
     note "try re-installing to local::lib";
     cplay(
