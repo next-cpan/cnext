@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/pause-play/cplay/workflows/integration/badge.svg)](https://github.com/pause-play/cplay/actions)
+
 # NAME
 
 App::cplay -  CPAN client using pause-play indexes
@@ -215,7 +217,7 @@ Probably a lot at this point this is still in active development.
 - \[ \] check builder type play for cplay, Build.PL and Makefile.PL...
 - \[ \] look at AcePerl and Acme BUILD.PL - configure\_requires
 - \[ \] set timeout in cplay workflow
-- \[ \] install to a custom location
+- \[ \] add git version on repo fatpack script
 
 # DEPENDENCIES
 
