@@ -190,12 +190,13 @@ sub _install_single_module_or_repository ( $self, $module_or_repository, $can_be
 }
 
 sub check_BUILD_version ( $self, $BUILD ) {
-    FATAL("build unset") unless ref $BUILD;
+    FATAL("check_BUILD_version: missing BUILD argument") unless ref $BUILD;
 
     if ( ( $BUILD->{'builder_API_version'} // 0 ) != 1 ) {
 
         #... we would like to redirect to Install/Builder/v1.pm, ...
-        FATAL("Only know how to handle builder_API_version == 1");
+        ERROR("Only know how to handle builder_API_version == 1");
+        return;
     }
 
     return 1;
@@ -212,9 +213,7 @@ sub install_repository ( $self, $repository_info ) {
     return unless $self->setup_tarball($repository_info);
 
     # check BUILD sanity state
-    my $BUILD = $self->BUILD->{$name} or FATAL("Cannot find a BUILD entry for $name");
-    $self->check_BUILD_version($BUILD);
-
+    my $BUILD   = $self->BUILD->{$name} or FATAL("Cannot find a BUILD entry for $name");
     my $version = $BUILD->{version};
 
     # check if distribution is already installed
@@ -230,8 +229,6 @@ sub install_repository ( $self, $repository_info ) {
 }
 
 sub install_from_BUILD ( $self, $BUILD, $name = undef ) {
-    $self->check_BUILD_version($BUILD);                              # need to check it again [can be called --from-tarball]
-
     if ( !defined $name ) {                                          # --from-tarball
         $name = $BUILD->{name};
         $self->BUILD->{$name} = $BUILD;
@@ -599,6 +596,15 @@ sub setup_tarball ( $self, $repository_info ) {
     my $dir = pushd($full_path);
 
     # load BUILD.json
+    return unless $self->load_BUILD_json;
+
+    return 1;
+}
+
+sub load_BUILD_json($self) {
+
+    my $cwd = Cwd::getcwd();
+
     my $BUILD;
     if ( -e 'BUILD.json' ) {
         eval      { $BUILD = $self->json->decode( read_file( 'BUILD.json', ':utf8' ) ); 1 }
@@ -606,19 +612,28 @@ sub setup_tarball ( $self, $repository_info ) {
           or DEBUG("Fail to read BUILD.json $@");
     }
     else {
-        ERROR("Missing BUILD.json file for Distribution $name");
+        ERROR("Missing BUILD.json file from $cwd");
         return;
     }
 
     if ( !ref $BUILD ) {
-        ERROR("Fail to read BUILD.json file from $full_path");
+        ERROR("Fail to read BUILD.json file from $cwd");
         return;
     }
 
-    $BUILD->{_rootdir} = $full_path;
+    $BUILD->{_rootdir} = $cwd;
+
+    return unless $self->check_BUILD_version($BUILD);
+
+    my $name = $BUILD->{name};
+    if ( !defined $name ) {
+        ERROR("No named defined in BUILD.json $cwd");
+        return;
+    }
+
     $self->BUILD->{$name} = $BUILD;    # store the BUILD informations
 
-    return 1;
+    return $BUILD;
 }
 
 sub download_repository ( $self, $repository_info ) {

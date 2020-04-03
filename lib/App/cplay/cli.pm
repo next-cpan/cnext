@@ -7,10 +7,11 @@ use App::cplay::Logger;    # import all
 use App::cplay::Http;
 
 # need to load all commands to fatpack them
-use App::cplay::cmd::cpanfile ();
-use App::cplay::cmd::help     ();
-use App::cplay::cmd::install  ();
-use App::cplay::cmd::version  ();
+use App::cplay::cmd::cpanfile    ();
+use App::cplay::cmd::help        ();
+use App::cplay::cmd::install     ();
+use App::cplay::cmd::version     ();
+use App::cplay::cmd::fromtarball ();
 
 use App::cplay::Index::Repositories;
 use App::cplay::Index::Modules;
@@ -250,6 +251,7 @@ sub get_cmd_sub_for ( $self, $cmd ) {
     return unless defined $cmd;
 
     $cmd =~ s{^-+}{};
+    $cmd =~ s{-}{}g;    # from-tarball -> fromtarball
 
     # command aliases
     my $aliases = {
@@ -258,6 +260,7 @@ sub get_cmd_sub_for ( $self, $cmd ) {
         V => 'version',
         i => 'install',
         c => 'cpanfile',
+        f => 'fromtarball',
     };
 
     $cmd = $aliases->{$cmd} if defined $aliases->{$cmd};
