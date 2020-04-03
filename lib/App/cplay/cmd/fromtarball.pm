@@ -28,6 +28,7 @@ sub run ( $cli, @args ) {
     my $in_dir = pushd($path) or return 1;
     return 1 unless my $BUILD = $installer->load_BUILD_json();
 
+    $installer->depth(1);    # need to setup depth
     $installer->install_from_BUILD($BUILD);
 
     DONE("install fromtarball succeeds");
