@@ -28,7 +28,7 @@ sub _build_columns($self) {    # fast parse version
         FATAL("Cannot read columns definition for ExplicitVersions index file");
     }
 
-    foreach my $name ( $description->{columns}->@* ) {
+    foreach my $name ( @{ $description->{columns} } ) {
         $columns->{$name} = $ix++;
     }
 

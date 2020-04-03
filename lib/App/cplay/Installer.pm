@@ -266,7 +266,7 @@ sub advertise_installed_modules ( $self, $BUILD ) {
 
     return unless ref $BUILD && ref $BUILD->{provides};
 
-    foreach my $module ( sort keys $BUILD->{provides}->%* ) {
+    foreach my $module ( sort keys %{ $BUILD->{provides} } ) {
         my $v = $BUILD->{provides}->{$module}->{version};
         DEBUG("advertise_installed_modules: $module => $v");
         App::cplay::Module::module_updated( $module, $v, $self->cli->local_lib );
@@ -517,8 +517,8 @@ EOS
     my $tests = 't/*.t';    # default tests to run
     if (   defined $BUILD->{tests}
         && ref $BUILD->{tests} eq 'ARRAY'
-        && scalar $BUILD->{tests}->@* ) {
-        $tests = join( ' ', $BUILD->{tests}->@* );
+        && scalar @{ $BUILD->{tests} } ) {
+        $tests = join( ' ', @{ $BUILD->{tests} } );
     }
 
     open( my $fh, '>', 'Makefile.PL' ) or die "Fail to open Makefile.PL $!";

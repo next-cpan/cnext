@@ -297,7 +297,7 @@ sub run ( $self, @argv ) {
         INFO("Running action '$cmd'");
     }
 
-    return $run->( $self, $self->{argv}->@* );
+    return $run->( $self, @{ $self->{argv} } );
 }
 
 1;

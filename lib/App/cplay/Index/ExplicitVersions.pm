@@ -61,7 +61,7 @@ sub search ( $self, $repository_or_module, $version = undef, $can_be_module = 1,
         }
 
         if ($found) {
-            return { zip( $self->sorted_columns->@*, $raw->@* ) };
+            return { zip( @{ $self->sorted_columns }, @$raw ) };
         }
     }
 

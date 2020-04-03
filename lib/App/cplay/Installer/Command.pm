@@ -18,7 +18,7 @@ sub _build_timeout { 0 }
 sub _build_txt($self) {
     return $self->cmd unless ref $self->cmd;
 
-    return join( ' ', $self->cmd->@* );
+    return join( ' ', @{ $self->cmd } );
 }
 
 sub run($self) {

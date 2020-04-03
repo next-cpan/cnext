@@ -39,12 +39,12 @@ sub search ( $self, $repository, $version = undef ) {
     my $repository_ix = $self->columns->{repository};
     my $version_ix    = $self->columns->{version};
 
-    foreach my $raw ( $cache->{data}->@* ) {
+    foreach my $raw ( @{ $cache->{data} } ) {
         next unless $raw->[$repository_ix] eq $repository;
 
         # we found it, let's check the version
         if ( !defined $version || $version eq $raw->[$version_ix] ) {
-            return { zip( $cache->{columns}->@*, $raw->@* ) };
+            return { zip( @{ $cache->{columns} }, @$raw ) };
         }
         return;
     }

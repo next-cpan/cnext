@@ -22,7 +22,7 @@ sub run ( $self, @files ) {
     my @phases = grep $self->{"with_$_"}, qw(configure build test runtime develop);
     my @types  = grep $self->{"with_$_"}, qw(requires recommends suggests);
 
-    my @features = $self->features->@*;
+    my @features = @{ $self->features };
 
     foreach my $f (@files) {
         $f = 'cpanfile' if $f eq '.';

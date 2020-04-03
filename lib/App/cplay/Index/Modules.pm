@@ -33,7 +33,7 @@ sub search ( $self, $module, $version = undef ) {
 
     # should always be 0
     my $ix = $self->columns->{module};
-    foreach my $raw ( $cache->{data}->@* ) {
+    foreach my $raw ( @{ $cache->{data} } ) {
         if ( $raw->[$ix] eq $module ) {
             if ( defined $version ) {
                 my $v_ix = $self->columns->{version};
@@ -42,7 +42,7 @@ sub search ( $self, $module, $version = undef ) {
                     return;
                 }
             }
-            return { zip( $cache->{columns}->@*, $raw->@* ) };
+            return { zip( @{ $cache->{columns} }, @$raw ) };
         }
     }
 
