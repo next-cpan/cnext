@@ -157,6 +157,8 @@ You could use either a module name or a distribution name.
    # where :owner, :repository and :sha are replaced with the accurate values
    cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
 
+   cplay --from-tarball -d https://github.com/pause-play/A1z-Html/archive/p5.tar.gz
+
 =head2 Install one distribution to a custom directory
 
 By default modules are install to the current @INC, but you can specify a custom directory

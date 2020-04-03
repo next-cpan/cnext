@@ -137,10 +137,12 @@ cplay Devel-PPPort@3.57_02
 
 ## Install a module from a custom repository
 
-```
+```perl
 cplay --from-tarball ./path-to/custom.tar.gz
 # where :owner, :repository and :sha are replaced with the accurate values
 cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
+
+cplay --from-tarball -d https://github.com/pause-play/A1z-Html/archive/p5.tar.gz
 ```
 
 ## Install one distribution to a custom directory

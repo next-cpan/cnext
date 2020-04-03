@@ -129,6 +129,9 @@
       "App::cplay::cmd::cpanfile" : {
          "file" : "lib/App/cplay/cmd/cpanfile.pm"
       },
+      "App::cplay::cmd::fromtarball" : {
+         "file" : "lib/App/cplay/cmd/fromtarball.pm"
+      },
       "App::cplay::cmd::help" : {
          "file" : "lib/App/cplay/cmd/help.pm"
       },
