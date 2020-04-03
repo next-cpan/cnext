@@ -189,13 +189,23 @@ sub _install_single_module_or_repository ( $self, $module_or_repository, $can_be
     return $self->install_repository($repository_info);
 }
 
+sub check_BUILD_version ( $self, $BUILD ) {
+    FATAL("build unset") unless ref $BUILD;
+
+    if ( ( $BUILD->{'builder_API_version'} // 0 ) != 1 ) {
+
+        #... we would like to redirect to Install/Builder/v1.pm, ...
+        FATAL("Only know how to handle builder_API_version == 1");
+    }
+
+    return 1;
+}
+
 sub install_repository ( $self, $repository_info ) {
     die unless ref $repository_info;
 
     my $name = $repository_info->{repository};
     return 1 if $self->tracking_repository($name);
-
-    my $version = $repository_info->{version};
 
     INFO("Installing Distribution $name");
 
@@ -203,11 +213,9 @@ sub install_repository ( $self, $repository_info ) {
 
     # check BUILD sanity state
     my $BUILD = $self->BUILD->{$name} or FATAL("Cannot find a BUILD entry for $name");
-    if ( ( $BUILD->{'builder_API_version'} // 0 ) != 1 ) {
+    $self->check_BUILD_version($BUILD);
 
-        #... we would like to redirect to Install/Builder/v1.pm, ...
-        FATAL("Only know how to handle builder_API_version == 1");
-    }
+    my $version = $BUILD->{version};
 
     # check if distribution is already installed
     if ( my $primary = $BUILD->{primary} ) {
@@ -217,6 +225,19 @@ sub install_repository ( $self, $repository_info ) {
             return 1;
         }
     }
+
+    return $self->install_from_BUILD( $BUILD, $name );
+}
+
+sub install_from_BUILD ( $self, $BUILD, $name = undef ) {
+    $self->check_BUILD_version($BUILD);                              # need to check it again [can be called --from-tarball]
+
+    if ( !defined $name ) {                                          # --from-tarball
+        $name = $BUILD->{name};
+        $self->BUILD->{$name} = $BUILD;
+    }
+
+    my $version = $BUILD->{version};
 
     return unless $self->resolve_dependencies($name);
 
