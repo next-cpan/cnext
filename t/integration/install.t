@@ -97,8 +97,8 @@ note "Testing cplay install for module $module";
         test => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => array {
-                item match qr{FAIL\s+\QCannot find distribution A1z-Html@0.00666\E};
-                item match qr{FAIL\s+\QFail to install A1z-Html@0.00666\E};
+                item match qr{FAIL\s+Cannot find distribution A1z-Html\@0\.00666};
+                item match qr{FAIL\s+Fail to install A1z-Html\@0\.00666};
                 end;
             }, "distribution installed";
         },
