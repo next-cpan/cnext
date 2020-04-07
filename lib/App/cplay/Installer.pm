@@ -257,7 +257,7 @@ sub install_from_BUILD ( $self, $BUILD, $name = undef ) {
     elsif ( $builder_type eq 'makefile.pl' ) {
         return unless $self->_builder_Makefile_PL($name);
     }
-    elsif ( $builder_type eq 'build' ) {
+    elsif ( $builder_type eq 'build.pl' ) {
         return unless $self->_builder_Build($name);
     }
     else {
@@ -326,8 +326,11 @@ sub _builder_play ( $self, $name ) {
         push @cmds, App::cplay::Installer::Command->new(
             type => 'test',
             txt  => "tests for $name",
-            cmd  => [ $^X, "-MExtUtils::Command::MM", "-MTest::Harness", "-e", "undef *Test::Harness::Switches; test_harness(0,lib)", @tests ],
-            env  => {
+            cmd  => [
+                $^X,  "-MExtUtils::Command::MM",                             "-MTest::Harness",
+                "-e", "undef *Test::Harness::Switches; test_harness(0,lib)", @tests
+            ],
+            env => {
                 PERL_DL_NONLAZY => 1,
                 AUTHOR_TESTING  => 0,
                 RELEASE_TESTING => 0,
@@ -347,6 +350,7 @@ sub _builder_play ( $self, $name ) {
         $ok = $self->_builder_play_install_files($BUILD);
 
         # ... installing scripts & co
+        # ... share
         return;
     };
     App::cplay::Timeout->new(
@@ -360,10 +364,6 @@ sub _builder_play ( $self, $name ) {
 }
 
 sub _builder_play_install_files ( $self, $BUILD ) {
-    ### copy files to final location
-    my $provides       = $BUILD->{provides} // {};
-    my %provides_files = map { $_->{file} => 1 } values %$provides;
-
     my $sitelib = $Config{sitelib};
     FATAL("sitelib is not defined") unless defined $sitelib;
     FATAL("sitelib is missing: $sitelib") unless -d $sitelib;
@@ -380,11 +380,6 @@ sub _builder_play_install_files ( $self, $BUILD ) {
         # $_ is the current filename within that directory
         # $File::Find::name is the complete pathname to the file.
         return unless -f $File::Find::name;
-
-        if ( !$provides_files{$File::Find::name} ) {
-            WARN( $File::Find::name . " is not listed in provides list, ignoring it." );
-            return;
-        }
 
         my ($base_dir) = $File::Find::dir =~ m{^lib/(.*)};
         my $to_dir     = $sitelib . '/' . $base_dir;
