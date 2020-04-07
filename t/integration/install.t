@@ -15,6 +15,7 @@ use App::cplay::Tester;
 # using a module without any deps
 my $module       = q[A1z::Html];
 my $distribution = q[A1z-Html];
+my $last_version = q[0.04];
 
 note "Testing cplay install for module $module";
 
@@ -75,7 +76,7 @@ note "Testing cplay install for module $module";
     note "requesting a specific version";
     remove_module($module);
     cplay(
-        args => [ $distribution . '@0.003' ],
+        args => [ $distribution . '@' . $last_version ],
         exit => 0,
         test => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
@@ -164,7 +165,7 @@ note "Testing cplay install for module $module";
                 item match qr{fetch\s+https://github.com/pause-play/A1z-Html/archive};
                 item match qr{DEBUG\s+signature OK};
                 item match qr{install\s+Running Tests for A1z-Html};
-                item match qr{DEBUG\s+\QAll tests successful.\E};
+                item match qr{DEBUG\s+.+\QTest::Harness\E};
                 item match qr{install\s+succeeds for A1z-Html};
                 item match qr{OK\s+Installed distribution A1z-Html};
                 etc;
