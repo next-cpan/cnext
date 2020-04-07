@@ -4,8 +4,8 @@ use App::cplay::std;
 
 use App::cplay::Logger;    # import all
 use App::cplay::Installer;
+use App::cplay::BUILD;
 
-use File::pushd;
 use File::Path ();
 
 use Cwd;
@@ -27,8 +27,7 @@ sub run ( $cli, @args ) {
     DEBUG("tarball is extracted at $path");
 
     {
-        my $in_dir = pushd($path) or return 1;
-        return 1 unless my $BUILD = $installer->load_BUILD_json();
+        return 1 unless my $BUILD = App::cplay::BUILD::create_from_file("$path/BUILD.json");
 
         $installer->depth(1);    # need to setup depth
         $installer->install_from_BUILD($BUILD);
