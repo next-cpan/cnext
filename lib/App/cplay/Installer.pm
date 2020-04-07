@@ -241,6 +241,8 @@ sub install_from_BUILD ( $self, $BUILD, $name = undef ) {
     # move to the tmp directory for the next actions
     my $indir = pushd( $BUILD->{_rootdir} );
 
+    $self->_setup_local_lib_env();
+
     my $builder_type = lc( $BUILD->{builder} // 'play' );
     if ( $builder_type eq 'play' ) {
         return unless $self->_builder_play($name);
@@ -299,8 +301,6 @@ sub _setup_local_lib_env ( $self, $force = 0 ) {
 }
 
 sub _builder_play ( $self, $name ) {
-
-    $self->_setup_local_lib_env();
 
     return unless $self->do_configure($name);
     return unless $self->do_install($name);
