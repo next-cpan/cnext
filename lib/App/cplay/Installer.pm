@@ -10,7 +10,7 @@ use App::cplay::Signature qw{check_signature};
 use App::cplay::Installer::Unpacker ();
 use App::cplay::IPC                 ();
 
-use App::cplay::Helpers qw{read_file};
+use App::cplay::BUILD ();
 
 use App::cplay::Installer::Command ();
 
@@ -26,8 +26,6 @@ use File::pushd;
 App::cplay::Logger->import(qw{fetch configure install resolve});
 
 use Simple::Accessor qw{cli unpacker BUILD depth local_lib_bin local_lib_lib};
-
-with 'App::cplay::Roles::JSON';
 
 use constant EXTUTILS_MAKEMAKER_MIN_VERSION => '6.64';
 
@@ -221,11 +219,11 @@ sub install_repository ( $self, $repository_info ) {
 
     # check BUILD sanity state
     my $BUILD   = $self->BUILD->{$name} or FATAL("Cannot find a BUILD entry for $name");
-    my $version = $BUILD->{version};
+    my $version = $BUILD->version;
 
     # check if distribution is already installed
-    if ( my $primary = $BUILD->{primary} ) {
-        my $module_v = $BUILD->{provides}->{$primary}->{version};    # should not raise warnings?
+    if ( my $primary = $BUILD->primary ) {
+        my $module_v = $BUILD->provides->{$primary}->{version};    # should not raise warnings?
         if ( $self->has_module_version( $primary, $module_v ) ) {
             OK("$name-$version is up to date.");
             return 1;
@@ -236,21 +234,21 @@ sub install_repository ( $self, $repository_info ) {
 }
 
 sub install_from_BUILD ( $self, $BUILD, $name = undef ) {
-    if ( !defined $name ) {                                          # --from-tarball
-        $name = $BUILD->{name};
+    if ( !defined $name ) {                                        # --from-tarball
+        $name = $BUILD->name;
         $self->BUILD->{$name} = $BUILD;
     }
 
-    my $version = $BUILD->{version};
+    my $version = $BUILD->version;
 
     return unless $self->resolve_dependencies($name);
 
     # move to the tmp directory for the next actions
-    my $indir = pushd( $BUILD->{_rootdir} );
+    my $indir = pushd( $BUILD->_rootdir );
 
     $self->_setup_local_lib_env();
 
-    my $builder_type = lc( $BUILD->{builder} // 'play' );
+    my $builder_type = $BUILD->builder;
     if ( $builder_type eq 'play' ) {
         return unless $self->_builder_play($name);
     }
@@ -273,10 +271,10 @@ sub install_from_BUILD ( $self, $BUILD, $name = undef ) {
 
 sub advertise_installed_modules ( $self, $BUILD ) {
 
-    return unless ref $BUILD && ref $BUILD->{provides};
+    return unless ref $BUILD && ref $BUILD->provides;
 
-    foreach my $module ( sort keys %{ $BUILD->{provides} } ) {
-        my $v = $BUILD->{provides}->{$module}->{version};
+    foreach my $module ( sort keys %{ $BUILD->provides } ) {
+        my $v = $BUILD->provides->{$module}->{version};
         DEBUG("advertise_installed_modules: $module => $v");
         App::cplay::Module::module_updated( $module, $v, $self->cli->local_lib );
     }
@@ -317,10 +315,10 @@ sub _builder_play ( $self, $name ) {
     my @cmds;
     if ( $self->cli->run_tests ) {
         my @tests = ('t/*.t');    # default
-        if (   defined $BUILD->{tests}
-            && ref $BUILD->{tests} eq 'ARRAY'
-            && scalar @{ $BUILD->{tests} } ) {
-            @tests = @{ $BUILD->{tests} };
+        if (   defined $BUILD->tests
+            && ref $BUILD->tests eq 'ARRAY'
+            && scalar @{ $BUILD->tests } ) {
+            @tests = @{ $BUILD->tests };
         }
 
         push @cmds, App::cplay::Installer::Command->new(
@@ -412,7 +410,7 @@ sub _builder_play_install_files ( $self, $BUILD ) {
 
     return if $has_errors;
 
-    install( "succeeds for " . $BUILD->{name} );
+    install( "succeeds for " . $BUILD->name );
     return 1;
 }
 
@@ -544,35 +542,8 @@ sub setup_tarball ( $self, $repository_info ) {
 
 sub load_BUILD_json($self) {
 
-    my $cwd = Cwd::getcwd();
-
-    my $BUILD;
-    if ( -e 'BUILD.json' ) {
-        eval      { $BUILD = $self->json->decode( read_file( 'BUILD.json', ':utf8' ) ); 1 }
-          or eval { $BUILD = $self->json->decode( read_file( 'BUILD.json', '' ) );      1 }
-          or DEBUG("Fail to read BUILD.json $@");
-    }
-    else {
-        ERROR("Missing BUILD.json file from $cwd");
-        return;
-    }
-
-    if ( !ref $BUILD ) {
-        ERROR("Fail to read BUILD.json file from $cwd");
-        return;
-    }
-
-    $BUILD->{_rootdir} = $cwd;
-
-    return unless $self->check_BUILD_version($BUILD);
-
-    my $name = $BUILD->{name};
-    if ( !defined $name ) {
-        ERROR("No named defined in BUILD.json $cwd");
-        return;
-    }
-
-    $self->BUILD->{$name} = $BUILD;    # store the BUILD informations
+    return unless my $BUILD = App::cplay::BUILD::create_from_file('BUILD.json');
+    $self->BUILD->{ $BUILD->name } = $BUILD;    # store the BUILD informations
 
     return $BUILD;
 }
