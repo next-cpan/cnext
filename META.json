@@ -72,6 +72,9 @@
          "file" : "lib/App/cplay.pm",
          "version" : "0.0001"
       },
+      "App::cplay::BUILD" : {
+         "file" : "lib/App/cplay/BUILD.pm"
+      },
       "App::cplay::Helpers" : {
          "file" : "lib/App/cplay/Helpers.pm"
       },
