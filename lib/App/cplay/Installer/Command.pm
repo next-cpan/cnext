@@ -5,7 +5,7 @@ use App::cplay::Logger;
 
 use App::cplay::Timeout ();
 
-use Simple::Accessor qw{type txt cmd timeout};
+use Simple::Accessor qw{type txt cmd timeout env};
 
 use App::cplay::IPC ();
 
@@ -14,6 +14,7 @@ use App::cplay::IPC ();
 sub _build_type    { 'install' }
 sub _build_cmd     { FATAL("cmd not defined for Command") }
 sub _build_timeout { 0 }
+sub _build_env     { {} }
 
 sub _build_txt($self) {
     return $self->cmd unless ref $self->cmd;
@@ -29,6 +30,8 @@ sub run($self) {
 
     my ( $status, $out, $err );
     my $todo = sub { ( $status, $out, $err ) = App::cplay::IPC::run3( $self->cmd ) };
+
+    local %ENV = ( %ENV, %{ $self->env } );
 
     if ( $self->timeout ) {
         App::cplay::Timeout->new(

@@ -164,8 +164,8 @@ note "Testing cplay install for module $module";
             is $lines => bag {
                 item match qr{fetch\s+https://github.com/pause-play/A1z-Html/archive};
                 item match qr{DEBUG\s+signature OK};
-                item match qr{install\s+Running Tests for A1z-Html};
-                item match qr{DEBUG\s+.+\QTest::Harness\E};
+                item match qr{test\s+running tests for A1z-Html};
+                item match qr{RUN\s+.+\QTest::Harness\E};
                 item match qr{install\s+succeeds for A1z-Html};
                 item match qr{OK\s+Installed distribution A1z-Html};
                 etc;
@@ -183,8 +183,7 @@ note "Testing cplay install for module $module";
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => bag {
                 item match qr{fetch\s+https://github.com/pause-play/A1z-Html/archive};
-                item match qr{install\s+Running Tests for A1z-Html};
-                item match qr{install\s+succeeds for A1z-Html};
+                item match qr{test\s+running tests for A1z-Html};
                 item match qr{OK\s+Installed distribution A1z-Html};
                 etc;
             }, "verbose output" or diag explain $lines;
@@ -204,12 +203,11 @@ note "Testing cplay install for module $module";
             is $lines => bag {
                 item match qr{fetch\s+https://github.com/pause-play/A1z-Html/archive};
                 item match qr{DEBUG\s+signature OK};
-                item match qr{install\s+succeeds for A1z-Html};
                 item match qr{OK\s+Installed distribution A1z-Html};
                 etc;
             }, "debug output" or diag explain $lines;
 
-            unlike $out->{output}, qr{Running Tests}, "no Running Tests";
+            unlike $out->{output}, qr{running tests}i, "no Running Tests";
         },
     );
 }

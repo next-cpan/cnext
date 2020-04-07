@@ -14,11 +14,18 @@ use App::cplay::Helpers qw{read_file};
 
 use App::cplay::Installer::Command ();
 
+use Config;
+
+use File::Copy     ();    # CORE
+use File::Path     ();    # CORE
+use File::Find     ();    # CORE
+use File::Basename ();    # CORE
+
 use File::pushd;
 
 App::cplay::Logger->import(qw{fetch configure install resolve});
 
-use Simple::Accessor qw{cli unpacker BUILD depth};
+use Simple::Accessor qw{cli unpacker BUILD depth local_lib_bin local_lib_lib};
 
 with 'App::cplay::Roles::JSON';
 
@@ -294,6 +301,9 @@ sub _setup_local_lib_env ( $self, $force = 0 ) {
     $ll->setup_local_lib;
     $ll->setup_env_hash;
 
+    $self->local_lib_bin( $ll->bins->[0] );
+    $self->local_lib_lib( $ll->libs->[0] );
+
     $ENV{PERL_MM_OPT} .= " INSTALLMAN1DIR=none INSTALLMAN3DIR=none";
     $ENV{PERL_MM_USE_DEFAULT} = 1;
 
@@ -301,10 +311,113 @@ sub _setup_local_lib_env ( $self, $force = 0 ) {
 }
 
 sub _builder_play ( $self, $name ) {
+    my $BUILD = $self->BUILD->{$name} or die;
 
-    return unless $self->do_configure($name);
-    return unless $self->do_install($name);
+    ### running tests
+    my @cmds;
+    if ( $self->cli->run_tests ) {
+        my @tests = ('t/*.t');    # default
+        if (   defined $BUILD->{tests}
+            && ref $BUILD->{tests} eq 'ARRAY'
+            && scalar @{ $BUILD->{tests} } ) {
+            @tests = @{ $BUILD->{tests} };
+        }
 
+        push @cmds, App::cplay::Installer::Command->new(
+            type => 'test',
+            txt  => "tests for $name",
+            cmd  => [ $^X, "-MExtUtils::Command::MM", "-MTest::Harness", "-e", "undef *Test::Harness::Switches; test_harness(0,lib)", @tests ],
+            env  => {
+                PERL_DL_NONLAZY => 1,
+                AUTHOR_TESTING  => 0,
+                RELEASE_TESTING => 0,
+            },
+            timeout => $self->cli->test_timeout,
+        );
+    }
+
+    foreach my $cmd (@cmds) {
+        return unless $cmd->run();
+    }
+
+    ### install files
+    my $ok;
+
+    my $install = sub {
+        $ok = $self->_builder_play_install_files($BUILD);
+
+        # ... installing scripts & co
+        return;
+    };
+    App::cplay::Timeout->new(
+        message => q[Reach timeout while installing files],
+        timeout => $self->cli->install_timeout,
+    )->run($install);
+
+    return unless $ok;
+
+    return 1;
+}
+
+sub _builder_play_install_files ( $self, $BUILD ) {
+    ### copy files to final location
+    my $provides       = $BUILD->{provides} // {};
+    my %provides_files = map { $_->{file} => 1 } values %$provides;
+
+    my $sitelib = $Config{sitelib};
+    FATAL("sitelib is not defined") unless defined $sitelib;
+    FATAL("sitelib is missing: $sitelib") unless -d $sitelib;
+
+    if ( my $local_lib_lib = $self->local_lib_lib ) {
+        INFO("installing to local_lib $local_lib_lib");
+        $sitelib = $local_lib_lib;
+    }
+
+    my $has_errors = 0;
+    my $wanted     = sub {
+
+        # $File::Find::dir is the current directory name,
+        # $_ is the current filename within that directory
+        # $File::Find::name is the complete pathname to the file.
+        return unless -f $File::Find::name;
+
+        if ( !$provides_files{$File::Find::name} ) {
+            WARN( $File::Find::name . " is not listed in provides list, ignoring it." );
+            return;
+        }
+
+        my ($base_dir) = $File::Find::dir =~ m{^lib/(.*)};
+        my $to_dir     = $sitelib . '/' . $base_dir;
+        my $to_file    = $to_dir . '/' . File::Basename::basename($_);
+
+        if ( !-d $to_dir ) {
+            DEBUG("create directory $to_dir");
+            my $ok = File::Path::make_path( $to_dir, { chmod => 0755, verbose => 0 } );
+            if ( !$ok ) {
+                ERROR("Failed to create directory $to_dir");
+                ++$has_errors;
+                return;
+            }
+        }
+
+        DEBUG("cp $File::Find::name $to_file");
+        File::Copy::copy( $File::Find::name, $to_file );
+        if ( !-f $to_file || -s _ != -s $File::Find::name ) {
+            ERROR("Failed to copy file to $to_file");
+            ++$has_errors;
+            return;
+        }
+
+        return;
+    };
+
+    my $umask = umask(0333);    # r/r/r
+    File::Find::find( { wanted => $wanted, no_chdir => 1 }, 'lib' );
+    umask($umask);              # restore umask
+
+    return if $has_errors;
+
+    install( "succeeds for " . $BUILD->{name} );
     return 1;
 }
 
@@ -384,173 +497,6 @@ sub _builder_Build ( $self, $name ) {
     }
 
     return 1;
-}
-
-=pod
-## play builder workflow
-
-- prove t/*.t
-
-tests entries from
-    https://github.com/pause-play/Abstract-Meta-Class/blob/p5/BUILD.json
-
-- assume that t/boilerplate.t is banned.
-
-- cp lib/* -> Config{sitelib}# or soemthing else on demand --args
-
-
-BUILD.json
-- requires_develop ??
-- recommends ???
-    perl version ?
-
-
-=cut
-
-sub do_install ( $self, $name ) {
-
-    my $make = App::cplay::Helpers::make_binary();
-
-    ## perl Makefile.PL move there
-    {
-        install("Running make for $name");
-
-        my ( $status, $out, $err ) = App::cplay::IPC::run3("$make");
-        if ( $status != 0 ) {
-            ERROR("Fail to build $name");
-            return;
-        }
-    }
-
-    if ( $self->cli->run_tests ) {
-        install("Running Tests for $name");
-
-        my ( $status, $out, $err ) = App::cplay::IPC::run3( [ $make, "test" ] );
-        if ( $status != 0 ) {
-            ERROR("Test failure from $name");
-            return;
-        }
-    }
-
-    {
-        install("succeeds for $name");
-
-        my ( $status, $out, $err ) = App::cplay::IPC::run3( [ $make, "install" ] );
-        if ( $status != 0 ) {
-            ERROR("Fail to install $name");
-            return;
-        }
-    }
-
-    return 1;
-}
-
-sub do_configure ( $self, $name ) {
-    my $BUILD = $self->BUILD->{$name} or die;
-
-    configure("Generate Makefile.PL for $name");
-
-    $self->generate_makefile_pl($BUILD);
-
-    configure("Running Makefile.PL for $name");
-    my ( $status, $out, $err ) = App::cplay::IPC::run3( [ $^X, "Makefile.PL" ] );
-    if ( $status != 0 ) {
-        ERROR($err) if defind $err;
-        return;
-    }
-
-    return 1;
-}
-
-sub generate_makefile_pl ( $self, $BUILD ) {
-    die unless ref $BUILD;
-
-    my $template = <<'EOS';
-# This is generated by cplay v~CPLAY_VERSION~
-
-## ~DISTNAME~ v~VERSION~
-
-use strict;
-use warnings;
-
-use ExtUtils::MakeMaker;
-
-my %WriteMakefileArgs = (
-  'ABSTRACT' => '~ABSTRACT~',
-  'AUTHOR' => '~AUTHOR~',
-  'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => 0
-  },
-  'DISTNAME' => '~DISTNAME~',
-  'LICENSE' => '~LICENSE~',
-  'NAME' => '~PRIMARY~',
-  'PREREQ_PM' => {
-~PREREQ_PM~
-  },
-  'TEST_REQUIRES' => {
-~TEST_REQUIRES~
-  },
-  'VERSION' => '~VERSION~',
-  'test' => {
-    'TESTS' => '~TESTS~'
-  }
-);
-
-WriteMakefile(%WriteMakefileArgs);
-EOS
-
-    my %PMs;
-
-    {    # build the PMs list
-        my @requires_type = qw{requires_build requires_runtime};
-        foreach my $type (@requires_type) {
-            my $requires_list = $BUILD->{$type} // {};
-            $PMs{$type} = '';
-            next unless scalar keys %$requires_list;
-            foreach my $module ( sort keys %$requires_list ) {
-                my $version = $requires_list->{$module};
-                $PMs{$type} .= "     '" . _sanity($module) . "' => $version,\n";
-            }
-        }
-    }
-
-    my $tests = 't/*.t';    # default tests to run
-    if (   defined $BUILD->{tests}
-        && ref $BUILD->{tests} eq 'ARRAY'
-        && scalar @{ $BUILD->{tests} } ) {
-        $tests = join( ' ', @{ $BUILD->{tests} } );
-    }
-
-    open( my $fh, '>', 'Makefile.PL' ) or die "Fail to open Makefile.PL $!";
-
-    my %v = (
-        CPLAY_VERSION => $App::cplay::VERSION,
-        ##
-        ABSTRACT => _sanity( $BUILD->{abstract} ),
-        AUTHOR   => _sanity( $BUILD->{maintainers}->[0] ),
-        DISTNAME => _sanity( $BUILD->{name} ),
-        LICENSE  => _sanity( $BUILD->{license} ),
-        PRIMARY  => _sanity( $BUILD->{primary} ),
-        VERSION  => _sanity( $BUILD->{version} ),
-
-        TESTS => $tests,
-
-        PREREQ_PM     => $PMs{requires_runtime},
-        TEST_REQUIRES => $PMs{requires_build},
-    );
-
-    $template =~ s{~([A-Za-z_]+)~}{$v{$1}}g;
-
-    print {$fh} $template or return;
-
-    return 1;
-}
-
-sub _sanity($str) {
-    $str =~ s{\n}{}g;
-    $str =~ s{'}{\\'}g;
-
-    return $str;
 }
 
 sub resolve_dependencies ( $self, $name ) {

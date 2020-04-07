@@ -9,7 +9,7 @@ use Exporter 'import';
 $| = 1;
 
 our @EXPORT    = qw{OK DONE FAIL ERROR WARN INFO DEBUG FATAL};
-our @EXPORT_OK = ( @EXPORT, qw(fetch resolve install configure build test) );
+our @EXPORT_OK = ( @EXPORT, qw(fetch resolve install configure build test RUN STDERROR) );
 
 our $COLOR;
 our $VERBOSE;
@@ -44,6 +44,7 @@ my %color = (
     WARN      => COLOR_YELLOW,
     INFO      => COLOR_GREEN,
     DEBUG     => COLOR_WHITE,
+    RUN       => COLOR_WHITE,
 );
 
 sub new ( $class, @args ) {
@@ -111,6 +112,11 @@ sub DONE ( $msg, @args ) {
 sub DEBUG ( $msg, @args ) {
     return unless $DEBUG;
     return __PACKAGE__->log( type => 'DEBUG', message => $msg, @args );
+}
+
+sub RUN ( $msg, @args ) {
+    return unless $DEBUG;
+    return __PACKAGE__->log( type => 'RUN', message => $msg, @args );
 }
 
 sub FAIL ( $msg, @args ) {
