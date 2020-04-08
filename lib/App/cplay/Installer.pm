@@ -399,6 +399,7 @@ sub _builder_play_install_files ( $self, $BUILD ) {
             }
         }
 
+        # FIXME use install_to_bin
         DEBUG("cp $File::Find::name $to_file");
         File::Copy::copy( $File::Find::name, $to_file );
         if ( !-f $to_file || -s _ != -s $File::Find::name ) {

@@ -60,12 +60,11 @@ You can read more about cplay client on the L<cplay website|https://pause-play.g
 
 This is using cplay to install itself.
 
-    curl -L https://github.com/pause-play/cplay/raw/master/cplay | perl - App::cplay
-    curl -L https://git.io/cplay | perl - App::cplay
+    curl -L https://git.io/cplay | perl - self-install
 
 =head2 Local installation
 
-   curl -fsSL --compressed https://github.com/pause-play/cplay/raw/master/cplay > cplay
+   curl -fsSL --compressed http://get.cplay.us > cplay
    chmod +x cplay
    ./cplay --version
 

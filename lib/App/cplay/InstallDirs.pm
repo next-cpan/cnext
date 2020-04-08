@@ -3,8 +3,10 @@ package App::cplay::InstallDirs;
 use App::cplay::std;
 
 use App::cplay::Logger;    # import all
+use App::cplay::IPC;
 
 use Config;
+use File::Path;
 
 use Simple::Accessor qw{
   type
@@ -101,7 +103,45 @@ sub build ( $self, %options ) {
 
 sub _validate_type ( $self, $v ) {
     return 1 if defined $v && defined $MAP->{$v};
-    die 'Invalid type ' . ( $v // 'undef' );
+    FATAL( 'Invalid type ' . ( $v // 'undef' ) );
+}
+
+sub create_if_missing ( $self, $dir ) {
+    FATAL("dir is not defined") unless defined $dir && length $dir;
+
+    if ( !-d $dir ) {
+        DEBUG("Creating missing directory: $dir");
+        File::Path::make_path( $dir, { chmod => 0755, verbose => 0 } ) or FATAL("Fail to create $dir");
+    }
+
+    return;
+}
+
+sub install_to_bin ( $self, $file, $basename = undef ) {
+    FATAL("File is not defined") unless defined $file && length $file;
+    FATAL("Cannot find file $file") unless -f $file;
+
+    my $location = $self->bin;
+    $self->create_if_missing($location);
+
+    $basename //= File::Basename::basename($file);
+    my $to_file = $self->bin . '/' . $basename;
+
+    #my $umask = umask(022);    # 755 FIXME fatpack something light for umask as object or come with our own
+    my $perms = 0755;
+
+    my $umask = umask( $perms ^ 07777 );
+    File::Copy::copy( $file, $to_file );
+    umask($umask);    # restore umask
+
+    if ( !-f $to_file || -s _ != -s $file ) {
+        FATAL("Failed to copy file to $to_file");
+    }
+
+    # FIXME should not be needed
+    App::cplay::IPC::run3( [ 'chmod', '+x', $to_file ] ) unless -x $to_file;
+
+    return $to_file;
 }
 
 1;
