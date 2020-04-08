@@ -35,10 +35,11 @@ my %WriteMakefileArgs = (
         "Test2::Harness"            => "1.000015",
         "Test2::Plugin::NoWarnings" => 0,
         "Test2::Tools::Explain"     => 0,
+        "Test::MockModule"          => 0,
         "Test::More"                => 0
     },
     "VERSION" => "0.0001",
-    "test"    => { "TESTS" => "t/integration/*.t" }
+    "test"    => { "TESTS" => "t/*.t t/integration/*.t" }
 );
 
 my %FallbackPrereqs = (
@@ -46,6 +47,7 @@ my %FallbackPrereqs = (
     "Test2::Harness"            => "1.000015",
     "Test2::Plugin::NoWarnings" => 0,
     "Test2::Tools::Explain"     => 0,
+    "Test::MockModule"          => 0,
     "Test::More"                => 0
 );
 

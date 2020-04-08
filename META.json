@@ -63,6 +63,7 @@
             "Test2::Harness" : "1.000015",
             "Test2::Plugin::NoWarnings" : "0",
             "Test2::Tools::Explain" : "0",
+            "Test::MockModule" : "0",
             "Test::More" : "0"
          }
       }
@@ -98,6 +99,9 @@
       },
       "App::cplay::Index::Role::Columns" : {
          "file" : "lib/App/cplay/Index/Role/Columns.pm"
+      },
+      "App::cplay::InstallDirs" : {
+         "file" : "lib/App/cplay/InstallDirs.pm"
       },
       "App::cplay::Installer" : {
          "file" : "lib/App/cplay/Installer.pm"

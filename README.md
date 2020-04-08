@@ -1,4 +1,6 @@
+[![Actions Status](https://github.com/pause-play/cplay/workflows/unit-tests/badge.svg)](https://github.com/pause-play/cplay/actions)
 [![Actions Status](https://github.com/pause-play/cplay/workflows/integration/badge.svg)](https://github.com/pause-play/cplay/actions)
+[![Actions Status](https://github.com/pause-play/cplay/workflows/cplay-fatpack/badge.svg)](https://github.com/pause-play/cplay/actions)
 
 # NAME
 
