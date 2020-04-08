@@ -17,10 +17,13 @@ use App::cplay::IPC ();
 
 use App::cplay::InstallDirs;
 
+use Cwd qw{abs_path};
+
 note "Testing cplay --self-install";
 
 if ( use_fatpack() ) {
-    my $cplay_path = App::cplay::InstallDirs->new->bin . '/cplay';
+    my $install_to_dir = App::cplay::InstallDirs->new->bin;
+    my $cplay_path     = $install_to_dir . '/cplay';
     unlink $cplay_path if -e $cplay_path;
     ok !-e $cplay_path, "cplay_path does not exist";
 
@@ -28,10 +31,13 @@ if ( use_fatpack() ) {
         command => '--self-install',
         args    => [],
         exit    => 0,
-        test    => sub($out) {
+        env     => {
+            PATH => $ENV{PATH} . ':' . $install_to_dir,
+        },
+        test => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => array {
-                item match qr{OK cplay is installed to };
+                item match qr{OK\s+cplay is installed to };
                 end;
             }, "cplay is installed to expected path";
         },
@@ -46,6 +52,34 @@ if ( use_fatpack() ) {
     is $err,   undef,                     'nothing on stderr';
 
     unlink $cplay_path;
+
+    note "Testing when PATH does not contain the install dir";
+
+    my $clean_path = clean_path($install_to_dir);
+    note $clean_path;
+
+    cplay(
+        command => '--self-install',
+        args    => [],
+        exit    => 0,
+        env     => {
+            PATH => $clean_path,
+        },
+        test => sub($out) {
+            my $lines = [ split( /\n/, $out->{output} ) ];
+            is $lines => array {
+                item match qr{OK\s+cplay is installed to };
+                item match qr{WARN\s+.+is not in your PATH};
+                end;
+            }, "cplay is installed to expected path";
+        },
+    );
+
+    ok -f $cplay_path, "cplay is installed to $cplay_path";
+    ok -x $cplay_path, "cplay is executable";
+
+    unlink $cplay_path;
+
 }
 else {
     cplay(
@@ -63,3 +97,16 @@ else {
 }
 
 done_testing;
+
+sub clean_path( $to_remove ) {
+    my @path = split( ':', $ENV{PATH} );
+
+    my @keep;
+    $to_remove = abs_path($to_remove);
+    foreach my $p (@path) {
+        next if abs_path($p) eq $to_remove;
+        push @keep, $p;
+    }
+
+    return join( ':', @keep );
+}
