@@ -61,8 +61,15 @@ You can read more about cplay client on the L<cplay website|https://pause-play.g
 This is using cplay to install itself.
 
     curl -L https://git.io/cplay | perl - self-install
+    cplay --version
+
+Or if you are not using root
+
+    sudo curl -L https://git.io/cplay | perl - self-install
 
 =head2 Local installation
+
+You can also download and install cplay to any custom location.
 
    curl -fsSL --compressed http://get.cplay.us > cplay
    chmod +x cplay

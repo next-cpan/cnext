@@ -32,11 +32,11 @@ jobs:
 
       - name: install cplay
         run: |
-          curl -fsSL --compressed http://get.cplay.us > cplay
-          chmod +x cplay
-          ./cplay --version
+          curl -L https://git.io/cplay | sudo perl - self-install
+          which cplay
+          cplay --version
 
       # sudo ./cplay from-tarball -d https://github.com/${{ github.repository }}/archive/${{ github.sha }}.tar.gz
       - name: cplay from-tarball A1z-Html
         run: |
-          sudo ./cplay from-tarball -d https://github.com/pause-play/A1z-Html/archive/p5.tar.gz
+          sudo cplay from-tarball -d https://github.com/pause-play/A1z-Html/archive/p5.tar.gz
