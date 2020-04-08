@@ -164,7 +164,7 @@ cplay -L ~/vendor Simple-Accessor
 -v, --verbose            Turns on chatty output
 -d, --debug              enable --verbose and display some additional informations
     --show-progress --no-show-progress
-                         show progress, default: on      
+                         show progress, default: on
     --refresh            force refresh the index files
     --color, --no-color  turn on/off color output, default: on
     --test, --no-test    run test cases, default: on
@@ -250,7 +250,9 @@ Patches and code improvements were contributed by:
 Bug reports, suggestions and feedbacks were sent by, or general
 acknowledgement goes to:
 
-....
+\- Matt S. Trout (mst) & Shadowcat System for their contribution
+on self-reading a script using Filter::Util::Call
+which is used by self-install instead of downloading it twice.
 
 # NO WARRANTY
 

@@ -4,19 +4,21 @@ use App::cplay::std;
 
 use App::cplay::Logger;    # import all
 use App::cplay::InstallDirs;
-use App::cplay::Installer;
+
+use App::cplay::Helpers qw{write_file};
 
 sub run ( $cli, @argv ) {
+
     if ( !is_fatpacked() ) {
         FAIL("Can only install a FatPacked version of 'cplay'.");
         return 1;
     }
 
-    my $url = q[https://git.io/cplay];    # or http://get.cplay.us
+    FATAL("No source code") unless length( $main::SOURCE_CODE // '' );
 
-    my $installer = App::cplay::Installer->new( cli => $cli );
-    my $tmp_file  = $installer->cli->build_dir . "/cplay.tmp";
-    $installer->cli->http->mirror( $url, $tmp_file );
+    my $tmp_file = $cli->build_dir . "/cplay.tmp";
+
+    write_file( $tmp_file, $main::SOURCE_CODE );
 
     my $dirs = App::cplay::InstallDirs->new;                  # FIXME use the cli config / installer ?
     my $path = $dirs->install_to_bin( $tmp_file, 'cplay' );
@@ -33,3 +35,4 @@ sub is_fatpacked() {
 }
 
 1;
+

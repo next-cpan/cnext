@@ -7,7 +7,7 @@ use File::Which ();
 use App::cplay::Logger;
 
 use Exporter 'import';
-our @EXPORT_OK = qw(read_file zip);
+our @EXPORT_OK = qw(read_file zip write_file);
 
 sub read_file ( $file, $mode = ':utf8' ) {
     local $/;
@@ -16,6 +16,15 @@ sub read_file ( $file, $mode = ':utf8' ) {
       or die "Fail to open file: $! " . join( ' ', ( caller(1) )[ 0, 1, 2, 3 ] ) . "\n";
 
     return readline($fh);
+}
+
+sub write_file ( $file, $content, $mode = ':utf8' ) {
+    open( my $fh, '>' . $mode, $file )
+      or die "Fail to open file: $! " . join( ' ', ( caller(1) )[ 0, 1, 2, 3 ] ) . "\n";
+
+    print {$fh} $content;
+
+    return;
 }
 
 sub zip : prototype(\@\@;\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@) {

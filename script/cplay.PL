@@ -1,5 +1,26 @@
 #!/usr/bin/env perl
 
+package main;
+
+our $SOURCE_CODE;
+
+BEGIN {    # thanks to mst and shadowcat to read itself
+    if ( grep { m{self-?install} } @ARGV ) {
+        require Filter::Util::Call;    #  CORE from 5.8
+
+        $SOURCE_CODE = qq[#!$^X\n\n];  # set the shebang
+
+        Filter::Util::Call::filter_add(
+            sub {
+                Filter::Util::Call::filter_del();
+                1 while Filter::Util::Call::filter_read();
+                $SOURCE_CODE .= $_;
+                return 1;
+            }
+        );
+    }
+}
+
 BEGIN {
     if ( "$]" < 5.019 ) {    # needs 5.20 for function signature
         die <<"EOS";
@@ -173,7 +194,7 @@ where to install these modules using -L.
    -v, --verbose            Turns on chatty output
    -d, --debug              enable --verbose and display some additional informations
        --show-progress --no-show-progress
-                            show progress, default: on      
+                            show progress, default: on
        --refresh            force refresh the index files
        --color, --no-color  turn on/off color output, default: on
        --test, --no-test    run test cases, default: on

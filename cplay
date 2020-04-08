@@ -1,5 +1,26 @@
 #!/usr/bin/env perl
 
+package main;
+
+our $SOURCE_CODE;
+
+BEGIN {    # thanks to mst and shadowcat to read itself
+    if ( grep { m{self-?install} } @ARGV ) {
+        require Filter::Util::Call;    #  CORE from 5.8
+
+        $SOURCE_CODE = qq[#!$^X\n\n];  # set the shebang
+
+        Filter::Util::Call::filter_add(
+            sub {
+                Filter::Util::Call::filter_del();
+                1 while Filter::Util::Call::filter_read();
+                $SOURCE_CODE .= $_;
+                return 1;
+            }
+        );
+    }
+}
+
 BEGIN {
     if ( "$]" < 5.019 ) {    # needs 5.20 for function signature
         die <<"EOS";
@@ -24,7 +45,7 @@ APP_CPLAY
 APP_CPLAY_BUILD
 
     $fatpacked{"App/cplay/Helpers.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_HELPERS';
-  package App::cplay::Helpers;use App::cplay::std;use Config;use File::Which ();use App::cplay::Logger;use Exporter 'import';our@EXPORT_OK=qw(read_file zip);sub read_file ( $file, $mode = ':utf8' ) {local $/;open(my$fh,'<' .$mode,$file)or die "Fail to open file: $! " .join(' ',(caller(1))[0,1,2,3 ])."\n";return readline($fh)}sub zip : prototype(\@\@;\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@) {my$max=-1;$max < $#$_ && ($max=$#$_)foreach @_;map {my$ix=$_;map $_->[$ix],@_}0 .. $max}sub make_binary {my@lookup=($Config{make},qw{make gmake});for my$bin (@lookup){next unless$bin;my$path=File::Which::which($Config{make});next unless -x $path;no warnings 'redefine';*make_binary=sub {$path};return$path}FATAL("Cannot find make binary")}sub prove_binary {my$prove;my@prefixes=qw{bin installbin sitebin vendorbin};for my$prefix (@prefixes){next unless$Config{$prefix};$prove=$Config{$prefix}.'/prove';last if -x $prove}if (!-x $prove){my$perldoc=$^X ."doc";$prove=qx{$perldoc -l prove};$prove=undef if $?!=0}if (defined$prove && -x $prove){no warnings 'redefine';*prove_binary=sub {$prove};return$prove}FATAL("Cannot find 'prove' binary")}1;
+  package App::cplay::Helpers;use App::cplay::std;use Config;use File::Which ();use App::cplay::Logger;use Exporter 'import';our@EXPORT_OK=qw(read_file zip write_file);sub read_file ( $file, $mode = ':utf8' ) {local $/;open(my$fh,'<' .$mode,$file)or die "Fail to open file: $! " .join(' ',(caller(1))[0,1,2,3 ])."\n";return readline($fh)}sub write_file ( $file, $content, $mode = ':utf8' ) {open(my$fh,'>' .$mode,$file)or die "Fail to open file: $! " .join(' ',(caller(1))[0,1,2,3 ])."\n";print {$fh}$content;return}sub zip : prototype(\@\@;\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@) {my$max=-1;$max < $#$_ && ($max=$#$_)foreach @_;map {my$ix=$_;map $_->[$ix],@_}0 .. $max}sub make_binary {my@lookup=($Config{make},qw{make gmake});for my$bin (@lookup){next unless$bin;my$path=File::Which::which($Config{make});next unless -x $path;no warnings 'redefine';*make_binary=sub {$path};return$path}FATAL("Cannot find make binary")}sub prove_binary {my$prove;my@prefixes=qw{bin installbin sitebin vendorbin};for my$prefix (@prefixes){next unless$Config{$prefix};$prove=$Config{$prefix}.'/prove';last if -x $prove}if (!-x $prove){my$perldoc=$^X ."doc";$prove=qx{$perldoc -l prove};$prove=undef if $?!=0}if (defined$prove && -x $prove){no warnings 'redefine';*prove_binary=sub {$prove};return$prove}FATAL("Cannot find 'prove' binary")}1;
 APP_CPLAY_HELPERS
 
     $fatpacked{"App/cplay/Http.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_HTTP';
@@ -116,7 +137,7 @@ APP_CPLAY_CMD_HELP
 APP_CPLAY_CMD_INSTALL
 
     $fatpacked{"App/cplay/cmd/selfinstall.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_CMD_SELFINSTALL';
-  package App::cplay::cmd::selfinstall;use App::cplay::std;use App::cplay::Logger;use App::cplay::InstallDirs;use App::cplay::Installer;sub run ( $cli, @argv ) {if (!is_fatpacked()){FAIL("Can only install a FatPacked version of 'cplay'.");return 1}my$url=q[https://git.io/cplay];my$installer=App::cplay::Installer->new(cli=>$cli);my$tmp_file=$installer->cli->build_dir ."/cplay.tmp";$installer->cli->http->mirror($url,$tmp_file);my$dirs=App::cplay::InstallDirs->new;my$path=$dirs->install_to_bin($tmp_file,'cplay');OK "cplay is installed to $path";unlink$tmp_file;return}sub is_fatpacked() {return unless my$ref=ref$INC{'App/cplay/cmd/selfinstall.pm'};return$ref =~ m{^FatPacked} ? 1 : 0}1;
+  package App::cplay::cmd::selfinstall;use App::cplay::std;use App::cplay::Logger;use App::cplay::InstallDirs;use App::cplay::Helpers qw{write_file};sub run ( $cli, @argv ) {if (!is_fatpacked()){FAIL("Can only install a FatPacked version of 'cplay'.");return 1}FATAL("No source code")unless length($main::SOURCE_CODE // '');my$tmp_file=$cli->build_dir ."/cplay.tmp";write_file($tmp_file,$main::SOURCE_CODE);my$dirs=App::cplay::InstallDirs->new;my$path=$dirs->install_to_bin($tmp_file,'cplay');OK "cplay is installed to $path";unlink$tmp_file;return}sub is_fatpacked() {return unless my$ref=ref$INC{'App/cplay/cmd/selfinstall.pm'};return$ref =~ m{^FatPacked} ? 1 : 0}1;
 APP_CPLAY_CMD_SELFINSTALL
 
     $fatpacked{"App/cplay/cmd/version.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_CMD_VERSION';
@@ -532,7 +553,7 @@ where to install these modules using -L.
    -v, --verbose            Turns on chatty output
    -d, --debug              enable --verbose and display some additional informations
        --show-progress --no-show-progress
-                            show progress, default: on      
+                            show progress, default: on
        --refresh            force refresh the index files
        --color, --no-color  turn on/off color output, default: on
        --test, --no-test    run test cases, default: on
