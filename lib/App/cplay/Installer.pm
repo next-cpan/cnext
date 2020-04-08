@@ -364,6 +364,12 @@ sub _builder_play ( $self, $name ) {
 sub _builder_play_install_files ( $self, $BUILD ) {
     my $sitelib = $Config{sitelib};
     FATAL("sitelib is not defined") unless defined $sitelib;
+
+    if ( !-d $sitelib ) {
+        DEBUG("Creating missing directory: $sitelib");
+        File::Path::make_path( $sitelib, { chmod => 0755, verbose => 0 } ) or FATAL("Fail to create $sitelib");
+    }
+
     FATAL("sitelib is missing: $sitelib") unless -d $sitelib;
 
     if ( my $local_lib_lib = $self->local_lib_lib ) {

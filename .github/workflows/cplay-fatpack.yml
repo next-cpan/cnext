@@ -7,7 +7,7 @@ on:
     branches: [ 'master' ]
 
 jobs:
-  perl:
+  cplay:
     env:
       # some plugins still needs this to run their tests...
       PERL_USE_UNSAFE_INC: 0
