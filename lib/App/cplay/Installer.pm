@@ -363,7 +363,7 @@ sub _builder_play ( $self, $name ) {
 
 sub _builder_play_install_files ( $self, $BUILD ) {
     my $sitelib = $Config{sitelib};
-    FATAL("sitelib is not defined") unless defined $sitelib;
+    FATAL("sitelib is not defined") unless defined $sitelib && length $sitelib;
 
     if ( !-d $sitelib ) {
         DEBUG("Creating missing directory: $sitelib");
