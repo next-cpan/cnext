@@ -13,6 +13,8 @@ use cPlayTestHelpers;
 use App::cplay::std;
 use App::cplay::Tester;
 
+use App::cplay::IPC ();
+
 use App::cplay::InstallDirs;
 
 note "Testing cplay --self-install";
@@ -37,6 +39,12 @@ if ( use_fatpack() ) {
 
     ok -f $cplay_path, "cplay is installed to $cplay_path";
     ok -x $cplay_path, "cplay is executable";
+
+    my ( $exit, $out, $err ) = App::cplay::IPC::run3( [ $cplay_path, '--version' ] );
+    is $exit,  0,                         'cplay --version exits with 0';
+    like $out, qr{^\s*cplay\s+\d+\.\d+}a, 'cplay --version output' or diag ":$out:";
+    is $err,   undef,                     'nothing on stderr';
+
     unlink $cplay_path;
 }
 else {
