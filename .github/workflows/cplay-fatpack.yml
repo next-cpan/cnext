@@ -24,6 +24,12 @@ jobs:
       - name: perl -V
         run: perl -V
 
+      - name: '%Config'
+        run: perl -MConfig -MTest::More -E 'note explain \%Config'
+
+      - name: perl '-V:install.*'
+        run: perl '-V:install.*'
+
       - name: install cplay
         run: |
           curl -fsSL --compressed https://github.com/pause-play/cplay/raw/master/cplay > cplay
