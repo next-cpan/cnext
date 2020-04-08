@@ -57,14 +57,14 @@ You can read more about cplay client on the [cplay website cplay.us](https://cpl
 This is using cplay to install itself.
 
 ```
-curl -L https://git.io/cplay | perl - self-install
+curl -sL https://git.io/cplay | perl - self-install
 cplay --version
 ```
 
 Or if you are not using root
 
 ```
-sudo curl -L https://git.io/cplay | perl - self-install
+sudo curl -sL https://git.io/cplay | perl - self-install
 ```
 
 ## Local installation
