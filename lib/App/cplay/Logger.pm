@@ -91,7 +91,7 @@ sub log ( $self_or_class, %options ) {
         print STDERR $r . sprintf "%s %s %s%s$eol", $result, $type, $message, $optional;
     }
     else {
-        warn $r . join( " ", map { defined $_ ? $_ : () } $result, $type, $message . $optional ) . $eol;
+        print STDERR $r . join( " ", map { defined $_ ? $_ : () } $result, $type, $message . $optional ) . $eol;
     }
 
     return;
