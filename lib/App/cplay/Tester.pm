@@ -19,7 +19,7 @@ use Cwd 'abs_path';
 use Test2::Harness::Util::IPC qw/run_cmd/;
 
 use Exporter 'import';
-our @EXPORT = qw/cplay/;
+our @EXPORT = qw/cplay use_fatpack/;
 
 my $apppath = find_cplay();
 
@@ -30,7 +30,7 @@ sub find_cplay {
         require App::cplay;
         my $path = abs_path( $INC{'App/cplay.pm'} );
 
-        if ( $ENV{USE_CPLAY_COMPILED} ) {
+        if ( use_fatpack() ) {
             $path =~ s{\Qlib/App/cplay.pm\E$}{cplay};
             -x $path or die "Cannot find cplay fatpack script";
             $cache = [$path];
@@ -50,6 +50,10 @@ sub find_cplay {
 
     return $cache->[0] unless wantarray;    # scalar context
     return @$cache;
+}
+
+sub use_fatpack {
+    return $ENV{USE_CPLAY_COMPILED} ? 1 : 0;
 }
 
 sub cplay(%params) {
