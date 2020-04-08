@@ -32,7 +32,7 @@ jobs:
 
       - name: install cplay
         run: |
-          curl -fsSL --compressed https://github.com/pause-play/cplay/raw/master/cplay > cplay
+          curl -fsSL --compressed http://get.cplay.us > cplay
           chmod +x cplay
           ./cplay --version
 
