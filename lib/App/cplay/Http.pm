@@ -21,7 +21,7 @@ sub create ( $class, %args ) {
     die "Couldn't find HTTP Clients that support https" unless $backend;
 
     my $http = $backend->new(
-        agent      => "App::cplay/$App::cplay::VERSION",
+        agent      => "App::cplay/v" . $App::cplay::VERSION,
         timeout    => 60,
         verify_SSL => 1,
         %args,

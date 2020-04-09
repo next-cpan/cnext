@@ -8,7 +8,7 @@ use App::cplay::Logger;    # import all
 use App::cplay::Installer;
 use App::cplay::InstallDirs;
 
-use App::cplay::Helpers qw{write_file is_fatpacked};
+use App::cplay::Helpers qw{write_file is_fatpacked update_shebang};
 
 use File::Basename ();
 use Cwd            ();
@@ -39,12 +39,13 @@ sub run ( $cli, @argv ) {
         return 1;
     }
 
-    my $current_version = $App::cplay::VERSION;
+    my $current_version = $App::cplay::VERSION . '@' . $App::cplay::REVISION;
     my ( $exit, $out, $err ) = App::cplay::IPC::run3( [ "$^X", $tmp_file, q[--version] ] );
     my $new_version;
-    if ( $out && $out =~ m{^cplay\s+(\d+\.\d+)\b}a ) {    # FIXME use sha1 id
+    if ( $out && $out =~ m{^cplay\s+([\S+])\b}a ) {    # FIXME use sha1 id
         $new_version = $1;
     }
+
     if ( $exit || $err || !defined $new_version || !length $new_version ) {
         FAIL( "Cannot get cplay version from " . URL );
         return 1;
@@ -62,8 +63,7 @@ sub run ( $cli, @argv ) {
         return 1;
     }
 
-    ## FIXME update shebang file
-    #update_shebang($tmp_file);
+    update_shebang($tmp_file);
 
     DEBUG("cp $tmp_file $to_file");
     File::Copy::copy( $tmp_file, $to_file ) or do {

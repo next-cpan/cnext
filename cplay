@@ -37,7 +37,7 @@ BEGIN {
     my %fatpacked;
 
     $fatpacked{"App/cplay.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY';
-  package App::cplay;our$VERSION="0.0001";1;
+  package App::cplay;our$VERSION="0.0001";our$REVISION='34fb661';1;
 APP_CPLAY
 
     $fatpacked{"App/cplay/BUILD.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_BUILD';
@@ -49,7 +49,7 @@ APP_CPLAY_BUILD
 APP_CPLAY_HELPERS
 
     $fatpacked{"App/cplay/Http.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_HTTP';
-  package App::cplay::Http;use App::cplay::std;use App::cplay ();use HTTP::Tinyish;sub create ( $class, %args ) {my@try=$args{prefer}? @{$args{prefer}}: qw(HTTPTiny LWP Curl Wget);my ($backend,$tool,$desc);for my$try (map "HTTP::Tinyish::$_",@try){my$meta=HTTP::Tinyish->configure_backend($try)or next;$try->supports("https")or next;($tool)=sort keys %$meta;($desc=$meta->{$tool})=~ s/^(.*?)\n.*/$1/s;$backend=$try,last}die "Couldn't find HTTP Clients that support https" unless$backend;my$http=$backend->new(agent=>"App::cplay/$App::cplay::VERSION",timeout=>60,verify_SSL=>1,%args,);my$keep_alive=exists$args{keep_alive}? $args{keep_alive}: 1;if ($keep_alive and $backend =~ /LWP$/){$http->{ua}->conn_cache({total_capacity=>1 })}return$http}1;
+  package App::cplay::Http;use App::cplay::std;use App::cplay ();use HTTP::Tinyish;sub create ( $class, %args ) {my@try=$args{prefer}? @{$args{prefer}}: qw(HTTPTiny LWP Curl Wget);my ($backend,$tool,$desc);for my$try (map "HTTP::Tinyish::$_",@try){my$meta=HTTP::Tinyish->configure_backend($try)or next;$try->supports("https")or next;($tool)=sort keys %$meta;($desc=$meta->{$tool})=~ s/^(.*?)\n.*/$1/s;$backend=$try,last}die "Couldn't find HTTP Clients that support https" unless$backend;my$http=$backend->new(agent=>"App::cplay/v".$App::cplay::VERSION,timeout=>60,verify_SSL=>1,%args,);my$keep_alive=exists$args{keep_alive}? $args{keep_alive}: 1;if ($keep_alive and $backend =~ /LWP$/){$http->{ua}->conn_cache({total_capacity=>1 })}return$http}1;
 APP_CPLAY_HTTP
 
     $fatpacked{"App/cplay/IPC.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_IPC';
@@ -141,11 +141,11 @@ APP_CPLAY_CMD_INSTALL
 APP_CPLAY_CMD_SELFINSTALL
 
     $fatpacked{"App/cplay/cmd/selfupdate.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_CMD_SELFUPDATE';
-  package App::cplay::cmd::selfupdate;use App::cplay ();use App::cplay::std;use App::cplay::Logger;use App::cplay::Installer;use App::cplay::InstallDirs;use App::cplay::Helpers qw{write_file is_fatpacked};use File::Basename ();use Cwd ();use File::Copy ();use constant URL=>q[http://get.cplay.us/];sub run ( $cli, @argv ) {if (!is_fatpacked()){FAIL("Can only update a FatPacked version of 'cplay'.");return 1}App::cplay::Logger::setup_for_script();my$force=grep {$_ eq 'force'}@argv;INFO("running 'selfupdate force'")if$force;my$installer=App::cplay::Installer->new(cli=>$cli);my$tmp_file=$installer->cli->build_dir ."/cplay.tmp";unlink$tmp_file if -e $tmp_file;$installer->cli->http->mirror(URL,$tmp_file);if (!-f $tmp_file || -z _){FAIL("Fail to download cplay from " .URL);return 1}my$current_version=$App::cplay::VERSION;my ($exit,$out,$err)=App::cplay::IPC::run3(["$^X",$tmp_file,q[--version] ]);my$new_version;if ($out && $out =~ m{^cplay\s+(\d+\.\d+)\b}a){$new_version=$1}if ($exit || $err ||!defined$new_version ||!length$new_version){FAIL("Cannot get cplay version from " .URL);return 1}if (!$force && $current_version eq $new_version){OK("cplay is already up to date using version '$current_version'");INFO("you can force an update by running: cplay selfupdate force");return}my$to_file=Cwd::abs_path($0);if (!-e $to_file){FAIL("Do not know how to update $0");return 1}DEBUG("cp $tmp_file $to_file");File::Copy::copy($tmp_file,$to_file)or do {FAIL("Cannot copy $tmp_file to $to_file");return 1};OK("cplay is updated to version '$new_version'");unlink$tmp_file;return}1;
+  package App::cplay::cmd::selfupdate;use App::cplay ();use App::cplay::std;use App::cplay::Logger;use App::cplay::Installer;use App::cplay::InstallDirs;use App::cplay::Helpers qw{write_file is_fatpacked};use File::Basename ();use Cwd ();use File::Copy ();use constant URL=>q[http://get.cplay.us/];sub run ( $cli, @argv ) {if (!is_fatpacked()){FAIL("Can only update a FatPacked version of 'cplay'.");return 1}App::cplay::Logger::setup_for_script();my$force=grep {$_ eq 'force'}@argv;INFO("running 'selfupdate force'")if$force;my$installer=App::cplay::Installer->new(cli=>$cli);my$tmp_file=$installer->cli->build_dir ."/cplay.tmp";unlink$tmp_file if -e $tmp_file;$installer->cli->http->mirror(URL,$tmp_file);if (!-f $tmp_file || -z _){FAIL("Fail to download cplay from " .URL);return 1}my$current_version=$App::cplay::VERSION;my ($exit,$out,$err)=App::cplay::IPC::run3(["$^X",$tmp_file,q[--version] ]);my$new_version;if ($out && $out =~ m{^cplay\s+([\S+])\b}a){$new_version=$1}if ($exit || $err ||!defined$new_version ||!length$new_version){FAIL("Cannot get cplay version from " .URL);return 1}if (!$force && $current_version eq $new_version){OK("cplay is already up to date using version '$current_version'");INFO("you can force an update by running: cplay selfupdate force");return}my$to_file=Cwd::abs_path($0);if (!-e $to_file){FAIL("Do not know how to update $0");return 1}DEBUG("cp $tmp_file $to_file");File::Copy::copy($tmp_file,$to_file)or do {FAIL("Cannot copy $tmp_file to $to_file");return 1};OK("cplay is updated to version '$new_version'");unlink$tmp_file;return}1;
 APP_CPLAY_CMD_SELFUPDATE
 
     $fatpacked{"App/cplay/cmd/version.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_CMD_VERSION';
-  package App::cplay::cmd::version;use App::cplay::std;sub run ( $self, @argv ) {say "cplay $App::cplay::VERSION ($0)";return}1;
+  package App::cplay::cmd::version;use App::cplay::std;sub run ( $self, @argv ) {my$version=$App::cplay::VERSION;my$revision=$App::cplay::REVISION;say "cplay $version\@$revision ($0)";return}1;
 APP_CPLAY_CMD_VERSION
 
     $fatpacked{"App/cplay/std.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_STD';

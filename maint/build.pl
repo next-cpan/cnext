@@ -60,6 +60,7 @@ my $fatpack_compact;
 }
 
 generate_file( 'script/cplay.PL', "cplay", $fatpack_compact );
+bump_git_revision('cplay');
 chmod 0755, "cplay";
 
 my $perltidy = qx{which perltidy};
@@ -72,4 +73,30 @@ if ( $? == 0 && length $perltidy ) {     # probably want to add a '# notidy file
 END {
     unlink "cplay.tmp";
     system "rm", "-r", ".build";
+}
+
+sub bump_git_revision {
+    my $f = shift or die;
+
+    -f $f or die;
+
+    my $last_change = qx{git log -n1 --pretty=format:%h lib};
+    return unless $? == 0;
+    return unless defined $last_change;
+    chomp $last_change;
+    return unless length $last_change;
+
+    my $content;
+    {
+        local $/;
+        open( my $fh, '<:utf8', $f ) or die;
+        $content = readline $fh;
+    }
+
+    $content =~ s{~REVISION~}{$last_change};
+
+    open( my $fh, '>:utf8', $f ) or die;
+    print {$fh} $content;
+
+    return;
 }

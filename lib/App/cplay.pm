@@ -1,6 +1,7 @@
 package App::cplay;
 
-our $VERSION = "0.0001";
+our $VERSION  = "0.0001";
+our $REVISION = '~REVISION~';
 
 1;
 
