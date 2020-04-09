@@ -23,9 +23,11 @@ use File::Basename ();    # CORE
 
 use File::pushd;
 
+use App::cplay::InstallDirs ();
+
 App::cplay::Logger->import(qw{fetch configure install resolve});
 
-use Simple::Accessor qw{cli unpacker BUILD depth local_lib_bin local_lib_lib};
+use Simple::Accessor qw{cli unpacker BUILD depth local_lib_bin local_lib_lib installdirs};
 
 use constant EXTUTILS_MAKEMAKER_MIN_VERSION => '6.64';
 
@@ -38,6 +40,10 @@ sub build ( $self, %opts ) {
     $self->{BUILD} = {};
 
     return $self;
+}
+
+sub _build_installdirs($self) {
+    App::cplay::InstallDirs->new( type => $self->cli->installdirs );
 }
 
 sub _build_unpacker($self) {
@@ -362,19 +368,19 @@ sub _builder_play ( $self, $name ) {
 }
 
 sub _builder_play_install_files ( $self, $BUILD ) {
-    my $sitelib = $Config{sitelib};
-    FATAL("sitelib is not defined") unless defined $sitelib && length $sitelib;
+    my $inst_lib = $self->installdirs->lib;
+    FATAL("inst_lib is not defined") unless defined $inst_lib && length $inst_lib;
 
-    if ( !-d $sitelib ) {
-        DEBUG("Creating missing directory: $sitelib");
-        File::Path::make_path( $sitelib, { chmod => 0755, verbose => 0 } ) or FATAL("Fail to create $sitelib");
+    if ( !-d $inst_lib ) {
+        DEBUG("Creating missing directory: $inst_lib");
+        File::Path::make_path( $inst_lib, { chmod => 0755, verbose => 0 } ) or FATAL("Fail to create $inst_lib");
     }
 
-    FATAL("sitelib is missing: $sitelib") unless -d $sitelib;
+    FATAL("inst_lib is missing: $inst_lib") unless -d $inst_lib;
 
     if ( my $local_lib_lib = $self->local_lib_lib ) {
         INFO("installing to local_lib $local_lib_lib");
-        $sitelib = $local_lib_lib;
+        $inst_lib = $local_lib_lib;
     }
 
     my $has_errors = 0;
@@ -386,7 +392,7 @@ sub _builder_play_install_files ( $self, $BUILD ) {
         return unless -f $File::Find::name;
 
         my ($base_dir) = $File::Find::dir =~ m{^lib/(.*)};
-        my $to_dir     = $sitelib . '/' . $base_dir;
+        my $to_dir     = $inst_lib . '/' . $base_dir;
         my $to_file    = $to_dir . '/' . File::Basename::basename($_);
 
         if ( !-d $to_dir ) {

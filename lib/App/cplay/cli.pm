@@ -35,6 +35,8 @@ use Simple::Accessor qw{
   refresh
   run_tests
 
+  installdirs
+
   features
 
   reinstall debug verbose
@@ -168,9 +170,10 @@ sub parse_options ( $self, @opts ) {
         "refresh"   => \( $self->{refresh} ),
         "reinstall" => \( $self->{reinstall} ),
 
-        "v|verbose"     => \( $self->{verbose} ),
-        "d|debug"       => \( $self->{debug} ),
-        "L|local-lib=s" => \( $self->{local_lib} ),
+        "v|verbose"                => \( $self->{verbose} ),
+        "d|debug"                  => \( $self->{debug} ),
+        "L|local-lib=s"            => \( $self->{local_lib} ),
+        "installdir|installdirs=s" => \( $self->{installdirs} ),
 
         "show-progress!" => \( $self->{show_progress} ),
 
@@ -207,6 +210,10 @@ sub parse_options ( $self, @opts ) {
     if ( defined $self->{local_lib} ) {
         $self->{local_lib} =~ s{^=}{};
         $self->{local_lib} = Cwd::abs_path( $self->local_lib );
+    }
+
+    if ( defined $self->{local_lib} and defined $self->{installdirs} ) {
+        FATAL("local_lib and installdir options are mutually exclusive.");
     }
 
     if ( defined $self->{cache_dir} ) {

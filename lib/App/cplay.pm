@@ -68,6 +68,13 @@ Or if you are not using root
 
     sudo curl -sL https://git.io/cplay | perl - self-install
 
+You can also select where you want to install the script using installdirs
+
+    curl -sL https://git.io/cplay | perl - self-install --installdirs=site  # this is the default
+    curl -sL https://git.io/cplay | perl - self-install --installdirs=perl
+    curl -sL https://git.io/cplay | perl - self-install --installdirs=vendor
+
+
 =head2 Local installation
 
 You can also download and install cplay to any custom location.
@@ -150,6 +157,29 @@ where to install these modules using -L.
 
    cplay -L ~/vendor Simple-Accessor
 
+=head2 Set destination
+
+You can setup the installdir destination you are targetting.
+Possible values are: perl, site, vendor (default: site)
+
+                                   INSTALLDIRS set to
+                             perl        site          vendor
+     
+                   PERLPREFIX      SITEPREFIX          VENDORPREFIX
+    INST_ARCHLIB   INSTALLARCHLIB  INSTALLSITEARCH     INSTALLVENDORARCH
+    INST_LIB       INSTALLPRIVLIB  INSTALLSITELIB      INSTALLVENDORLIB
+    INST_BIN       INSTALLBIN      INSTALLSITEBIN      INSTALLVENDORBIN
+    INST_SCRIPT    INSTALLSCRIPT   INSTALLSITESCRIPT   INSTALLVENDORSCRIPT
+    INST_MAN1DIR   INSTALLMAN1DIR  INSTALLSITEMAN1DIR  INSTALLVENDORMAN1DIR
+    INST_MAN3DIR   INSTALLMAN3DIR  INSTALLSITEMAN3DIR  INSTALLVENDORMAN3DIR
+
+Sample usages:
+
+    cplay install A1z-Html                     # install to site directories by default
+    cplay install --installdir=site   A1z-Html  # site is the default
+    cplay install --installdir=vendor A1z-Html
+    cplay install --installdir=perl   A1z-Html
+
 =head1 USAGE
 
   cplay [ACTION] [OPTIONS] [ARGS]
@@ -186,6 +216,7 @@ where to install these modules using -L.
        --install-timeout    Timeout forinstalling files            (default: 60)
        use a value of '0' to disable a timeout
    -L, --local-lib DIR      Specify the install base directory to install all modules.
+       --installdir TYPE    Set installation destination, possible values are perl, site, vendor (default:site)
 
 =head2 cpanfile options
 

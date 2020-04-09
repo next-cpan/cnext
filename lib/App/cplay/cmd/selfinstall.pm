@@ -3,7 +3,7 @@ package App::cplay::cmd::selfinstall;
 use App::cplay::std;
 
 use App::cplay::Logger;    # import all
-use App::cplay::InstallDirs;
+use App::cplay::Installer;
 
 use App::cplay::Helpers qw{write_file is_fatpacked};
 
@@ -23,8 +23,9 @@ sub run ( $cli, @argv ) {
     my $tmp_file = $cli->build_dir . "/cplay.tmp";
     write_file( $tmp_file, $main::SOURCE_CODE );
 
-    my $dirs = App::cplay::InstallDirs->new;                  # FIXME use the cli config / installer ?
-    my $path = $dirs->install_to_bin( $tmp_file, 'cplay' );
+    my $installer = App::cplay::Installer->new( cli => $cli );
+    my $dirs      = $installer->installdirs;
+    my $path      = $dirs->install_to_bin( $tmp_file, 'cplay' );
     OK "cplay is installed to $path";
     check_path_for($path);
 
