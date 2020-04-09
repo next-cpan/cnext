@@ -230,6 +230,10 @@ Probably a lot at this point this is still in active development.
 - \[ \] look at AcePerl and Acme BUILD.PL - configure\_requires
 - \[ \] set timeout in cplay workflow
 - \[ \] add git version on repo fatpack script
+- \[ \] install .
+- \[ \] look
+- \[ \] support for share directories
+- \[ \] support for script \[shebang\]
 
 # COPYRIGHT
 

@@ -148,6 +148,9 @@
       "App::cplay::cmd::selfinstall" : {
          "file" : "lib/App/cplay/cmd/selfinstall.pm"
       },
+      "App::cplay::cmd::selfupdate" : {
+         "file" : "lib/App/cplay/cmd/selfupdate.pm"
+      },
       "App::cplay::cmd::version" : {
          "file" : "lib/App/cplay/cmd/version.pm"
       },

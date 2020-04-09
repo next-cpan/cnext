@@ -50,8 +50,6 @@ sub run ( $cli, @argv ) {
         return 1;
     }
 
-    OK("$current_version eq $new_version");
-
     if ( !$force && $current_version eq $new_version ) {
         OK("cplay is already up to date using version '$current_version'");
         INFO("you can force an update by running: cplay selfupdate force");
@@ -63,6 +61,9 @@ sub run ( $cli, @argv ) {
         FAIL("Do not know how to update $0");
         return 1;
     }
+
+    ## FIXME update shebang file
+    #update_shebang($tmp_file);
 
     DEBUG("cp $tmp_file $to_file");
     File::Copy::copy( $tmp_file, $to_file ) or do {

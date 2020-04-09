@@ -21,8 +21,6 @@ use Test2::Harness::Util::IPC qw/run_cmd/;
 use Exporter 'import';
 our @EXPORT = qw/cplay use_fatpack/;
 
-my $apppath = find_cplay();
-
 sub find_cplay {
     state $cache;
 
