@@ -42,7 +42,7 @@ sub run ( $cli, @argv ) {
     my $current_version = $App::cplay::VERSION . '@' . $App::cplay::REVISION;
     my ( $exit, $out, $err ) = App::cplay::IPC::run3( [ "$^X", $tmp_file, q[--version] ] );
     my $new_version;
-    if ( $out && $out =~ m{^cplay\s+([\S+])\b}a ) {    # FIXME use sha1 id
+    if ( $out && $out =~ m{^cplay\s+(\d+\.\d+\@\w+)\b}a ) {    # FIXME use sha1 id
         $new_version = $1;
     }
 
@@ -56,6 +56,8 @@ sub run ( $cli, @argv ) {
         INFO("you can force an update by running: cplay selfupdate force");
         return;
     }
+
+    DEBUG("current_version: $current_version ; target_version: $new_version");
 
     my $to_file = Cwd::abs_path($0);
     if ( !-e $to_file ) {
