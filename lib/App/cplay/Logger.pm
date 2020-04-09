@@ -51,6 +51,12 @@ sub new ( $class, @args ) {
     return bless {@args}, $class;
 }
 
+sub setup_for_script {
+    $VERBOSE       = 1;
+    $SHOW_PROGRESS = 0;
+    return;
+}
+
 sub log ( $self_or_class, %options ) {
 
     my $type    = $options{type} || "";

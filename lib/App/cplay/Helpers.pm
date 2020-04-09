@@ -7,7 +7,7 @@ use File::Which ();
 use App::cplay::Logger;
 
 use Exporter 'import';
-our @EXPORT_OK = qw(read_file zip write_file);
+our @EXPORT_OK = qw(read_file zip write_file is_fatpacked);
 
 sub read_file ( $file, $mode = ':utf8' ) {
     local $/;
@@ -16,6 +16,11 @@ sub read_file ( $file, $mode = ':utf8' ) {
       or die "Fail to open file: $! " . join( ' ', ( caller(1) )[ 0, 1, 2, 3 ] ) . "\n";
 
     return readline($fh);
+}
+
+sub is_fatpacked() {
+    return unless my $ref = ref $INC{'App/cplay/cmd/selfinstall.pm'};
+    return $ref =~ m{^FatPacked} ? 1 : 0;
 }
 
 sub write_file ( $file, $content, $mode = ':utf8' ) {

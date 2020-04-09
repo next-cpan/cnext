@@ -222,6 +222,14 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] add git version on repo fatpack script
 
+=item * [ ] install .
+
+=item * [ ] look
+
+=item * [ ] support for share directories
+
+=item * [ ] support for script [shebang]
+
 =back
 
 =head1 COPYRIGHT
