@@ -37,7 +37,7 @@ BEGIN {
     my %fatpacked;
 
     $fatpacked{"App/cplay.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY';
-  package App::cplay;our$VERSION="0.0001";our$REVISION='6bf88c1';1;
+  package App::cplay;our$VERSION="0.0001";our$REVISION='c662c5b';1;
 APP_CPLAY
 
     $fatpacked{"App/cplay/BUILD.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_BUILD';
