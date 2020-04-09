@@ -164,7 +164,24 @@ where to install these modules using -L.
 cplay -L ~/vendor Simple-Accessor
 ```
 
-# OPTIONS
+# USAGE
+
+```
+cplay [ACTION] [OPTIONS] [ARGS]
+```
+
+## ACTIONS
+
+```
+  install             default action to install distributions
+  cpanfile            install dependencies from a cpanfile
+  fromtarabll         install a distribution from a tarball
+  selfupdate          selfupdate cplay binary
+  selfinstall         selfinstall the binary
+  help                display this documentation
+```
+
+## OPTIONS
 
 ## Generic options
 
