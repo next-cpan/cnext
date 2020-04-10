@@ -1,4 +1,4 @@
-name: cplay-makefile
+name: cplay-build
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ 'master' ]
 
 jobs:
-  makefile:
+  build:
     env:
       # some plugins still needs this to run their tests...
       PERL_USE_UNSAFE_INC: 0
@@ -15,8 +15,8 @@ jobs:
       AUTOMATED_TESTING: 1
       RELEASE_TESTING: 0
       # would be better to find a different module without deps
-      CPLAY_MODULE: 'Algorithm::Diff'
-      CPLAY_DISTRO: 'Algorithm-Diff'
+      CPLAY_MODULE: 'Acme::Alien::DontPanic'
+      CPLAY_DISTRO: 'Acme-Alien-DontPanic'
 
     runs-on: ubuntu-latest
 
