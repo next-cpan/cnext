@@ -146,7 +146,7 @@ OUT
     );
 
     ok -f q[First-Module/lib/First/Module.pm], 'lib/First/Module.pm';
-    ok -f q[SecondOne/lib/SecondOne.pm],       'lib/First/Module.pm';
+    ok -f q[SecondOne/lib/SecondOne.pm],       'lib/SecondOne.pm';
 }
 
 undef $intmp;    # allow tmp destruction

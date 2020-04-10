@@ -7,7 +7,7 @@ use App::cplay::IPC;
 use Test::More;
 
 use Exporter 'import';
-our @EXPORT = qw/remove_module is_module_installed is_module_installed_to_local_lib/;
+our @EXPORT = qw/remove_module is_module_installed is_module_installed_to_local_lib module_path/;
 
 use constant PERLDOC => $^X . 'doc';
 
@@ -26,6 +26,13 @@ sub remove_module($module) {
 sub is_module_installed($module) {
     my ( $status, $out, $err ) = App::cplay::IPC::run3( [ PERLDOC, '-lm', $module ] );
     return $status == 0;
+}
+
+sub module_path($module) {
+    my ( $status, $out, $err ) = App::cplay::IPC::run3( [ PERLDOC, '-lm', $module ] );
+    return unless $status == 0;
+    chomp $out if $out;
+    return $out;
 }
 
 sub is_module_installed_to_local_lib ( $module, $local_lib ) {
