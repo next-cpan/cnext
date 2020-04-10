@@ -25,13 +25,7 @@ sub run ( $cli, @args ) {
     return 1 unless my $path = setup_tarball( $installer, $tarball );
 
     DEBUG("tarball is extracted at $path");
-
-    {
-        return 1 unless my $BUILD = App::cplay::BUILD::create_from_file("$path/BUILD.json");
-
-        $installer->depth(1);    # need to setup depth
-        $installer->install_from_BUILD($BUILD);
-    }
+    return 1 unless $installer->install_from_file("$path/BUILD.json");
 
     File::Path::rmtree($path);
 

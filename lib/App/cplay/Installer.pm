@@ -90,6 +90,18 @@ sub has_module_version ( $self, $module, $version ) {
     return;
 }
 
+sub install_from_file ( $self, $file = 'BUILD.json' ) {
+
+    # cannot load BUILD.json
+    return unless my $BUILD = App::cplay::BUILD::create_from_file($file);
+
+    $self->depth(1);    # need to setup depth
+    my $ok = $self->install_from_BUILD($BUILD);
+    $self->depth(0);
+
+    return $ok;
+}
+
 sub install_single_module ( $self, $module, $need_version = undef ) {
     return $self->install_single_module_or_repository( $module, 0, $need_version );
 }
