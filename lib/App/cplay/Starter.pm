@@ -160,6 +160,8 @@ sub add_BUILD($self) {
 sub git_init($self) {
 
     # optional
+    # FIXME: try to initialize the git repo
+    #   just a warning if it fails
 
 }
 ## main entry point
@@ -182,7 +184,10 @@ sub create($self) {
 
     return unless $self->add_BUILD();
     DEBUG("init git");
-    $self->git_init();
+
+    # FIXME create the license file
+
+    $self->git_init();    # FIXME todo
 
     return 1;
 }

@@ -267,14 +267,6 @@ Probably a lot at this point this is still in active development.
 
 =item * [ ] look at AcePerl and Acme BUILD.PL - configure_requires
 
-=item * [ ] set timeout in cplay workflow
-
-=item * [ ] add git version on repo fatpack script
-
-=item * [ ] start
-
-=item * [ ] install .
-
 =item * [ ] look
 
 =item * [ ] support for share directories

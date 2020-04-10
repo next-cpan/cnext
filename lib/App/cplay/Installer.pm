@@ -212,19 +212,6 @@ sub _install_single_module_or_repository ( $self, $module_or_repository, $can_be
     return $self->install_repository($repository_info);
 }
 
-sub check_BUILD_version ( $self, $BUILD ) {
-    FATAL("check_BUILD_version: missing BUILD argument") unless ref $BUILD;
-
-    if ( ( $BUILD->{'builder_API_version'} // 0 ) != 1 ) {
-
-        #... we would like to redirect to Install/Builder/v1.pm, ...
-        ERROR("Only know how to handle builder_API_version == 1");
-        return;
-    }
-
-    return 1;
-}
-
 sub install_repository ( $self, $repository_info ) {
     die unless ref $repository_info;
 
@@ -365,8 +352,8 @@ sub _builder_play ( $self, $name ) {
     my $install = sub {
         $ok = $self->_builder_play_install_files($BUILD);
 
-        # ... installing scripts & co
-        # ... share
+        # ... FIXME installing scripts & co
+        # ... FIXME share
         return;
     };
     App::cplay::Timeout->new(
