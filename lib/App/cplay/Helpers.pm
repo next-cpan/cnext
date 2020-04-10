@@ -25,7 +25,7 @@ sub is_fatpacked() {
 
 sub write_file ( $file, $content, $mode = ':utf8' ) {
     open( my $fh, '>' . $mode, $file )
-      or die "Fail to open file: $! " . join( ' ', ( caller(1) )[ 0, 1, 2, 3 ] ) . "\n";
+      or die "Fail to open file: '$file' $! " . join( ' ', ( caller(1) )[ 0, 1, 2, 3 ] ) . "\n";
 
     print {$fh} $content;
 

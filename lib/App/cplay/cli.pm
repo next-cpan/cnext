@@ -13,6 +13,7 @@ use App::cplay::cmd::help        ();
 use App::cplay::cmd::install     ();
 use App::cplay::cmd::selfinstall ();
 use App::cplay::cmd::selfupdate  ();
+use App::cplay::cmd::start       ();
 use App::cplay::cmd::version     ();
 
 use App::cplay::Index::Repositories;

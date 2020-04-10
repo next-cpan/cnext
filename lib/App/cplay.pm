@@ -239,6 +239,10 @@ Sample usages:
 
 =head2 Install dependencies
 
+All dependencies are listed in a cpanfile, you can install them using App::cpanm
+
+        cpanm --installdeps .
+
 =head2 Build the fatpack version
 
 =head1 Known issues
@@ -266,6 +270,8 @@ Probably a lot at this point this is still in active development.
 =item * [ ] set timeout in cplay workflow
 
 =item * [ ] add git version on repo fatpack script
+
+=item * [ ] start
 
 =item * [ ] install .
 
