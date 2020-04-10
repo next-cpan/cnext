@@ -1,0 +1,44 @@
+name: cplay-makefile
+
+on:
+  push:
+    branches: [ 'master' ]
+  pull_request:
+    branches: [ 'master' ]
+
+jobs:
+  cplay:
+    env:
+      # some plugins still needs this to run their tests...
+      PERL_USE_UNSAFE_INC: 0
+      AUTHOR_TESTING: 0
+      AUTOMATED_TESTING: 1
+      RELEASE_TESTING: 0
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # no need to checkout
+      #- uses: actions/checkout@v2
+
+      - name: perl -V
+        run: perl -V
+
+      # would be better to find a different module without deps
+      - name: install cpm
+        run: |
+          curl -fsSL --compressed https://git.io/cpm | sudo perl - install -g App::cpm
+
+      - name: install deps
+        run: |
+          sudo cpm install -g --show-build-log-on-failure Algorithm::Diff
+
+      - name: install cplay
+        run: |
+          curl -L https://git.io/cplay | sudo perl - self-install
+          which cplay
+          cplay --version
+
+      - name: cplay from-tarball Algorithm-Diff-XS
+        run: |
+          sudo cplay from-tarball -d https://github.com/pause-play/Algorithm-Diff-XS/archive/p5.tar.gz
