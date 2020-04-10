@@ -14,6 +14,9 @@ jobs:
       AUTHOR_TESTING: 0
       AUTOMATED_TESTING: 1
       RELEASE_TESTING: 0
+      # would be better to find a different module without deps
+      CPLAY_MODULE: 'Algorithm::Diff'
+      CPLAY_DISTRO: 'Algorithm-Diff'
 
     runs-on: ubuntu-latest
 
@@ -24,14 +27,19 @@ jobs:
       - name: perl -V
         run: perl -V
 
-      # would be better to find a different module without deps
       - name: install cpm
         run: |
           curl -fsSL --compressed https://git.io/cpm | sudo perl - install -g App::cpm
 
-      - name: install deps
+      # install module using cpm
+      - name: "cpm ${{ env.CPLAY_MODULE }} & deps"
         run: |
-          sudo cpm install -g --show-build-log-on-failure Algorithm::Diff
+          sudo cpm install -g --show-build-log-on-failure ${{ env.CPLAY_MODULE }}
+          perl -m${{ env.CPLAY_MODULE }} -e1
+
+      - name: remove ${{ env.CPLAY_MODULE }}
+        run: |
+          sudo rm -f $(perldoc -lm ${{ env.CPLAY_MODULE }})
 
       - name: install cplay
         run: |
@@ -39,6 +47,10 @@ jobs:
           which cplay
           cplay --version
 
-      - name: cplay from-tarball Algorithm-Diff-XS
+      - name: cplay from-tarball ${{ env.CPLAY_DISTRO }}
         run: |
-          sudo cplay from-tarball -d https://github.com/pause-play/Algorithm-Diff-XS/archive/p5.tar.gz
+          sudo cplay from-tarball -d https://github.com/pause-play/${{ env.CPLAY_DISTRO }}/archive/p5.tar.gz
+
+      - name: check module is installed
+        run: |
+          perl -m${{ env.CPLAY_MODULE }} -e1
