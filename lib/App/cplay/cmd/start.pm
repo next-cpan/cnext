@@ -27,6 +27,7 @@ sub run ( $cli, @modules ) {
         }
         else {
             FAIL("Cannot create directory for $module.");
+            DEBUG("Error: $@");
             return 1;
         }
     }

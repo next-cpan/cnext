@@ -14,7 +14,7 @@ use App::cplay::std;
 use App::cplay::Tester;
 
 use App::cplay::IPC;
-use App::cplay::Helpers;
+use App::cplay::Helpers qw{read_file};
 
 use File::Temp;
 use File::pushd;
@@ -64,6 +64,38 @@ my $intmp = pushd("$tmp");
     ok -f q[My-Custom-Module/lib/My/Custom/Module.pm], 'main module .pm';
 
     ok -f q[My-Custom-Module/t/00-load.t], 't/00-load.t';
+    ok -f q[My-Custom-Module/BUILD.json],  'BUILD.json';
+
+    {
+        note "check BUILD.json";
+        require App::cplay::Roles::JSON;
+        my $build = App::cplay::Roles::JSON->new->json->decode( read_file( q[My-Custom-Module/BUILD.json], ':utf8' ) );
+        is $build, {
+            'XS'                  => 0,
+            'abstract'            => 'Abstract for My-Custom-Module',
+            'builder'             => 'play',
+            'builder_API_version' => 1,
+            'license'             => 'perl',
+            'maintainers'         => [ D() ],
+            'name'                => 'My-Custom-Module',
+            'primary'             => 'My::Custom::Module',
+            'provides'            => {
+                'My::Custom::Module' => {
+                    'file'    => 'lib/My/Custom/Module.pm',
+                    'version' => '0.001'
+                }
+            },
+            'recommends_runtime' => {},
+            'requires_build'     => {},
+            'requires_develop'   => {},
+            'requires_runtime'   => {},
+            'source'             => 'p5',
+            'version'            => '0.001'
+          },
+          'BUILD.json content'
+          or diag explain $build;
+
+    }
 
     {
         my $in_dir = pushd('My-Custom-Module');

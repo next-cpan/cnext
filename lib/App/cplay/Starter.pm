@@ -102,18 +102,20 @@ sub add_primary_pm($self ) {
     my $file   = $self->primary_file;
     my $module = $self->module;
 
-    my $content = <<"EOS";
+    my $content = <<'EOS';
 #!perl
 
-package $module;
+package ~module~;
 
 use strict;
 use warnings;
 
-our \$VERSION = '0.001';
+our $VERSION = '0.001';
 
 1;
 EOS
+
+    $content =~ s{~module~}{$module}g;
 
     return eval { write_file( $file, $content ); 1 };
 }
@@ -122,23 +124,37 @@ sub add_test($self) {
     my $module = $self->module;
 
     my $file    = q[t/00-load.t];
-    my $content = <<"EOS";
+    my $content = <<'EOS';
 #!perl
 
 use Test::More;
 
-use_ok "$module";
+use_ok "~module~";
 
-ok defined \$${module}::VERSION, "VERSION set";
+ok defined $~module~::VERSION, "VERSION set";
 
 done_testing;
 EOS
+
+    $content =~ s{~module~}{$module}g;
 
     return eval { write_file( $file, $content ); 1 };
 }
 
 sub add_BUILD($self) {
-    1;
+    my $build = App::cplay::BUILD->new(
+        abstract => "Abstract for " . $self->distribution,
+        name     => $self->distribution,
+        primary  => $self->module,
+
+    );
+    push @{ $build->maintainers }, 'Your Name <your@email.tld>';    # use git config ?
+    $build->provides->{ $self->module } = {
+        file    => $self->primary_file,
+        version => $build->version,
+    };
+
+    return $build->save_to_file;                                    # default to BUILD.json
 }
 
 sub git_init($self) {

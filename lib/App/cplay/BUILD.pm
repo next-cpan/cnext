@@ -4,12 +4,12 @@ use App::cplay::std;
 
 use App::cplay::Logger;    # import all
 
-use App::cplay::Helpers qw{read_file};
+use App::cplay::Helpers qw{read_file write_file};
 
 use Cwd            ();
 use File::Basename ();
 
-use Simple::Accessor qw{
+use constant IN_JSON => qw{
   XS abstract
   builder builder_API_version
   license
@@ -25,23 +25,16 @@ use Simple::Accessor qw{
   version
 
   tests
-
-  _rootdir _filepath
 };
+use Simple::Accessor +IN_JSON, qw{ _rootdir _filepath };
 
-use App::cplay::Roles::JSON ();    # not a role here..
+# could also assume _* are private values
+with 'App::cplay::Roles::JSON';
 
 sub build ( $self, %options ) {
 
-    # setup _rootdir
-
-    # if ( my $from_file = delete $options{from_file} ) {
-    # 	return create_from_file($from_file);
-    # }
-
-    # force check builder_API_version
-    $self->builder_API_version( $self->builder_API_version // 1 );
-    $self->builder( lc( $options{builder} // 'unknown' ) );
+    $self->builder_API_version( $self->builder_API_version );    # force check builder_API_version
+    $self->builder( lc( $options{builder} // $self->builder ) );
 
     if ( !defined $self->name || !length $self->name ) {
         ERROR("missing name");
@@ -53,12 +46,24 @@ sub build ( $self, %options ) {
         return;
     }
 
-    if ( !defined $self->tests ) {
-        $self->tests( ['t/*.t'] );
-    }
-
     return $self;
 }
+
+sub _build_XS                  { 0 }
+sub _build_builder             { 'play' }
+sub _build_builder_API_version { 1 }
+sub _build_license             { 'perl' }
+sub _build_source              { 'p5' }
+sub _build_version             { '0.001' }
+
+sub _build_tests { ['t/*.t'] }
+
+sub _build_maintainers        { [] }
+sub _build_provides           { {} }
+sub _build_recommends_runtime { {} }
+sub _build_requires_build     { {} }
+sub _build_requires_develop   { {} }
+sub _build_requires_runtime   { {} }
 
 sub _validate_builder ( $self, $v ) {
     return 1 if $v && $v =~ m{^(?:play|makefile\.pl|build\.pl)$};
@@ -71,9 +76,33 @@ sub _validate_builder_API_version ( $self, $v ) {
     return;
 }
 
-sub create_from_file($file='Build.json') {
+sub save_to_file ( $self, $file = 'BUILD.json' ) {
+    my $json = $self->json->pretty(1)->encode( $self->as_hash );
 
-    state $JSON = App::cplay::Roles::JSON->new;
+    return eval { write_file( $file, $json ); 1 };
+}
+
+sub as_hash($self) {
+    foreach my $attr (IN_JSON) {
+        $self->can($attr)->($self);    # force init all missing attributes
+    }
+
+    my %as_hash = map { $_ => $self->{$_} } IN_JSON;
+
+    if (   $as_hash{tests}
+        && scalar @{ $as_hash{tests} } == 1
+        && $as_hash{tests}->[0] eq 't/*.t' ) {
+        delete $as_hash{tests};
+    }
+
+    delete $as_hash{no_index} unless defined $as_hash{no_index};
+
+    return \%as_hash;
+}
+
+sub create_from_file($file='BUILD.json') {
+
+    state $JSON = App::cplay::Roles::JSON->new;    # not used as a role here
 
     $file = Cwd::abs_path($file);
 
