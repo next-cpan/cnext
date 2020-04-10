@@ -2,7 +2,7 @@
 
 use FindBin;
 use lib $FindBin::Bin . '/../lib';
-use lib $FindBin::Bin . '/../fatlib';
+use lib $FindBin::Bin . '/../../fatlib';
 
 use Test2::Bundle::Extended;
 use Test2::Tools::Explain;
