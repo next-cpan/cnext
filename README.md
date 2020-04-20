@@ -30,6 +30,9 @@ cplay install --no-cleanup --verbose A1z::Html
 cplay cpanfile .
 cplay cpanfile ~/my-custom.cpanfile
 
+# Getting a repository / distribution name for a module
+cplay get-repo Simple::Accessor
+
 cplay --version
 cplay --help
 ```
@@ -180,7 +183,7 @@ Possible values are: perl, site, vendor (default: site)
 ```
                                INSTALLDIRS set to
                          perl        site          vendor
- 
+
                PERLPREFIX      SITEPREFIX          VENDORPREFIX
 INST_ARCHLIB   INSTALLARCHLIB  INSTALLSITEARCH     INSTALLVENDORARCH
 INST_LIB       INSTALLPRIVLIB  INSTALLSITELIB      INSTALLVENDORLIB
@@ -287,10 +290,6 @@ Probably a lot at this point this is still in active development.
 - \[ \] log output to file
 - \[ \] check builder type play for cplay, Build.PL and Makefile.PL...
 - \[ \] look at AcePerl and Acme BUILD.PL - configure\_requires
-- \[ \] set timeout in cplay workflow
-- \[ \] add git version on repo fatpack script
-- \[ \] start
-- \[ \] install .
 - \[ \] look
 - \[ \] support for share directories
 - \[ \] support for script \[shebang\]

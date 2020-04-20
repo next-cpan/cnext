@@ -79,6 +79,9 @@ App::cplay -  CPAN client using pause-play indexes
     cplay cpanfile .
     cplay cpanfile ~/my-custom.cpanfile
 
+    # Getting a repository / distribution name for a module
+    cplay get-repo Simple::Accessor
+
     cplay --version
     cplay --help
 
@@ -207,7 +210,7 @@ Possible values are: perl, site, vendor (default: site)
 
                                    INSTALLDIRS set to
                              perl        site          vendor
-     
+
                    PERLPREFIX      SITEPREFIX          VENDORPREFIX
     INST_ARCHLIB   INSTALLARCHLIB  INSTALLSITEARCH     INSTALLVENDORARCH
     INST_LIB       INSTALLPRIVLIB  INSTALLSITELIB      INSTALLVENDORLIB
