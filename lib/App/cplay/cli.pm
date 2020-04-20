@@ -9,6 +9,7 @@ use App::cplay::Http;
 # need to load all commands to fatpack them
 use App::cplay::cmd::cpanfile    ();
 use App::cplay::cmd::fromtarball ();
+use App::cplay::cmd::getrepo     ();
 use App::cplay::cmd::help        ();
 use App::cplay::cmd::install     ();
 use App::cplay::cmd::selfinstall ();
