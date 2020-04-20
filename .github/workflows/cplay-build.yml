@@ -2,9 +2,9 @@ name: cplay-build
 
 on:
   push:
-    branches: [ 'master' ]
+    branches: ["master"]
   pull_request:
-    branches: [ 'master' ]
+    branches: ["master"]
 
 jobs:
   build:
@@ -15,8 +15,8 @@ jobs:
       AUTOMATED_TESTING: 1
       RELEASE_TESTING: 0
       # would be better to find a different module without deps
-      CPLAY_MODULE: 'Acme::Alien::DontPanic'
-      CPLAY_DISTRO: 'Acme-Alien-DontPanic'
+      CPLAY_MODULE: "Acme::Alien::DontPanic"
+      CPLAY_DISTRO: "Acme-Alien-DontPanic"
 
     runs-on: ubuntu-latest
 
@@ -27,7 +27,7 @@ jobs:
       - name: perl -V
         run: perl -V
 
-      uses: perl-actions/install-cpm@v1.0
+      - uses: perl-actions/install-cpm@v1.0
 
       # install module using cpm
       - name: "cpm ${{ env.CPLAY_MODULE }} & deps"

@@ -2,9 +2,9 @@ name: cplay-fatpack
 
 on:
   push:
-    branches: [ 'master' ]
+    branches: ["master"]
   pull_request:
-    branches: [ 'master' ]
+    branches: ["master"]
 
 jobs:
   cplay:
@@ -24,7 +24,7 @@ jobs:
       - name: perl -V
         run: perl -V
 
-      - name: '%Config'
+      - name: "%Config"
         run: perl -MConfig -MTest::More -E 'note explain \%Config'
 
       - name: perl '-V:install.*'

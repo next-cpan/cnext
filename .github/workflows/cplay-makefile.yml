@@ -2,9 +2,9 @@ name: cplay-makefile
 
 on:
   push:
-    branches: [ 'master' ]
+    branches: ["master"]
   pull_request:
-    branches: [ 'master' ]
+    branches: ["master"]
 
 jobs:
   makefile:
@@ -15,8 +15,8 @@ jobs:
       AUTOMATED_TESTING: 1
       RELEASE_TESTING: 0
       # would be better to find a different module without deps
-      CPLAY_MODULE: 'Algorithm::Diff'
-      CPLAY_DISTRO: 'Algorithm-Diff'
+      CPLAY_MODULE: "Algorithm::Diff"
+      CPLAY_DISTRO: "Algorithm-Diff"
 
     runs-on: ubuntu-latest
 
