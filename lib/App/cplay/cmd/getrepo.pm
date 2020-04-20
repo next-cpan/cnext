@@ -14,7 +14,7 @@ sub run ( $cli, @argv ) {
     my $is_core     = Module::CoreList->first_release($module);
 
     if ( $module eq 'perl' || $is_core ) {
-        say 'perl', $is_core ? " v$is_core" : '';
+        say 'CORE', $is_core ? " v$is_core" : '';
         return;
     }
 

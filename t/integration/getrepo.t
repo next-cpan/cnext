@@ -56,7 +56,7 @@ note "Testing cplay get-repo action";
         test    => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => array {
-                item 'perl v5.006';
+                item 'CORE v5.006';
                 end;
             }, "warnings is CORE";
         },
@@ -69,7 +69,7 @@ note "Testing cplay get-repo action";
         test    => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => array {
-                item 'perl v5';
+                item 'CORE v5';
                 end;
             }, "File::Basename is CORE";
         },
@@ -82,7 +82,7 @@ note "Testing cplay get-repo action";
         test    => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => array {
-                item 'perl';
+                item 'CORE';
                 end;
             }, "perl";
         },
