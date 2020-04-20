@@ -227,7 +227,7 @@ sub install_repository ( $self, $repository_info ) {
     my $version = $BUILD->version;
 
     # check if distribution is already installed
-    if ( my $primary = $BUILD->primary ) {
+    if ( my $primary = $BUILD->primary ) {    ## FIXME skip if using --retry
         my $module_v = $BUILD->provides->{$primary}->{version};    # should not raise warnings?
         if ( $self->has_module_version( $primary, $module_v ) ) {
             OK("$name-$version is up to date.");
