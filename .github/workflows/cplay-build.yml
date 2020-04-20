@@ -27,13 +27,12 @@ jobs:
       - name: perl -V
         run: perl -V
 
-      - uses: perl-actions/install-cpm@v1.0
-
-      # install module using cpm
-      - name: "cpm ${{ env.CPLAY_MODULE }} & deps"
-        run: |
-          sudo cpm install -g --show-build-log-on-failure ${{ env.CPLAY_MODULE }}
-          perl -m${{ env.CPLAY_MODULE }} -e1
+      - name: "Install deps with cpm"
+        uses: perl-actions/install-cpm@v1.3
+        with:
+          install: |
+           ${{ env.CPLAY_MODULE }}
+           Test2::Suite
 
       - name: remove ${{ env.CPLAY_MODULE }}
         run: |
