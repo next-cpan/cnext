@@ -61,4 +61,16 @@ sub get_tarball_url ( $self, $repository ) {
     return $url;
 }
 
+sub get_git_repository_url ( $self, $repository ) {
+    die unless ref $repository;
+
+    my $url = $self->template_url;
+    ( $url, undef ) = split( '/archive', $url );
+    $url .= '.git';
+
+    $url =~ s{:([a-z0-9]+)}{$repository->{$1}}g;
+
+    return $url;
+}
+
 1;

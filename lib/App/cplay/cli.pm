@@ -12,6 +12,7 @@ use App::cplay::cmd::fromtarball ();
 use App::cplay::cmd::getrepo     ();
 use App::cplay::cmd::help        ();
 use App::cplay::cmd::install     ();
+use App::cplay::cmd::look        ();
 use App::cplay::cmd::selfinstall ();
 use App::cplay::cmd::selfupdate  ();
 use App::cplay::cmd::start       ();
