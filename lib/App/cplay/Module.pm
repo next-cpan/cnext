@@ -28,6 +28,8 @@ sub has_module_version ( $module, $version, $local_lib = undef ) {
     my $has_module  = 0;
     my $got_version = get_module_version( $module, $local_lib );
 
+    $version =~ s{^\s*>=\s*}{};
+
     if ( lc $module eq 'perl' && $version =~ m{^v?(\d+)\.(\d+)\.(\d+)$}ia ) {
         $version = sprintf( "%d.%03d%03d", $1, $2, $3 );
     }
