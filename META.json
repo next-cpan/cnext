@@ -155,6 +155,9 @@
       "App::cplay::cmd::install" : {
          "file" : "lib/App/cplay/cmd/install.pm"
       },
+      "App::cplay::cmd::look" : {
+         "file" : "lib/App/cplay/cmd/look.pm"
+      },
       "App::cplay::cmd::selfinstall" : {
          "file" : "lib/App/cplay/cmd/selfinstall.pm"
       },

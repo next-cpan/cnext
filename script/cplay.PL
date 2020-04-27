@@ -226,6 +226,14 @@ Sample usages:
     cplay install --installdir=vendor A1z-Html
     cplay install --installdir=perl   A1z-Html
 
+=head2 Checking a repository
+
+This will clone and open a SHELL in a temporary directory,
+removed once you exit the session.
+
+  cplay look A1z::Html
+  cplay look A1z-Html
+
 =head1 USAGE
 
   cplay [ACTION] [OPTIONS] [ARGS]
@@ -238,6 +246,7 @@ Sample usages:
       selfupdate          selfupdate cplay binary
       selfinstall         selfinstall the binary
       help                display this documentation
+      look                Clones & opens the distribution with your SHELL
 
 =head2 OPTIONS
 
