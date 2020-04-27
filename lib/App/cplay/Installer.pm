@@ -279,7 +279,7 @@ sub advertise_installed_modules ( $self, $BUILD ) {
     return unless ref $BUILD && ref $BUILD->provides;
 
     foreach my $module ( sort keys %{ $BUILD->provides } ) {
-        my $v = $BUILD->provides->{$module}->{version};
+        my $v = $BUILD->provides->{$module}->{version} // 0;
         DEBUG("advertise_installed_modules: $module => $v");
         App::cplay::Module::module_updated( $module, $v, $self->cli->local_lib );
     }
