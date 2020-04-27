@@ -11,10 +11,11 @@ sub run ( $cli, @argv ) {
 
     my $module      = $argv[0];
     my $module_info = $cli->modules_idx->search($module);
-    my $is_core     = Module::CoreList->first_release($module);
+    my $is_core     = Module::CoreList->is_core($module);
 
     if ( $module eq 'perl' || $is_core ) {
-        say 'CORE', $is_core ? " v$is_core" : '';
+        my $first_release = Module::CoreList->first_release($module);
+        say 'CORE', $first_release ? " v$first_release" : '';
         return;
     }
 
