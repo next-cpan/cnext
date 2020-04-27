@@ -326,6 +326,13 @@ sub _builder_play ( $self, $name ) {
             @tests = @{ $BUILD->tests };
         }
 
+        # multiple modules are relying on blib being there
+        #   use 'blib'; # can be removed in p7
+        {    # minimum scaffold to make blib happy
+            File::Path::make_path('blib/lib');
+            File::Path::make_path('blib/arch');
+        }
+
         push @cmds, App::cplay::Installer::Command->new(
             type => 'test',
             txt  => "tests for $name",
