@@ -52,9 +52,9 @@ sub run ( $cli, @argv ) {
         }
 
         {
-            my $shell = $ENV{SHELL} || File::Which::which('bash') || File::Which::which('bash');
+            my $shell = $ENV{SHELL} || File::Which::which('bash') || File::Which::which('sh');
             if ( !-x $shell ) {
-                ERROR("Cannot find a valid shell");
+                ERROR("Cannot find a valid shell, set SHELL env. variable");
                 INFO("repository was cloned to $dir");
                 INFO("     cd $dir");
                 return 1;
