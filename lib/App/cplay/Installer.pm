@@ -437,10 +437,14 @@ sub _builder_Makefile_PL ( $self, $name ) {
     my $make = App::cplay::Helpers::make_binary();
 
     my @cmds;
+
+    my $use_dot  = -d 'inc';
+    my @test_cmd = ( $^X, $use_dot ? ( '-I', '.' ) : (), "Makefile.PL" );
+
     push @cmds, App::cplay::Installer::Command->new(
         type    => 'configure',
-        txt     => "perl Makefile.PL",
-        cmd     => [ $^X, "Makefile.PL" ],
+        txt     => "perl " . join( ' ', @test_cmd[ 1 .. $#test_cmd ] ),
+        cmd     => [@test_cmd],
         timeout => $self->cli->configure_timeout,
     );
 

@@ -15,6 +15,8 @@ my %GOT;                # current install version of a module
 sub has_module_version ( $module, $version, $local_lib = undef ) {
     my $IN = _in($local_lib);
 
+    $version //= 0;
+
     # check the global cache
     if (   defined $CACHE{$module}
         && defined $CACHE{$module}->{$IN}
