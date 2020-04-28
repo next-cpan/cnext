@@ -259,7 +259,8 @@ removed once you exit the session.
                             show progress, default: on
        --refresh            force refresh the index files
        --color, --no-color  turn on/off color output, default: on
-       --test, --no-test    run test cases, default: on
+       --test               run test cases, default: on
+   -n, --no-test
        --reinstall          reinstall the distribution(s)/module(s) even if you already have the latest version installed
                             do not apply to dependencies
        --cache-dir, --cache specify an alternate cache directory (default: ~/.cplay)
