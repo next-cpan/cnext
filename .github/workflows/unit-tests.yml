@@ -37,9 +37,11 @@ jobs:
       - name: perl -V
         run: perl -V
 
-      - name: Install Dependencies
-        run: |
-          cpm install -g --no-test --show-build-log-on-failure --cpanfile cpanfile
+      - name: Install Dependencies with cpm
+        uses: perl-actions/install-with-cpm@v1.3
+        with:
+          cpanfile: cpanfile
+          sudo: false
 
       - name: Running Unit Tests
         run: prove -vl t/*.t
