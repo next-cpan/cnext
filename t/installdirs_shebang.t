@@ -37,6 +37,9 @@ my @tests = (
 
     [ '#!/usr/bin/perl -w -w -w' => "#!$MYPERL -w -w -w" ],
 
+    [ "#!/usr/local/perl/perls/perl-5.30.1/bin/perl" => "#!$MYPERL" ],
+    [ "#!$^X"                                        => "#!$MYPERL" ],
+
     # non perl
     [ '#!sh'        => "#!sh" ],
     [ '#!/bin/sh'   => "#!/bin/sh" ],
@@ -55,7 +58,7 @@ foreach my $test (@tests) {
     write_text( $script, hello_world($shebang) );
 
     if ( $shebang ne $updated_shebang ) {
-        ok $idir->adjust_perl_shebang( $script, $MYPERL ), "adjust_perl_shebang updated";
+        ok $idir->adjust_perl_shebang( $script, $MYPERL ), "adjust_perl_shebang updated - $shebang -> $updated_shebang";
     }
     else {
         ok !$idir->adjust_perl_shebang( $script, $MYPERL ), "adjust_perl_shebang no shebang to update";

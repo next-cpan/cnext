@@ -122,11 +122,16 @@ sub adjust_perl_shebang ( $self, $file, $perl = $^X ) {
 
     # have a sneak peak first
     open( my $input, '<', $file ) or do { WARN("Fail to open $file"); return };
+
     $shebang = readline $input;
+    chomp $shebang if defined $shebang;
     my $original_shebang = $shebang;
 
     # adjust the shebang line
-    return unless $shebang =~ s{^#![/\w\.]*\s*perl(\b.*)}{#!$perl$1};
+    return
+      unless $shebang =~ s{^#![/\w\.\-_]*\s*perl\s*$}{#!$perl}
+      || $shebang =~ s{^#![/\w\.]*\s*perl\s+(-.*)$}{#!$perl $1};
+
     return if $original_shebang eq $shebang;
 
     my $content;
@@ -138,7 +143,7 @@ sub adjust_perl_shebang ( $self, $file, $perl = $^X ) {
 
     # update the content
     open( my $output, '>', $file ) or do { WARN("Fail to open $file for writing"); return };
-    print {$output} $shebang;
+    print {$output} $shebang . "\n";
     print {$output} $content;
     close $output;
 
