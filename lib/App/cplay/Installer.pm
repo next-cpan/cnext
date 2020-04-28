@@ -357,10 +357,9 @@ sub _builder_play ( $self, $name ) {
     my $ok;
 
     my $install = sub {
-        $ok = $self->_builder_play_install_files($BUILD);
-        $ok &= $self->_builder_play_install_bin($BUILD);
+        $ok = $self->_builder_play_install_files($BUILD) // 0;
+        $ok &= $self->_builder_play_install_bin($BUILD) // 0;
 
-        # ... FIXME installing scripts & co
         # ... FIXME share
         return;
     };
