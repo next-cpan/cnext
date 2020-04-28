@@ -31,6 +31,7 @@ my %WriteMakefileArgs = (
     "NAME"               => "App::cplay",
     "PREREQ_PM"          => {},
     "TEST_REQUIRES"      => {
+        "File::Slurper"             => 0,
         "Test2::Bundle::Extended"   => 0,
         "Test2::Harness"            => "1.000015",
         "Test2::Plugin::NoWarnings" => 0,
@@ -43,6 +44,7 @@ my %WriteMakefileArgs = (
 );
 
 my %FallbackPrereqs = (
+    "File::Slurper"             => 0,
     "Test2::Bundle::Extended"   => 0,
     "Test2::Harness"            => "1.000015",
     "Test2::Plugin::NoWarnings" => 0,
