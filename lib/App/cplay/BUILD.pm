@@ -21,6 +21,7 @@ use constant IN_JSON => qw{
   requires_build
   requires_develop
   requires_runtime
+  scripts
   source
   version
 
@@ -64,6 +65,11 @@ sub _build_recommends_runtime { {} }
 sub _build_requires_build     { {} }
 sub _build_requires_develop   { {} }
 sub _build_requires_runtime   { {} }
+sub _build_scripts            { [] }
+
+sub bin($self) {    # alias to scripts
+    return $self->scripts;
+}
 
 sub _validate_builder ( $self, $v ) {
     return 1 if $v && $v =~ m{^(?:play|makefile\.pl|build\.pl)$};

@@ -117,7 +117,35 @@ sub create_if_missing ( $self, $dir ) {
     return;
 }
 
-sub install_to_bin ( $self, $file, $basename = undef ) {
+sub adjust_perl_shebang ( $self, $file, $perl = $^X ) {
+    my $shebang;
+
+    # have a sneak peak first
+    open( my $input, '<', $file ) or do { WARN("Fail to open $file"); return };
+    $shebang = readline $input;
+    my $original_shebang = $shebang;
+
+    # adjust the shebang line
+    return unless $shebang =~ s{^#![/\w\.]*\s*perl(\b.*)}{#!$perl$1};
+    return if $original_shebang eq $shebang;
+
+    my $content;
+    {
+        local $/;
+        $content = readline $input;
+    }
+    close $input;
+
+    # update the content
+    open( my $output, '>', $file ) or do { WARN("Fail to open $file for writing"); return };
+    print {$output} $shebang;
+    print {$output} $content;
+    close $output;
+
+    return 1;
+}
+
+sub install_to_bin ( $self, $file, $basename = undef, $perl = $^X ) {
     FATAL("File is not defined") unless defined $file && length $file;
     FATAL("Cannot find file $file") unless -f $file;
 
@@ -131,12 +159,16 @@ sub install_to_bin ( $self, $file, $basename = undef ) {
     my $perms = 0755;
 
     my $umask = umask( $perms ^ 07777 );
+    DEBUG("cp $file $to_file");
     File::Copy::copy( $file, $to_file );
     umask($umask);    # restore umask
 
     if ( !-f $to_file || -s _ != -s $file ) {
         FATAL("Failed to copy file to $to_file");
     }
+
+    $self->adjust_perl_shebang( $to_file, $perl )
+      and DEBUG("perl shebang adjusted for '$file' to use $perl");
 
     # FIXME should not be needed
     App::cplay::IPC::run3( [ 'chmod', '+x', $to_file ] ) unless -x $to_file;

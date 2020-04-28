@@ -358,6 +358,7 @@ sub _builder_play ( $self, $name ) {
 
     my $install = sub {
         $ok = $self->_builder_play_install_files($BUILD);
+        $ok &= $self->_builder_play_install_bin($BUILD);
 
         # ... FIXME installing scripts & co
         # ... FIXME share
@@ -369,6 +370,25 @@ sub _builder_play ( $self, $name ) {
     )->run($install);
 
     return unless $ok;
+
+    return 1;
+}
+
+sub _builder_play_install_bin ( $self, $BUILD ) {
+    die "invalid BUILD" unless ref $BUILD eq 'App::cplay::BUILD';
+    my $scripts = $BUILD->scripts;
+    return 1 unless ref $scripts && scalar @$scripts;
+
+    # setup local lib directory if needed
+    if ( my $local_lib_bin = $self->local_lib_bin ) {
+        INFO("installing bin to local_lib $local_lib_bin");
+        $self->installdirs->bin($local_lib_bin);
+    }
+
+    foreach my $script (@$scripts) {
+        DEBUG("installing $script");
+        $self->installdirs->install_to_bin($script);
+    }
 
     return 1;
 }
