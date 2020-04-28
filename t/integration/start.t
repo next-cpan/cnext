@@ -71,7 +71,6 @@ my $intmp = pushd("$tmp");
         require App::cplay::Roles::JSON;
         my $build = App::cplay::Roles::JSON->new->json->decode( read_file( q[My-Custom-Module/BUILD.json], ':utf8' ) );
         is $build, {
-            'XS'                  => 0,
             'abstract'            => 'Abstract for My-Custom-Module',
             'builder'             => 'play',
             'builder_API_version' => 1,
@@ -91,7 +90,8 @@ my $intmp = pushd("$tmp");
             'requires_runtime'   => {},
             'source'             => 'p5',
             'scripts'            => [],
-            'version'            => '0.001'
+            'version'            => '0.001',
+            'xs'                 => 0,
           },
           'BUILD.json content'
           or diag explain $build;

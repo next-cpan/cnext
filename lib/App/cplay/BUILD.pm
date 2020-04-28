@@ -10,7 +10,7 @@ use Cwd            ();
 use File::Basename ();
 
 use constant IN_JSON => qw{
-  XS abstract
+  abstract
   builder builder_API_version
   license
   maintainers name
@@ -26,6 +26,8 @@ use constant IN_JSON => qw{
   version
 
   tests
+
+  xs
 };
 use Simple::Accessor +IN_JSON, qw{ _rootdir _filepath };
 
@@ -50,7 +52,7 @@ sub build ( $self, %options ) {
     return $self;
 }
 
-sub _build_XS                  { 0 }
+sub _build_xs                  { 0 }
 sub _build_builder             { 'play' }
 sub _build_builder_API_version { 1 }
 sub _build_license             { 'perl' }
