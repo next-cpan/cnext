@@ -90,6 +90,7 @@ my $intmp = pushd("$tmp");
             'requires_develop'   => {},
             'requires_runtime'   => {},
             'source'             => 'p5',
+            'scripts'            => [],
             'version'            => '0.001'
           },
           'BUILD.json content'
