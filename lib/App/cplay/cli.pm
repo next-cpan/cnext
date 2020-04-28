@@ -158,6 +158,8 @@ sub parse_options ( $self, @opts ) {
     my @with_types  = qw(requires recommends suggests);
     my @with_phases = qw(configure build test runtime develop);
 
+    my $n_tests;
+
     GetOptions(
 
         # used
@@ -169,6 +171,7 @@ sub parse_options ( $self, @opts ) {
 
         'test!'  => \( $self->{run_tests} ),
         'tests!' => \( $self->{run_tests} ),    # allow typo?
+        'n'      => \$n_tests,
 
         "refresh"   => \( $self->{refresh} ),
         "reinstall" => \( $self->{reinstall} ),
@@ -204,6 +207,8 @@ sub parse_options ( $self, @opts ) {
     $self->{show_progress} = 0 unless -t STDIN;
 
     $self->{features} = \@feature if @feature;
+
+    $self->{run_tests} = 0 if $n_tests;              # alias -n for --no-tests
 
     $self->run_tests(1) unless defined $self->{run_tests};
     if ( !$self->run_tests ) {
