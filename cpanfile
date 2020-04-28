@@ -2,6 +2,9 @@ requires 'perl', '5.018';
 
 on test => sub {
 	# continuous integration should only need this
+
+	requires 'File::Slurper';
+
 	requires 'Test::More';
 	requires 'Test2::Harness' => '1.000015';
 
