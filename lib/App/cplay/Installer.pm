@@ -394,7 +394,9 @@ sub _builder_play_install_bin ( $self, $BUILD ) {
 
 sub _builder_play_install_files ( $self, $BUILD ) {
     my $inst_lib = $self->installdirs->lib;
-    FATAL("inst_lib is not defined") unless defined $inst_lib && length $inst_lib;
+    unless ( defined $inst_lib && length $inst_lib ) {
+        FATAL( "install lib is not defined for " . $self->cli->installdirs . "\n" );
+    }
 
     if ( !-d $inst_lib ) {
         DEBUG("Creating missing directory: $inst_lib");
