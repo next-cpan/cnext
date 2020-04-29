@@ -5,6 +5,7 @@ use App::cplay::std;
 use App::cplay::Logger;                  # import all
 
 use File::Spec;                          # CORE
+use Umask::Local;                        # fatpacked
 
 use Simple::Accessor qw{installdirs BUILD dist_dir};
 
@@ -64,12 +65,9 @@ sub install_share($self) {
 }
 
 sub install($self) {    # main entry point
-                        # FIXME could use a fatpacked version of Umask::Local
-    my $umask = umask(0333);                                           # r/r/r
-    my $ok    = $self->install_share && $self->install_share_module;
-    umask($umask);                                                     # restore umask
 
-    return $ok;                                                        # returns 1 on success
+    my $umask = umask_localize(0333);    # r/r/r
+    return $self->install_share && $self->install_share_module;
 }
 
 =pod

@@ -22,6 +22,8 @@ use File::Path     ();    # CORE
 use File::Find     ();    # CORE
 use File::Basename ();    # CORE
 
+use Umask::Local;         # fatpacked
+
 use File::pushd;
 
 use App::cplay::InstallDirs ();
@@ -460,9 +462,8 @@ sub _builder_play_install_files ( $self, $BUILD ) {
         return;
     };
 
-    my $umask = umask(0333);    # r/r/r
+    my $umask = umask_localize(0333);    # r/r/r
     File::Find::find( { wanted => $wanted, no_chdir => 1 }, 'lib' );
-    umask($umask);              # restore umask
 
     return if $has_errors;
 

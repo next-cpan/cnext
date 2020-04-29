@@ -9,7 +9,7 @@ use Config;
 use File::Path;
 use File::Spec;            # CORE
 
-use Umask::Local ();       # fatpacked
+use Umask::Local;          # fatpacked
 
 use Simple::Accessor qw{
   type
@@ -204,14 +204,11 @@ sub install_file ( $self, $from_file, $to_file, $perms = undef ) {
     my $destination_directory = File::Basename::dirname($to_file);
     $self->create_if_missing($destination_directory);
 
-    # FIXME could use a fatpacked version of Umask::Local
     my $umask;
-    $umask = umask( $perms ^ 07777 ) if defined $perms;
+    $umask = umask_localize( $perms ^ 07777 ) if defined $perms;
 
     DEBUG("cp $from_file $to_file");
     File::Copy::copy( $from_file, $to_file );
-
-    umask($umask) if defined $perms;    # restore umask
 
     if ( !-f $to_file || -s _ != -s $from_file ) {
         FATAL("Failed to copy file $to_file");
