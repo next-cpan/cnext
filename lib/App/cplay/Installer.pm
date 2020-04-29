@@ -462,7 +462,7 @@ sub _builder_play_install_files ( $self, $BUILD ) {
         return;
     };
 
-    my $umask = umask_localize(0333);    # r/r/r
+    my $umask = Umask::Local->new(0333);    # r/r/r
     File::Find::find( { wanted => $wanted, no_chdir => 1 }, 'lib' );
 
     return if $has_errors;

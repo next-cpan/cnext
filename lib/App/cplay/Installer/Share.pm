@@ -5,7 +5,7 @@ use App::cplay::std;
 use App::cplay::Logger;                  # import all
 
 use File::Spec;                          # CORE
-use Umask::Local;                        # fatpacked
+use Umask::Local ();                     # fatpacked
 
 use Simple::Accessor qw{installdirs BUILD dist_dir};
 
@@ -66,7 +66,7 @@ sub install_share($self) {
 
 sub install($self) {    # main entry point
 
-    my $umask = umask_localize(0333);    # r/r/r
+    my $umask = Umask::Local->new(0333);    # r/r/r
     return $self->install_share && $self->install_share_module;
 }
 

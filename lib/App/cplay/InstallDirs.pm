@@ -9,7 +9,7 @@ use Config;
 use File::Path;
 use File::Spec;            # CORE
 
-use Umask::Local;          # fatpacked
+use Umask::Local ();       # fatpacked
 
 use Simple::Accessor qw{
   type
@@ -159,7 +159,7 @@ sub install_to_bin ( $self, $file, $basename = undef, $perl = $^X ) {
     FATAL("Cannot find file $file") unless -f $file;
 
     $basename //= File::Basename::basename($file);
-    my $to_file = File::Spec::catfile( $self->bin, $basename );
+    my $to_file = File::Spec->catfile( $self->bin, $basename );
 
     $self->install_file( $file, $to_file, 0755 );
 
@@ -183,16 +183,16 @@ sub install_to_bin ( $self, $file, $basename = undef, $perl = $^X ) {
 
 sub install_to_lib ( $self, $from_file, $to_file ) {
 
-    return $self->install_file( $from_file, File::Spec::catfile( $self->lib, $to_file ) );
+    if ( $to_file =~ m{^/} ) {
+        FATAL("to_file cannot start with a '/', need a relative path: $to_file");
+    }
+
+    return $self->install_file( $from_file, File::Spec->catfile( $self->lib, $to_file ) );
 }
 
 sub install_file ( $self, $from_file, $to_file, $perms = undef ) {
 
     # sanity check
-    if ( $to_file =~ m{^/} ) {
-        FATAL("to_file cannot start with a '/', need a relative path: $to_file");
-    }
-
     if ( $to_file =~ m{/$} ) {
         FATAL("to_file cannot be a folder name, path should not end by '/': $to_file");
     }
@@ -205,7 +205,7 @@ sub install_file ( $self, $from_file, $to_file, $perms = undef ) {
     $self->create_if_missing($destination_directory);
 
     my $umask;
-    $umask = umask_localize( $perms ^ 07777 ) if defined $perms;
+    $umask = Umask::Local->new( $perms ^ 07777 ) if defined $perms;
 
     DEBUG("cp $from_file $to_file");
     File::Copy::copy( $from_file, $to_file );
