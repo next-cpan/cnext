@@ -11,5 +11,6 @@ requires 'HTTP::Tinyish'    => 0;
 requires 'File::pushd'      => 0;
 requires 'File::Which'      => 0;
 requires 'File::Basename'   => 0;
+requires 'Umask::Local'     => 0;
 
 requires 'Digest::Perl::MD5' => 0; # embed method to check tarball signature

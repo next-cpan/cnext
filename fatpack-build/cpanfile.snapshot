@@ -63,3 +63,10 @@ DISTRIBUTIONS
       perl 5.006
       strict 0
       warnings 0
+  Umask-Local-1.0
+    pathname: R/RO/ROUZIER/Umask-Local-1.0.tar.gz
+    provides:
+      Umask::Local 1.0
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
