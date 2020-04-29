@@ -1,8 +1,76 @@
-package App::cplay::Installer::Share;
+package App::cplay::Installer::Share;    # Maybe InstallDirs/Share ?
 
 use App::cplay::std;
 
-use App::cplay::Logger;    # import all
+use App::cplay::Logger;                  # import all
+
+use File::Spec;                          # CORE
+
+use Simple::Accessor qw{installdirs BUILD dist_dir};
+
+# /Users/nicolas/perl5/perlbrew/perls/perl-5.30.1/lib/site_perl/5.30.1/auto/share/module/Dist-Zilla-MintingProfile-Milla
+# /Users/nicolas/perl5/perlbrew/perls/perl-5.30.1/lib/site_perl/5.30.1/auto/share/module/Dist-Zilla-MintingProfile-Milla/default
+
+#   'sitelib' => '/Users/nicolas/perl5/perlbrew/perls/perl-5.30.1/lib/site_perl/5.30.1',
+#   'installsitelib' => '/Users/nicolas/perl5/perlbrew/perls/perl-5.30.1/lib/site_perl/5.30.1',
+
+sub _build_dist_dir( $self ) {
+    my $dist = $self->BUILD->name;
+    FATAL("Invalid distribution name: '$dist'") unless $dist =~ /^[a-z0-9+_-]+$/is;
+
+    return File::Spec->catdir( 'auto', 'share', 'dist', $dist );
+}
+
+sub module_dir ( $self, $module ) {
+    $module =~ s/::/-/g;
+    FATAL("Invalid module name: '$module'") if $module =~ m{\s};
+
+    return File::Spec->catdir( $self->installdirs->lib, 'auto', 'share', 'module', $module );
+}
+
+sub install_share_module($self) {
+    return unless -d q[share-module];
+
+    # we need one example
+    ...;
+}
+
+sub install_share($self) {
+    return unless -d q[share];
+
+    my $has_errors = 0;
+    my $wanted     = sub {
+
+        # $File::Find::dir is the current directory name,
+        # $_ is the current filename within that directory
+        # $File::Find::name is the complete pathname to the file.
+        return unless -f $File::Find::name;
+
+        eval {
+            $self->installdirs->install_to_lib(
+                $File::Find::name,    # complete pathname to current file
+                File::Spec->catfile( $self->dist_dir, File::Basename::basename($_) )
+            );
+            1;
+        } or ++$has_errors;
+
+        return;
+    };
+
+    File::Find::find( { wanted => $wanted, no_chdir => 1 }, 'share' );
+    return if $has_errors;
+
+    return 1;
+}
+
+sub install($self) {    # main entry point
+                        # FIXME could use a fatpacked version of Umask::Local
+    my $umask = umask(0333);                                           # r/r/r
+    my $ok    = $self->install_share && $self->install_share_module;
+    umask($umask);                                                     # restore umask
+
+    return $ok;                                                        # returns 1 on success
+}
 
 =pod
 

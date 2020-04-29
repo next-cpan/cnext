@@ -7,6 +7,9 @@ use App::cplay::IPC;
 
 use Config;
 use File::Path;
+use File::Spec;            # CORE
+
+use Umask::Local ();       # fatpacked
 
 use Simple::Accessor qw{
   type
@@ -109,12 +112,13 @@ sub _validate_type ( $self, $v ) {
 sub create_if_missing ( $self, $dir ) {
     FATAL("dir is not defined") unless defined $dir && length $dir;
 
-    if ( !-d $dir ) {
-        DEBUG("Creating missing directory: $dir");
-        File::Path::make_path( $dir, { chmod => 0755, verbose => 0 } ) or FATAL("Fail to create $dir");
-    }
+    return 2 if -d $dir;
 
-    return;
+    DEBUG("Creating missing directory: $dir");
+    File::Path::make_path( $dir, { chmod => 0755, verbose => 0 } )
+      or FATAL("Fail to create $dir");
+
+    return 1;
 }
 
 sub adjust_perl_shebang ( $self, $file, $perl = $^X ) {
@@ -154,23 +158,10 @@ sub install_to_bin ( $self, $file, $basename = undef, $perl = $^X ) {
     FATAL("File is not defined") unless defined $file && length $file;
     FATAL("Cannot find file $file") unless -f $file;
 
-    my $location = $self->bin;
-    $self->create_if_missing($location);
-
     $basename //= File::Basename::basename($file);
-    my $to_file = $self->bin . '/' . $basename;
+    my $to_file = File::Spec::catfile( $self->bin, $basename );
 
-    #my $umask = umask(022);    # 755 FIXME fatpack something light for umask as object or come with our own
-    my $perms = 0755;
-
-    my $umask = umask( $perms ^ 07777 );
-    DEBUG("cp $file $to_file");
-    File::Copy::copy( $file, $to_file );
-    umask($umask);    # restore umask
-
-    if ( !-f $to_file || -s _ != -s $file ) {
-        FATAL("Failed to copy file to $to_file");
-    }
+    $self->install_file( $file, $to_file, 0755 );
 
     $self->adjust_perl_shebang( $to_file, $perl )
       and DEBUG("perl shebang adjusted for '$file' to use $perl");
@@ -179,6 +170,54 @@ sub install_to_bin ( $self, $file, $basename = undef, $perl = $^X ) {
     App::cplay::IPC::run3( [ 'chmod', '+x', $to_file ] ) unless -x $to_file;
 
     return $to_file;
+}
+
+=pod
+
+        $self->installdirs->install_to_lib(  
+          'share/file',
+          'auto/share/dist/Dist-Sample/file'
+        );
+
+=cut
+
+sub install_to_lib ( $self, $from_file, $to_file ) {
+
+    return $self->install_file( $from_file, File::Spec::catfile( $self->lib, $to_file ) );
+}
+
+sub install_file ( $self, $from_file, $to_file, $perms = undef ) {
+
+    # sanity check
+    if ( $to_file =~ m{^/} ) {
+        FATAL("to_file cannot start with a '/', need a relative path: $to_file");
+    }
+
+    if ( $to_file =~ m{/$} ) {
+        FATAL("to_file cannot be a folder name, path should not end by '/': $to_file");
+    }
+
+    if ( -d $to_file ) {
+        FATAL("Cannot install file, a directory already exists: $to_file");
+    }
+
+    my $destination_directory = File::Basename::dirname($to_file);
+    $self->create_if_missing($destination_directory);
+
+    # FIXME could use a fatpacked version of Umask::Local
+    my $umask;
+    $umask = umask( $perms ^ 07777 ) if defined $perms;
+
+    DEBUG("cp $from_file $to_file");
+    File::Copy::copy( $from_file, $to_file );
+
+    umask($umask) if defined $perms;    # restore umask
+
+    if ( !-f $to_file || -s _ != -s $from_file ) {
+        FATAL("Failed to copy file $to_file");
+    }
+
+    return;
 }
 
 1;

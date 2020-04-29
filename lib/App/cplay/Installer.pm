@@ -13,6 +13,7 @@ use App::cplay::IPC                 ();
 use App::cplay::BUILD ();
 
 use App::cplay::Installer::Command ();
+use App::cplay::Installer::Share   ();
 
 use Config;
 
@@ -358,9 +359,8 @@ sub _builder_play ( $self, $name ) {
 
     my $install = sub {
         $ok = $self->_builder_play_install_files($BUILD) // 0;
-        $ok &= $self->_builder_play_install_bin($BUILD) // 0;
-
-        # ... FIXME share
+        $ok &= $self->_builder_play_install_bin($BUILD)   // 0;
+        $ok &= $self->_builder_play_install_share($BUILD) // 0;
         return;
     };
     App::cplay::Timeout->new(
@@ -384,12 +384,25 @@ sub _builder_play_install_bin ( $self, $BUILD ) {
         $self->installdirs->bin($local_lib_bin);
     }
 
+    # install the advertised scripts in BUILD.json
     foreach my $script (@$scripts) {
         DEBUG("installing $script");
         $self->installdirs->install_to_bin($script);
     }
 
     return 1;
+}
+
+sub _builder_play_install_share ( $self, $BUILD ) {
+    die "invalid BUILD" unless ref $BUILD eq 'App::cplay::BUILD';
+
+    # shortcut
+    return 1 unless -d q[share] || -d q[share-module];
+
+    return App::cplay::Installer::Share->new(
+        installdirs => $self->installdirs,
+        BUILD       => $BUILD,
+    )->install;
 }
 
 sub _builder_play_install_files ( $self, $BUILD ) {
@@ -408,6 +421,9 @@ sub _builder_play_install_files ( $self, $BUILD ) {
     if ( my $local_lib_lib = $self->local_lib_lib ) {
         INFO("installing to local_lib $local_lib_lib");
         $inst_lib = $local_lib_lib;
+
+        # update installdirs location when using local_lib
+        $self->installdirs->lib($local_lib_lib);
     }
 
     my $has_errors = 0;
@@ -432,7 +448,7 @@ sub _builder_play_install_files ( $self, $BUILD ) {
             }
         }
 
-        # FIXME use install_to_bin
+        # FIXME use install_to_lib
         DEBUG("cp $File::Find::name $to_file");
         File::Copy::copy( $File::Find::name, $to_file );
         if ( !-f $to_file || -s _ != -s $File::Find::name ) {

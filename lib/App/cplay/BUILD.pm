@@ -13,7 +13,8 @@ use constant IN_JSON => qw{
   abstract
   builder builder_API_version
   license
-  maintainers name
+  maintainers
+  name
   no_index
   primary
   provides
