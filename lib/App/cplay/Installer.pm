@@ -436,28 +436,16 @@ sub _builder_play_install_files ( $self, $BUILD ) {
         # $File::Find::name is the complete pathname to the file.
         return unless -f $File::Find::name;
 
-        my ($base_dir) = $File::Find::dir =~ m{^lib/(.*)};
-        my $to_dir     = $inst_lib . '/' . $base_dir;
-        my $to_file    = $to_dir . '/' . File::Basename::basename($_);
+        my $destination = $File::Find::name;
+        $destination =~ s{^lib/}{};
 
-        if ( !-d $to_dir ) {
-            DEBUG("create directory $to_dir");
-            my $ok = File::Path::make_path( $to_dir, { chmod => 0755, verbose => 0 } );
-            if ( !$ok ) {
-                ERROR("Failed to create directory $to_dir");
-                ++$has_errors;
-                return;
-            }
-        }
-
-        # FIXME use install_to_lib
-        DEBUG("cp $File::Find::name $to_file");
-        File::Copy::copy( $File::Find::name, $to_file );
-        if ( !-f $to_file || -s _ != -s $File::Find::name ) {
-            ERROR("Failed to copy file to $to_file");
-            ++$has_errors;
-            return;
-        }
+        eval {
+            $self->installdirs->install_to_lib(
+                $File::Find::name,    # complete pathname to current file
+                $destination
+            );
+            1;
+        } or ++$has_errors;
 
         return;
     };
