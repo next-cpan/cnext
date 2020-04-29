@@ -30,14 +30,14 @@ sub module_dir ( $self, $module ) {
 }
 
 sub install_share_module($self) {
-    return unless -d q[share-module];
+    return 1 unless -d q[share-module];
 
     # we need one example
     ...;
 }
 
 sub install_share($self) {
-    return unless -d q[share];
+    return 1 unless -d q[share];
 
     my $has_errors = 0;
     my $wanted     = sub {
@@ -47,10 +47,13 @@ sub install_share($self) {
         # $File::Find::name is the complete pathname to the file.
         return unless -f $File::Find::name;
 
+        my $destination = $File::Find::name;
+        $destination =~ s{^share/}{};
+
         eval {
             $self->installdirs->install_to_lib(
                 $File::Find::name,    # complete pathname to current file
-                File::Spec->catfile( $self->dist_dir, File::Basename::basename($_) )
+                File::Spec->catfile( $self->dist_dir, $destination )
             );
             1;
         } or ++$has_errors;
