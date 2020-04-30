@@ -68,7 +68,7 @@ sub check_share_files_and_dir($root) {
             is $lines => array {
                 item match qr{OK Installed distribution $distribution};
                 end;
-            }, "distribution installed from tarball";
+            }, "distribution installed";
         },
     );
 
@@ -94,7 +94,7 @@ sub check_share_files_and_dir($root) {
             is $lines => array {
                 item match qr{OK Installed distribution $distribution};
                 end;
-            }, "distribution installed from tarball";
+            }, "distribution installed";
         },
     );
     ok is_module_installed($module), "module $module is intalled";
