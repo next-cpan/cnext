@@ -168,6 +168,9 @@
       "App::cplay::cmd::start" : {
          "file" : "lib/App/cplay/cmd/start.pm"
       },
+      "App::cplay::cmd::test" : {
+         "file" : "lib/App/cplay/cmd/test.pm"
+      },
       "App::cplay::cmd::version" : {
          "file" : "lib/App/cplay/cmd/version.pm"
       },

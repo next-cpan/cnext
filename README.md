@@ -26,12 +26,23 @@ cplay install Devel-PPPort@3.57_02
 # preserve .cpbuild directory to preserve cache and debug
 cplay install --no-cleanup --verbose A1z::Html
 
+# install the distribution from current directory
+cplay install .
+
 # install distributions from a cpanfile
 cplay cpanfile .
 cplay cpanfile ~/my-custom.cpanfile
 
 # Getting a repository / distribution name for a module
 cplay get-repo Simple::Accessor
+
+# Clone a distribution to investigate / patch in a SHELL session
+cplay look Simple-Accessor
+
+# Only run unit tests without installing any distributions
+cplay test Simple-Accessor
+# Run test for the distribution in the current directory
+cplay test .
 
 cplay --version
 cplay --help
@@ -210,6 +221,22 @@ removed once you exit the session.
 ```
 cplay look A1z::Html
 cplay look A1z-Html
+```
+
+## Testing a distribution
+
+You can test a distribution without installing it.
+
+```
+cplay test Your-Distribution
+cplay test -v Your-Distribution # with some verbose output
+cplay test -d Your-Distribution # with some debug output
+```
+
+You can also test a distribution described by the BUILD.json in the current directory.
+
+```
+cplay test .
 ```
 
 # USAGE
