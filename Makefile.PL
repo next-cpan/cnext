@@ -40,7 +40,7 @@ my %WriteMakefileArgs = (
         "Test::More"                => 0
     },
     "VERSION" => "0.0001",
-    "test"    => { "TESTS" => "t/*.t t/integration/*.t" }
+    "test"    => { "TESTS" => "t/*.t t/fixtures/My-Custom-Distro/t/*.t t/integration/*.t" }
 );
 
 my %FallbackPrereqs = (
