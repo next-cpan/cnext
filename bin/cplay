@@ -37,7 +37,7 @@ BEGIN {
     my %fatpacked;
 
     $fatpacked{"App/cplay.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY';
-  package App::cplay;our$VERSION="0.0001";our$REVISION='a8afb23';1;
+  package App::cplay;our$VERSION="0.0001";our$REVISION='1298f5e';1;
 APP_CPLAY
 
     $fatpacked{"App/cplay/BUILD.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_BUILD';
@@ -89,7 +89,7 @@ APP_CPLAY_INSTALLER
 APP_CPLAY_INSTALLER_COMMAND
 
     $fatpacked{"App/cplay/Installer/Share.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_INSTALLER_SHARE';
-  package App::cplay::Installer::Share;use App::cplay::std;use App::cplay::Logger;use File::Spec;use Umask::Local ();use Simple::Accessor qw{installdirs BUILD dist_dir};sub _build_dist_dir( $self ) {my$dist=$self->BUILD->name;FATAL("Invalid distribution name: '$dist'")unless$dist =~ /^[a-z0-9+_-]+$/is;return File::Spec->catdir('auto','share','dist',$dist)}sub module_dir ( $self, $module ) {$module =~ s/::/-/g;FATAL("Invalid module name: '$module'")if$module =~ m{\s};return File::Spec->catdir($self->installdirs->lib,'auto','share','module',$module)}sub install_share_module($self) {return 1 unless -d q[share-module];...}sub install_share($self) {return 1 unless -d q[share];my$has_errors=0;my$wanted=sub {return unless -f $File::Find::name;my$destination=$File::Find::name;$destination =~ s{^share/}{};eval {$self->installdirs->install_to_lib($File::Find::name,File::Spec->catfile($self->dist_dir,$destination));1}or ++$has_errors;return};File::Find::find({wanted=>$wanted,no_chdir=>1 },'share');return if$has_errors;return 1}sub install($self) {my$umask=Umask::Local->new(0333);return$self->install_share && $self->install_share_module}1;
+  package App::cplay::Installer::Share;use App::cplay::std;use App::cplay::Logger;use File::Spec;use Umask::Local ();use Simple::Accessor qw{installdirs BUILD dist_dir};sub _build_dist_dir( $self ) {my$dist=$self->BUILD->name;FATAL("Invalid distribution name: '$dist'")unless$dist =~ /^[a-z0-9+_-]+$/is;return File::Spec->catdir('auto','share','dist',$dist)}sub module_dir ( $self, $module ) {$module =~ s/::/-/g;FATAL("Invalid module name: '$module'")if$module =~ m{\s};return File::Spec->catdir('auto','share','module',$module)}sub install_share_module($self) {return 1 unless -d q[share-module];my$has_errors=0;my$wanted=sub {return unless -f $File::Find::name;my$destination=$File::Find::name;$destination =~ s{^share-module/}{};my ($shared_module,$path)=split('/',$destination,2);if (!defined$path){ERROR("Invalid share-module path: $destination");++$has_errors;return}eval {$self->installdirs->install_to_lib($File::Find::name,File::Spec->catfile($self->module_dir($shared_module),$path));1}or ++$has_errors;return};File::Find::find({wanted=>$wanted,no_chdir=>1 },'share-module');return if$has_errors;return 1}sub install_share($self) {return 1 unless -d q[share];my$has_errors=0;my$wanted=sub {return unless -f $File::Find::name;my$destination=$File::Find::name;$destination =~ s{^share/}{};eval {$self->installdirs->install_to_lib($File::Find::name,File::Spec->catfile($self->dist_dir,$destination));1}or ++$has_errors;return};File::Find::find({wanted=>$wanted,no_chdir=>1 },'share');return if$has_errors;return 1}sub install($self) {my$umask=Umask::Local->new(0333);return$self->install_share && $self->install_share_module}1;
 APP_CPLAY_INSTALLER_SHARE
 
     $fatpacked{"App/cplay/Installer/Unpacker.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CPLAY_INSTALLER_UNPACKER';
