@@ -484,7 +484,7 @@ sub _builder_Makefile_PL ( $self, $name ) {
     my @cmds;
 
     my $use_dot  = -d 'inc';
-    my @test_cmd = ( $^X, $use_dot ? ( '-I', '.' ) : (), "Makefile.PL" );
+    my @test_cmd = ( $^X, $use_dot ? (qw{-I .}) : (), "Makefile.PL" );
 
     push @cmds, App::cplay::Installer::Command->new(
         type    => 'configure',

@@ -1,0 +1,28 @@
+{
+   "abstract" : "Fake Module for Testing",
+   "builder" : "Makefile.PL",
+   "builder_API_version" : "1",
+   "license" : "perl",
+   "maintainers" : [
+      "Some One <test@perl.cow>"
+   ],
+   "name" : "Makefile-Workflow",
+   "primary" : "Makefile::Workflow",
+   "provides" : {
+      "Makefile::Workflow" : {
+         "file" : "lib/Makefile/Workflow.pm",
+         "version" : "1.00"
+      }
+   },
+   "recommends_runtime" : {},
+   "requires_build" : {},
+   "requires_develop" : {},
+   "requires_runtime" : {
+      "strict" : 0,
+      "vars" : 0,
+      "warnings" : 0
+   },
+   "source" : "void",
+   "version" : "1.00",
+   "xs" : 0
+}

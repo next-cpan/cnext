@@ -19,6 +19,9 @@ my $module       = q[A1z::Html];
 my $distribution = q[A1z-Html];
 my $last_version = q[0.04];
 
+my $fixtures_directory = $FindBin::Bin . '/../fixtures';
+die q[Missing fixtures] unless -d $fixtures_directory;
+
 note "Testing cplay install for module $module";
 
 {
@@ -63,7 +66,7 @@ note "Testing cplay install for module $module";
     my $module       = q[Test::Failure];
     my $distribution = q[Test-Failure];
 
-    my $dir = $FindBin::Bin . '/../fixtures/Test-Failure';
+    my $dir = $fixtures_directory . '/' . $distribution;
     ok -d $dir or die;
     my $in_dir = pushd($dir);
 
@@ -79,10 +82,75 @@ note "Testing cplay install for module $module";
                 item match qr{ERROR Fail to run tests for Test-Failure};
                 item match qr{\QFAIL Fail to test distribution from .\E};
                 end;
-            }, "Cannot disable tests when using 'test' command.";
+            }, "Detect a failing unit test";
         },
     );
     ok !is_module_installed($module), "module is not installed";
+}
+
+{
+    note "Running tests using a play workflow";
+
+    my $module       = q[My::Custom::Distro];
+    my $distribution = q[My-Custom-Distro];
+
+    remove_module($module);    # before chdir
+    ok !is_module_installed($module), "module is not installed";
+
+    my $dir = $fixtures_directory . '/' . $distribution;
+    ok -d $dir or die;
+    my $in_dir = pushd($dir);
+
+    cplay(
+        command => 'test',
+        args    => ['.'],
+        exit    => 0,
+        test    => sub($out) {
+            my $lines = [ split( /\n/, $out->{output} ) ];
+            is $lines => array {
+                item match qr{OK Tests Succeeds for $distribution};
+                end;
+            }, "Test Succeeds on a play workflow";
+        },
+    );
+    ok !is_module_installed($module), "module is not installed";
+}
+
+{
+    note "Running tests using a Makefile.PL workflow";
+
+    my $module       = q[Makefile::Workflow];
+    my $distribution = q[Makefile-Workflow];
+
+    remove_module($module);    # before chdir
+    ok !is_module_installed($module), "module is not installed";
+
+    my $dir = $fixtures_directory . '/' . $distribution;
+    ok -d $dir or die;
+    my $in_dir = pushd($dir);
+
+    cplay(
+        command => 'test',
+        args    => ['.'],
+        exit    => 0,
+        test    => sub($out) {
+            my $lines = [ split( /\n/, $out->{output} ) ];
+            is $lines => array {
+                item match qr{OK Tests Succeeds for $distribution};
+                end;
+            }, "Test Succeeds on a Makefile.PL workflow";
+        },
+    );
+
+    undef $in_dir;
+    ok !is_module_installed($module), "module is not installed";
+}
+
+{
+    note "Running tests using a Build.PL workflow";
+
+    my $module       = q[Build::Workflow];
+    my $distribution = q[Build-Workflow];
 
 }
 
