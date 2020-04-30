@@ -53,13 +53,13 @@ Run `cplay -h` or `perldoc cplay` for more options.
 # DESCRIPTION
 
 This repository provides the \`cplay\` client to install Perl modules without using PAUSE.
-This is using the \`pause-play\` GitHub repositories indexed by \`pause-index\`
+This is using the \`pause-play\` GitHub repositories indexed by \`play-indexes\`
 
 [https://ix.cplay.us](https://ix.cplay.us)
 
 Rather than using distribution tarball from PAUSE itself, \`play\` is relying on GitHub infrastructure to download distributions.
 
-The repo \`pause-index\` host some index files which can be consumed to download and install most Perl modules.
+The repo \`play-indexes\` host some index files which can be consumed to download and install most Perl modules.
 
 \`cplay\` is the recommended CPAN client using these indexes and GitHub repositories.
 You can read more about cplay client on the [cplay website cplay.us](https://cplay.us).

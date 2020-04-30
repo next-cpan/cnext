@@ -6,10 +6,10 @@ use App::cplay::Logger;
 
 use App::cplay::Installer::Unpacker ();
 
-use constant BASE_URL => q[https://pause-play.github.io/pause-index];
+use constant BASE_URL => q[https://pause-play.github.io/play-indexes];
 
 # tarball containing all .ix files
-use constant IDX_TARBALL_URL => q[https://github.com/pause-play/pause-index/archive/p5.tar.gz];
+use constant IDX_TARBALL_URL => q[https://github.com/pause-play/play-indexes/archive/p5.tar.gz];
 
 use constant MODULES_IX_BASENAME           => 'module.idx';
 use constant REPOSITORIES_IX_BASENAME      => 'repositories.idx';
