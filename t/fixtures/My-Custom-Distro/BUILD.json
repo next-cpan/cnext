@@ -1,0 +1,32 @@
+{
+   "abstract" : "Fake Module for Testing",
+   "builder" : "play",
+   "builder_API_version" : "1",
+   "license" : "perl",
+   "maintainers" : [
+      "Some One <test@perl.cow>"
+   ],
+   "name" : "My-Custom-Distro",
+   "primary" : "My::Custom::Distro",
+   "provides" : {
+      "My::Custom::Distro" : {
+         "file" : "lib/My/Custom/Distro.pm",
+         "version" : "0.01"
+      },
+      "My::Custom::Distro::SubModule" : {
+         "file" : "lib/My/Custom/Distro/SubModule.pm",
+         "version" : "0.01"
+      }
+   },
+   "recommends_runtime" : {},
+   "requires_build" : {},
+   "requires_develop" : {},
+   "requires_runtime" : {
+      "strict" : 0,
+      "vars" : 0,
+      "warnings" : 0
+   },
+   "source" : "void",
+   "version" : "0.01",
+   "xs" : 0
+}

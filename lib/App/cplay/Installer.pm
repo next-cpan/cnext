@@ -320,7 +320,6 @@ sub _builder_play ( $self, $name ) {
     my $BUILD = $self->BUILD->{$name} or die;
 
     ### running tests
-    my @cmds;
     if ( $self->cli->run_tests ) {
         my @tests = ('t/*.t');    # default
         if (   defined $BUILD->tests
@@ -336,7 +335,7 @@ sub _builder_play ( $self, $name ) {
             File::Path::make_path('blib/arch');
         }
 
-        push @cmds, App::cplay::Installer::Command->new(
+        my $cmd = App::cplay::Installer::Command->new(
             type => 'test',
             txt  => "tests for $name",
             cmd  => [
@@ -350,10 +349,10 @@ sub _builder_play ( $self, $name ) {
             },
             timeout => $self->cli->test_timeout,
         );
-    }
 
-    foreach my $cmd (@cmds) {
-        return unless $cmd->run();
+        my $tests_ok = $cmd->run();
+        File::Path::rmtree('blib');
+        return unless $tests_ok;
     }
 
     ### install files
