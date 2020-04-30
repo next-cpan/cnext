@@ -16,6 +16,7 @@ use App::cplay::cmd::look        ();
 use App::cplay::cmd::selfinstall ();
 use App::cplay::cmd::selfupdate  ();
 use App::cplay::cmd::start       ();
+use App::cplay::cmd::test        ();
 use App::cplay::cmd::version     ();
 
 use App::cplay::Index::Repositories;
@@ -272,12 +273,13 @@ sub get_cmd_sub_for ( $self, $cmd ) {
 
     # command aliases
     my $aliases = {
-        h => 'help',
-        v => 'version',
-        V => 'version',
-        i => 'install',
-        c => 'cpanfile',
-        f => 'fromtarball',
+        h       => 'help',
+        v       => 'version',
+        V       => 'version',
+        i       => 'install',
+        c       => 'cpanfile',
+        f       => 'fromtarball',
+        'tests' => 'test',
     };
 
     $cmd = $aliases->{$cmd} if defined $aliases->{$cmd};

@@ -30,7 +30,17 @@ use App::cplay::InstallDirs ();
 
 App::cplay::Logger->import(qw{fetch configure install resolve});
 
-use Simple::Accessor qw{cli unpacker BUILD depth local_lib_bin local_lib_lib installdirs};
+use Simple::Accessor qw{
+  cli
+  unpacker
+  BUILD
+  depth
+  local_lib_bin
+  local_lib_lib
+  installdirs
+
+  run_install
+};
 
 use constant EXTUTILS_MAKEMAKER_MIN_VERSION => '6.64';
 
@@ -39,6 +49,9 @@ sub build ( $self, %opts ) {
     $self->{_tracked_modules}      = {};
     $self->{_tracked_repositories} = {};
     $self->{depth}                 = 0;    # starts at 1;
+
+    # by default perform the install action, disable for testing only
+    $self->{run_install} = 1;
 
     $self->{BUILD} = {};
 
@@ -356,20 +369,22 @@ sub _builder_play ( $self, $name ) {
     }
 
     ### install files
-    my $ok;
+    if ( $self->run_install ) {
+        my $ok;
 
-    my $install = sub {
-        $ok = $self->_builder_play_install_files($BUILD) // 0;
-        $ok &= $self->_builder_play_install_bin($BUILD)   // 0;
-        $ok &= $self->_builder_play_install_share($BUILD) // 0;
-        return;
-    };
-    App::cplay::Timeout->new(
-        message => q[Reach timeout while installing files],
-        timeout => $self->cli->install_timeout,
-    )->run($install);
+        my $install = sub {
+            $ok = $self->_builder_play_install_files($BUILD) // 0;
+            $ok &= $self->_builder_play_install_bin($BUILD)   // 0;
+            $ok &= $self->_builder_play_install_share($BUILD) // 0;
+            return;
+        };
+        App::cplay::Timeout->new(
+            message => q[Reach timeout while installing files],
+            timeout => $self->cli->install_timeout,
+        )->run($install);
 
-    return unless $ok;
+        return unless $ok;
+    }
 
     return 1;
 }
@@ -489,12 +504,14 @@ sub _builder_Makefile_PL ( $self, $name ) {
         );
     }
 
-    push @cmds, App::cplay::Installer::Command->new(
-        type    => 'install',
-        txt     => "make install",
-        cmd     => [ $make, "install" ],
-        timeout => $self->cli->install_timeout,
-    );
+    if ( $self->run_install ) {
+        push @cmds, App::cplay::Installer::Command->new(
+            type    => 'install',
+            txt     => "make install",
+            cmd     => [ $make, "install" ],
+            timeout => $self->cli->install_timeout,
+        );
+    }
 
     foreach my $cmd (@cmds) {
         return unless $cmd->run();
@@ -527,11 +544,13 @@ sub _builder_Build ( $self, $name ) {
         );
     }
 
-    push @cmds, App::cplay::Installer::Command->new(
-        type    => 'install',
-        cmd     => [ "./Build", "install" ],
-        timeout => $self->cli->install_timeout,
-    );
+    if ( $self->run_install ) {
+        push @cmds, App::cplay::Installer::Command->new(
+            type    => 'install',
+            cmd     => [ "./Build", "install" ],
+            timeout => $self->cli->install_timeout,
+        );
+    }
 
     foreach my $cmd (@cmds) {
         return unless $cmd->run();
