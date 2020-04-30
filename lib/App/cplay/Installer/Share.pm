@@ -9,12 +9,6 @@ use Umask::Local ();                     # fatpacked
 
 use Simple::Accessor qw{installdirs BUILD dist_dir};
 
-# /Users/nicolas/perl5/perlbrew/perls/perl-5.30.1/lib/site_perl/5.30.1/auto/share/module/Dist-Zilla-MintingProfile-Milla
-# /Users/nicolas/perl5/perlbrew/perls/perl-5.30.1/lib/site_perl/5.30.1/auto/share/module/Dist-Zilla-MintingProfile-Milla/default
-
-#   'sitelib' => '/Users/nicolas/perl5/perlbrew/perls/perl-5.30.1/lib/site_perl/5.30.1',
-#   'installsitelib' => '/Users/nicolas/perl5/perlbrew/perls/perl-5.30.1/lib/site_perl/5.30.1',
-
 sub _build_dist_dir( $self ) {
     my $dist = $self->BUILD->name;
     FATAL("Invalid distribution name: '$dist'") unless $dist =~ /^[a-z0-9+_-]+$/is;
@@ -26,14 +20,45 @@ sub module_dir ( $self, $module ) {
     $module =~ s/::/-/g;
     FATAL("Invalid module name: '$module'") if $module =~ m{\s};
 
-    return File::Spec->catdir( $self->installdirs->lib, 'auto', 'share', 'module', $module );
+    return File::Spec->catdir( 'auto', 'share', 'module', $module );
 }
 
 sub install_share_module($self) {
     return 1 unless -d q[share-module];
 
-    # we need one example
-    ...;
+    my $has_errors = 0;
+    my $wanted     = sub {
+
+        # $File::Find::dir is the current directory name,
+        # $_ is the current filename within that directory
+        # $File::Find::name is the complete pathname to the file.
+        return unless -f $File::Find::name;
+
+        my $destination = $File::Find::name;
+        $destination =~ s{^share-module/}{};
+
+        my ( $shared_module, $path ) = split( '/', $destination, 2 );
+        if ( !defined $path ) {
+            ERROR("Invalid share-module path: $destination");
+            ++$has_errors;
+            return;
+        }
+
+        eval {
+            $self->installdirs->install_to_lib(
+                $File::Find::name,    # complete pathname to current file
+                File::Spec->catfile( $self->module_dir($shared_module), $path )
+            );
+            1;
+        } or ++$has_errors;
+
+        return;
+    };
+
+    File::Find::find( { wanted => $wanted, no_chdir => 1 }, 'share-module' );
+    return if $has_errors;
+
+    return 1;
 }
 
 sub install_share($self) {
