@@ -5,12 +5,12 @@ use App::cplay::std;
 use App::cplay::Logger;    # import all
 use App::cplay::Installer;
 
-sub run ( $self, @modules ) {    # very close to install command [could refactor?]
+sub run ( $cli, @modules ) {    # very close to install command [could refactor?]
     return 1 unless scalar @modules;
 
-    my $installer = App::cplay::Installer->new( cli => $self, run_install => 0 );
+    my $installer = App::cplay::Installer->new( cli => $cli, run_install => 0 );
 
-    if ( $self->cli->run_tests ) {
+    if ( !$cli->run_tests ) {
         ERROR("Cannot disable tests when using 'test' command.");
         return 1;
     }

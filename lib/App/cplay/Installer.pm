@@ -51,7 +51,7 @@ sub build ( $self, %opts ) {
     $self->{depth}                 = 0;    # starts at 1;
 
     # by default perform the install action, disable for testing only
-    $self->{run_install} = 1;
+    $self->{run_install} //= 1;
 
     $self->{BUILD} = {};
 
@@ -285,7 +285,12 @@ sub install_from_BUILD ( $self, $BUILD, $name = undef ) {
 
     $self->advertise_installed_modules($BUILD);
 
-    OK("Installed distribution $name-$version");
+    if ( $self->run_install ) {
+        OK("Installed distribution $name-$version");
+    }
+    else {
+        OK("Tests Succeeds for $name-$version");
+    }
 
     return 1;
 }

@@ -1,0 +1,28 @@
+{
+   "abstract" : "Fake Module for Testing",
+   "builder" : "play",
+   "builder_API_version" : "1",
+   "license" : "perl",
+   "maintainers" : [
+      "Some One <test@perl.cow>"
+   ],
+   "name" : "Test-Failure",
+   "primary" : "Test::Failure",
+   "provides" : {
+      "Test::Failure" : {
+         "file" : "lib/Test/Failure.pm",
+         "version" : "6.66"
+      }
+   },
+   "recommends_runtime" : {},
+   "requires_build" : {},
+   "requires_develop" : {},
+   "requires_runtime" : {
+      "strict" : 0,
+      "vars" : 0,
+      "warnings" : 0
+   },
+   "source" : "void",
+   "version" : "6.66",
+   "xs" : 0
+}
