@@ -1,0 +1,7 @@
+BUILD.json
+Build.PL
+lib/Build/Workflow.pm
+LICENSE
+MANIFEST			This list of files
+README.md
+t/01-load.t

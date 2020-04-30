@@ -152,8 +152,28 @@ note "Testing cplay install for module $module";
     my $module       = q[Build::Workflow];
     my $distribution = q[Build-Workflow];
 
-}
+    remove_module($module);    # before chdir
+    ok !is_module_installed($module), "module is not installed";
 
-# FIXME add tests using fixtures for a Makefile.PL, BUILD.PL and cplay
+    my $dir = $fixtures_directory . '/' . $distribution;
+    ok -d $dir or die;
+    my $in_dir = pushd($dir);
+
+    cplay(
+        command => 'test',
+        args    => ['.'],
+        exit    => 0,
+        test    => sub($out) {
+            my $lines = [ split( /\n/, $out->{output} ) ];
+            is $lines => array {
+                item match qr{OK Tests Succeeds for $distribution};
+                end;
+            }, "Test Succeeds on a Build.PL workflow";
+        },
+    );
+
+    undef $in_dir;
+    ok !is_module_installed($module), "module is not installed";
+}
 
 done_testing;

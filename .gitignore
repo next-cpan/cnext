@@ -11,3 +11,5 @@ MANIFEST
 /fatpack-build/local
 .cpbuild
 .DS_Store
+t/fixtures/Build-Workflow/Build
+t/fixtures/Build-Workflow/_build/
