@@ -40,7 +40,7 @@ my %WriteMakefileArgs = (
         "Test::More"                => 0
     },
     "VERSION" => "0.0001",
-    "test"    => { "TESTS" => "t/*.t t/fixtures/Build-Workflow/t/*.t t/fixtures/Makefile-Workflow/t/*.t t/fixtures/My-Custom-Distro/t/*.t t/fixtures/Test-Failure/t/*.t t/integration/*.t" }
+    "test"    => { "TESTS" => "t/*.t t/fixtures/Build-Workflow/t/*.t t/fixtures/Makefile-Workflow/t/*.t t/fixtures/My-Custom-Distro/t/*.t t/fixtures/Test-Failure/t/*.t t/fixtures/With-Share-Module/t/*.t t/fixtures/With-Share/t/*.t t/integration/*.t" }
 );
 
 my %FallbackPrereqs = (
