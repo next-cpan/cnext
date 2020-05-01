@@ -184,19 +184,15 @@ sub _install_single_module_or_repository ( $self, $module_or_repository, $can_be
         $repository_info = $cli->repositories_idx->search( $module_or_repository, $custom_requested_version );
     }
 
-    # 3 - lookup in the explicitversons file if needed
+    # 3 - lookup for an older version or a TRIAL version
     if ( !$module_info && !$repository_info && defined $custom_requested_version ) {
-        my $raw = $cli->explicit_versions_idx->search( $module_or_repository, $custom_requested_version, 0, $can_be_repo );
 
-        if ( !defined $raw ) {
-            FAIL("Cannot find distribution $module_or_repository\@$custom_requested_version");
-            return;
-        }
+        # $module_or_repository, $custom_requested_version, 0, $can_be_repo
 
-        # will check if module is already installed
-        $module_info = { module => $raw->{module}, version => $raw->{version} };
+        my $raw = {};
+        ...;    # need to lookup for a custom tag
 
-        # convert the result from explicit_versions to repository
+        # convert the result to a repository
         $repository_info = {
             repository => $raw->{repository},
             version    => $raw->{repository_version},

@@ -21,7 +21,6 @@ use App::cplay::cmd::version     ();
 
 use App::cplay::Index::Repositories;
 use App::cplay::Index::Modules;
-use App::cplay::Index::ExplicitVersions;
 
 use Cwd ();
 
@@ -47,7 +46,6 @@ use Simple::Accessor qw{
 
   repositories_idx
   modules_idx
-  explicit_versions_idx
 
 };
 
@@ -141,10 +139,6 @@ sub _build_repositories_idx($self) {
 
 sub _build_modules_idx($self) {
     App::cplay::Index::Modules->new( cli => $self );
-}
-
-sub _build_explicit_versions_idx($self) {
-    App::cplay::Index::ExplicitVersions->new( cli => $self );
 }
 
 sub parse_options ( $self, @opts ) {

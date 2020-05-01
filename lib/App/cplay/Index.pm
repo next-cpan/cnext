@@ -6,20 +6,19 @@ use App::cplay::Logger;
 
 use App::cplay::Installer::Unpacker ();
 
-use constant BASE_URL => q[https://pause-play.github.io/play-indexes];
+# CDN -> https://pause-play.github.io/play-indexes
+use constant BASE_URL => q[https://github.com/pause-play/play-indexes];
 
 # tarball containing all .ix files
-use constant IDX_TARBALL_URL => q[https://github.com/pause-play/play-indexes/archive/p5.tar.gz];
+use constant IDX_TARBALL_URL => BASE_URL . q[/archive/p5.tar.gz];
 
-use constant MODULES_IX_BASENAME           => 'module.idx';
-use constant REPOSITORIES_IX_BASENAME      => 'repositories.idx';
-use constant EXPLICIT_VERSIONS_IX_BASENAME => 'explicit_versions.idx';
+use constant MODULES_IX_BASENAME      => 'modules.idx';
+use constant REPOSITORIES_IX_BASENAME => 'repositories.idx';
 
 use constant REFRESH_TIMEOUT => 24 * 3_600;    # X hours
 
 my $_MODULES_IX_FILE;
 my $_REPOSITORIES_IX_FILE;
-my $_EXPLICIT_VERSIONS_IX_FILE;
 
 # FIXME improve download the tarball from the repo & extract it
 sub setup_once ( $cli, $attempt = 1 ) {
@@ -31,12 +30,11 @@ sub setup_once ( $cli, $attempt = 1 ) {
     #	refresh them if needed
 
     my $root = $cli->cache_dir;
-    $_MODULES_IX_FILE           = "$root/" . MODULES_IX_BASENAME;
-    $_REPOSITORIES_IX_FILE      = "$root/" . REPOSITORIES_IX_BASENAME;
-    $_EXPLICIT_VERSIONS_IX_FILE = "$root/" . EXPLICIT_VERSIONS_IX_BASENAME;
+    $_MODULES_IX_FILE      = "$root/" . MODULES_IX_BASENAME;
+    $_REPOSITORIES_IX_FILE = "$root/" . REPOSITORIES_IX_BASENAME;
 
-    my @all_ix_files_basename = ( MODULES_IX_BASENAME, REPOSITORIES_IX_BASENAME, EXPLICIT_VERSIONS_IX_BASENAME );
-    my @all_ix_files          = ( $_MODULES_IX_FILE, $_REPOSITORIES_IX_FILE, $_EXPLICIT_VERSIONS_IX_FILE );
+    my @all_ix_files_basename = ( MODULES_IX_BASENAME, REPOSITORIES_IX_BASENAME );
+    my @all_ix_files          = ( $_MODULES_IX_FILE, $_REPOSITORIES_IX_FILE );
 
     my $now = time;
 
@@ -135,12 +133,6 @@ sub get_repositories_ix_file($cli) {
     setup_once($cli);
 
     return $_REPOSITORIES_IX_FILE;
-}
-
-sub get_explicit_versions_ix_file($cli) {
-    setup_once($cli);
-
-    return $_EXPLICIT_VERSIONS_IX_FILE;
 }
 
 1;
