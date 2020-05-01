@@ -14,6 +14,7 @@ use App::cplay::BUILD ();
 
 use App::cplay::Installer::Command ();
 use App::cplay::Installer::Share   ();
+use App::cplay::Helpers qw{is_valid_distribution_name};
 
 use Config;
 
@@ -187,17 +188,42 @@ sub _install_single_module_or_repository ( $self, $module_or_repository, $can_be
     # 3 - lookup for an older version or a TRIAL version
     if ( !$module_info && !$repository_info && defined $custom_requested_version ) {
 
-        # $module_or_repository, $custom_requested_version, 0, $can_be_repo
+        # only works on repositories names
+        my $repository = $module_or_repository;
+        FATAL("Invalid distribution name: '$repository'") unless is_valid_distribution_name($repository);
 
-        my $raw = {};
-        ...;    # need to lookup for a custom tag
+        DEBUG("Try to install '$repository' from a custom tag/version.");
+
+        # $module_or_repository, $custom_requested_version, 0, $can_be_repo
+        my $branch = q[p5];    # FIXME move to a central location
+
+        my $tag;
+        if ( $custom_requested_version =~ m{^$branch} ) {    # p5-v1.00
+            $tag = $custom_requested_version;
+        }
+        elsif ( $custom_requested_version =~ m{^v} ) {       # v1.00
+            $tag = $branch . '-' . $custom_requested_version;
+        }
+        elsif ( $custom_requested_version =~ m{^[0-9\._]+$} ) {    # 1.00, 1.01_01
+            $tag = $branch . '-v' . $custom_requested_version;
+        }
+        else {                                                     # any other tags
+            $tag = $custom_requested_version;
+        }
+
+        my $version = 0;
+        if ( $tag =~ m{^$branch-v(.+)$} ) {
+            $version = $1;
+        }
+
+        DEBUG("$repository: tag $tag ; version $version");
 
         # convert the result to a repository
         $repository_info = {
-            repository => $raw->{repository},
-            version    => $raw->{repository_version},
-            sha        => $raw->{sha},
-            signature  => $raw->{signature},
+            repository => $repository,
+            version    => $version,
+            sha        => $tag,
+            signature  => undef,
         };
     }
 
@@ -627,7 +653,14 @@ sub download_repository ( $self, $repository_info ) {
     my $tarball = "${name}.tar.gz";
     my $path    = $cli->build_dir . "/$tarball";
 
+    unlink $path if -e $path;    # clear the tarball if it already exists
+
     $cli->http->mirror( $url, $path );
+
+    if ( !-e $path ) {
+        DEBUG("Fail to download tarball from $url");
+        return;
+    }
 
     # check signature
     my $signature = $repository_info->{signature};

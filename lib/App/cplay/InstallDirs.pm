@@ -210,8 +210,18 @@ sub install_file ( $self, $from_file, $to_file, $perms = undef ) {
     DEBUG("cp $from_file $to_file");
     File::Copy::copy( $from_file, $to_file );
 
-    if ( !-f $to_file || -s _ != -s $from_file ) {
+    if ( !-f $to_file ) {
         FATAL("Failed to copy file $to_file");
+    }
+
+    if ( -s _ != -s $from_file ) {
+
+        # give it a second chance
+        unlink($to_file) or FATAL("Failed to update file $to_file - $!");
+        File::Copy::copy( $from_file, $to_file );
+        if ( !-f $to_file && -s _ != -s $from_file ) {
+            FATAL("Failed to copy file $from_file / $to_file [size mismatch]");
+        }
     }
 
     return;

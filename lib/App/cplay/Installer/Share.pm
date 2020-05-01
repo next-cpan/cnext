@@ -4,6 +4,8 @@ use App::cplay::std;
 
 use App::cplay::Logger;                  # import all
 
+use App::cplay::Helpers qw{is_valid_distribution_name};
+
 use File::Spec;                          # CORE
 use Umask::Local ();                     # fatpacked
 
@@ -11,7 +13,7 @@ use Simple::Accessor qw{installdirs BUILD dist_dir};
 
 sub _build_dist_dir( $self ) {
     my $dist = $self->BUILD->name;
-    FATAL("Invalid distribution name: '$dist'") unless $dist =~ /^[a-z0-9+_-]+$/is;
+    FATAL("Invalid distribution name: '$dist'") unless is_valid_distribution_name($dist);
 
     return File::Spec->catdir( 'auto', 'share', 'dist', $dist );
 }

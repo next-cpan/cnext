@@ -7,7 +7,7 @@ use File::Which ();
 use App::cplay::Logger;
 
 use Exporter 'import';
-our @EXPORT_OK = qw(read_file zip write_file is_fatpacked update_shebang);
+our @EXPORT_OK = qw(read_file zip write_file is_fatpacked update_shebang is_valid_distribution_name);
 
 sub read_file ( $file, $mode = ':utf8' ) {
     local $/;
@@ -53,6 +53,10 @@ sub make_binary {
     }
 
     FATAL("Cannot find make binary");
+}
+
+sub is_valid_distribution_name($name) {
+    return defined $name && $name =~ /^[a-z0-9+_-]+$/is;
 }
 
 sub prove_binary {
