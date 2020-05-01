@@ -159,7 +159,9 @@ die q[Missing fixtures] unless -d $fixtures_directory;
         test => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => array {
-                item match qr{\QFAIL Fail to install cPlay-Test-Module@0.66 or its dependencies.\E};
+
+                # cannot use @ inside the \Q..\E due to a bug in 5.20
+                item match qr{\QFAIL Fail to install cPlay-Test-Module\E\@\Q0.66 or its dependencies.\E};
                 end;
             }, "fail to install $distribution\@$unknow_version";
         },
