@@ -9,7 +9,7 @@ use base 'App::cplay::Index';
 
 use App::cplay::Search::Result ();
 
-use Simple::Accessor qw{file cli cache};
+use Simple::Accessor qw{file cli};
 
 with 'App::cplay::Roles::JSON';
 with 'App::cplay::Index::Role::Columns';    # provides columns and sorted_columns
@@ -32,30 +32,30 @@ sub build ( $self, %opts ) {
     return $self;
 }
 
-## maybe do a fast search...
 sub search ( $self, $module, $version = undef ) {
     FATAL("Missing module") unless defined $module;
-
     INFO("search module $module");
 
-    return unless my $cache = $self->cache;
+    my $ix = $self->columns->{module};    # should always be 0
 
-    # should always be 0
-    my $ix = $self->columns->{module};
-    foreach my $raw ( @{ $cache->{data} } ) {
-        if ( $raw->[$ix] eq $module ) {
-            if ( defined $version ) {
-                my $v_ix = $self->columns->{version};
-                if ( $raw->[$v_ix] ne $version ) {
-                    DEBUG( "requested $module version $version ; latest is " . $raw->[$v_ix] );
-                    return;
-                }
+    my $result;
+    my $iterator = sub($raw) {
+        return unless $raw->[$ix] eq $module;
+
+        if ( defined $version ) {
+            my $v_ix = $self->columns->{version};
+            if ( $raw->[$v_ix] ne $version ) {
+                DEBUG( "requested $module version $version ; latest is " . $raw->[$v_ix] );
+                return;
             }
-            return $self->raw_to_hash($raw);
         }
-    }
+        $result = $self->raw_to_hash($raw);
+        return 1;    # stop the iterator
+    };
 
-    return;
+    $self->iterate($iterator);
+
+    return $result;
 }
 
 sub regexp_search ( $self, $pattern ) {
@@ -67,7 +67,7 @@ sub regexp_search ( $self, $pattern ) {
     my $module_ix     = $self->columns->{module};
     my $repository_ix = $self->columns->{repository};
 
-    my $check_raw = sub($raw) {
+    my $iterator = sub($raw) {
         if ( $raw->[$module_ix] =~ m{$pattern}i ) {
             $result->add_module( $raw->[$module_ix] );
 
@@ -79,10 +79,10 @@ sub regexp_search ( $self, $pattern ) {
             $result->add_repository( $raw->[$repository_ix] );
         }
 
-        return 1;    # continue the search [maybe add a limit??]
+        return;    # continue the search [maybe add a limit??]
     };
 
-    $self->iterate($check_raw);
+    $self->iterate($iterator);
 
     return $result;
 }

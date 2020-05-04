@@ -29,8 +29,8 @@ sub iterate ( $self, $callback ) {
         my $raw;
         eval { $raw = $self->json->decode($line) };
 
-        my $continue = $callback->($raw);
-        last unless $continue;
+        my $last = $callback->($raw);
+        last if $last;
     }
 
     return;
