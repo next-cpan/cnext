@@ -11,7 +11,19 @@ use App::cplay::Search::Result ();
 use Simple::Accessor qw{file cli cache};
 
 with 'App::cplay::Roles::JSON';
-with 'App::cplay::Index::Role::Columns';    # provide columns and sorted_columns
+with 'App::cplay::Index::Role::Columns';     # provides columns and sorted_columns
+with 'App::cplay::Index::Role::Iterator';    # provides the iterate helper
+
+=pod
+
+=head1 Available columns
+
+    my $module_ix             = $self->columns->{module};
+    my $version_ix            = $self->columns->{version};
+    my $repository_ix         = $self->columns->{repository};
+    my $repository_version_ix = $self->columns->{repository_version};
+
+=cut
 
 sub build ( $self, %opts ) {
 
@@ -51,12 +63,6 @@ sub search ( $self, $module, $version = undef ) {
     return;
 }
 
-sub quick_search ( $self, $module ) {
-
-    #...
-    # FIXME idea only read the file line per line
-}
-
 sub regexp_search ( $self, $pattern ) {
 
     return unless defined $pattern && length $pattern;
@@ -81,92 +87,9 @@ sub regexp_search ( $self, $pattern ) {
         return 1;    # continue the search [maybe add a limit??]
     };
 
-    $self->iterate($check_raw);
+    $self->iterate()->( $self, $check_raw );
 
     return $result;
 }
 
-sub iterate ( $self, $callback ) {    # FIXME move to generic location
-
-    die "Missing a callback function" unless ref $callback eq 'CODE';
-
-    # my $module_ix             = $self->columns->{module};
-    # my $version_ix            = $self->columns->{version};
-    # my $repository_ix         = $self->columns->{repository};
-    # my $repository_version_ix = $self->columns->{repository_version};
-
-    open( my $fh, '<:utf8', $self->file ) or die $!;
-
-    my $in_data;
-    while ( my $line = <$fh> ) {
-        if ( !$in_data ) {
-            $in_data = 1 if $line =~ m{^\s*"data"};    # search for the data marker
-            next;
-        }
-
-        next unless $line =~ m{^\s*\[};
-        $line =~ s{,\s*$}{};
-
-        my $raw;
-        eval { $raw = $self->json->decode($line) };
-
-        my $continue = $callback->($raw);
-        last unless $continue;
-
-        # move to helper
-        # if ($found) {
-        #     return { zip( @{ $self->sorted_columns }, @$raw ) };
-        # }
-    }
-
-    return;
-}
-
 1;
-
-__END__
-
-
-sub search ( $self, $repository_or_module, $version = undef, $can_be_module = 1, $can_be_repo = 1, ) {
-
-    return unless $can_be_repo || $can_be_module;
-
-    my $module_ix             = $self->columns->{module};
-    my $version_ix            = $self->columns->{version};
-    my $repository_ix         = $self->columns->{repository};
-    my $repository_version_ix = $self->columns->{repository_version};
-
-    open( my $fh, '<:utf8', $self->file ) or die $!;
-
-    my $in_data;
-    while ( my $line = <$fh> ) {
-        if ( !$in_data ) {
-            $in_data = 1 if $line =~ m{^\s*"data"};    # search for the data marker
-            next;
-        }
-
-        next unless $line =~ m{^\s*\[};
-        $line =~ s{,\s*$}{};
-
-        my $raw;
-        eval { $raw = $self->json->decode($line) };
-
-        my $found;
-        if ( $can_be_module && $raw->[$module_ix] eq $repository_or_module ) {
-            if ( !defined $version || $version eq $raw->[$version_ix] ) {
-                $found = 1;
-            }
-        }
-        elsif ( $can_be_repo && $raw->[$repository_ix] eq $repository_or_module ) {
-            if ( !defined $version || $version eq $raw->[$repository_version_ix] ) {
-                $found = 1;
-            }
-        }
-
-        if ($found) {
-            return { zip( @{ $self->sorted_columns }, @$raw ) };
-        }
-    }
-
-    return;
-}
