@@ -98,6 +98,9 @@
       "App::cplay::Index::Role::Columns" : {
          "file" : "lib/App/cplay/Index/Role/Columns.pm"
       },
+      "App::cplay::Index::Role::Iterator" : {
+         "file" : "lib/App/cplay/Index/Role/Iterator.pm"
+      },
       "App::cplay::InstallDirs" : {
          "file" : "lib/App/cplay/InstallDirs.pm"
       },
@@ -121,6 +124,9 @@
       },
       "App::cplay::Roles::JSON" : {
          "file" : "lib/App/cplay/Roles/JSON.pm"
+      },
+      "App::cplay::Search::Result" : {
+         "file" : "lib/App/cplay/Search/Result.pm"
       },
       "App::cplay::Signature" : {
          "file" : "lib/App/cplay/Signature.pm"
@@ -155,6 +161,9 @@
       },
       "App::cplay::cmd::look" : {
          "file" : "lib/App/cplay/cmd/look.pm"
+      },
+      "App::cplay::cmd::search" : {
+         "file" : "lib/App/cplay/cmd/search.pm"
       },
       "App::cplay::cmd::selfinstall" : {
          "file" : "lib/App/cplay/cmd/selfinstall.pm"
@@ -193,7 +202,7 @@
       "Nicolas R <nicolas@atoomic.org>"
    ],
    "x_generated_by_perl" : "v5.30.1",
-   "x_serialization_backend" : "Cpanel::JSON::XS version 4.18",
+   "x_serialization_backend" : "Cpanel::JSON::XS version 4.19",
    "x_static_install" : 0
 }
 
