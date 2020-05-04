@@ -2,7 +2,12 @@ package App::cplay::Index;
 
 use App::cplay::std;    # import strict, warnings & features
 
-use App::cplay::Helpers qw{zip};
+use App::cplay::Helpers qw{read_file zip};
+
+# naive solution for now read the whole cache
+sub _build_cache($self) {
+    return $self->json->decode( read_file( $self->file ) );
+}
 
 sub iterate ( $self, $callback ) {
 

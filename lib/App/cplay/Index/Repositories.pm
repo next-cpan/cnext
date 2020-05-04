@@ -3,7 +3,6 @@ package App::cplay::Index::Repositories;
 use App::cplay::std;    # import strict, warnings & features
 use App::cplay::Indexes;
 
-use App::cplay::Helpers qw{read_file zip};
 use App::cplay::Logger;    # import all
 
 use base 'App::cplay::Index';
@@ -18,11 +17,6 @@ sub build ( $self, %opts ) {
     $self->{file} = App::cplay::Indexes::get_repositories_ix_file( $self->cli );
 
     return $self;
-}
-
-# naive solution for now read the whole cache
-sub _build_cache($self) {
-    return $self->json->decode( read_file( $self->file ) );
 }
 
 sub _build_template_url($self) {
