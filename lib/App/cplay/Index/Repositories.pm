@@ -6,6 +6,8 @@ use App::cplay::Indexes;
 use App::cplay::Helpers qw{read_file zip};
 use App::cplay::Logger;    # import all
 
+use base 'App::cplay::Index';
+
 use Simple::Accessor qw{file cli cache template_url};
 
 with 'App::cplay::Roles::JSON';
@@ -44,7 +46,7 @@ sub search ( $self, $repository, $version = undef ) {
 
         # we found it, let's check the version
         if ( !defined $version || $version eq $raw->[$version_ix] ) {
-            return { zip( @{ $self->sorted_columns }, @$raw ) };
+            return $self->raw_to_hash($raw);
         }
         return;
     }

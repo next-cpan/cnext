@@ -6,13 +6,14 @@ use App::cplay::Indexes;
 use App::cplay::Helpers qw{read_file zip};
 use App::cplay::Logger;    # import all
 
+use base 'App::cplay::Index';
+
 use App::cplay::Search::Result ();
 
 use Simple::Accessor qw{file cli cache};
 
 with 'App::cplay::Roles::JSON';
-with 'App::cplay::Index::Role::Columns';     # provides columns and sorted_columns
-with 'App::cplay::Index::Role::Iterator';    # provides the iterate helper
+with 'App::cplay::Index::Role::Columns';    # provides columns and sorted_columns
 
 =pod
 
@@ -56,7 +57,7 @@ sub search ( $self, $module, $version = undef ) {
                     return;
                 }
             }
-            return { zip( @{ $self->sorted_columns }, @$raw ) };
+            return $self->raw_to_hash($raw);
         }
     }
 
@@ -87,7 +88,7 @@ sub regexp_search ( $self, $pattern ) {
         return 1;    # continue the search [maybe add a limit??]
     };
 
-    $self->iterate()->( $self, $check_raw );
+    $self->iterate($check_raw);
 
     return $result;
 }
