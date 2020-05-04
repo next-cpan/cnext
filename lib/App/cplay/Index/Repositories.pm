@@ -44,7 +44,7 @@ sub search ( $self, $repository, $version = undef ) {
 
         # we found it, let's check the version
         if ( !defined $version || $version eq $raw->[$version_ix] ) {
-            return { zip( @{ $cache->{columns} }, @$raw ) };
+            return { zip( @{ $self->sorted_columns }, @$raw ) };
         }
         return;
     }

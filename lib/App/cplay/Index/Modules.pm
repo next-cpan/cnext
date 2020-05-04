@@ -56,7 +56,7 @@ sub search ( $self, $module, $version = undef ) {
                     return;
                 }
             }
-            return { zip( @{ $cache->{columns} }, @$raw ) };
+            return { zip( @{ $self->sorted_columns }, @$raw ) };
         }
     }
 
