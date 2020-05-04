@@ -1,7 +1,7 @@
 package App::cplay::Index::Repositories;
 
 use App::cplay::std;    # import strict, warnings & features
-use App::cplay::Index;
+use App::cplay::Indexes;
 
 use App::cplay::Helpers qw{read_file zip};
 use App::cplay::Logger;    # import all
@@ -13,7 +13,7 @@ with 'App::cplay::Index::Role::Columns';    # provide columns and sorted_columns
 
 sub build ( $self, %opts ) {
 
-    $self->{file} = App::cplay::Index::get_repositories_ix_file( $self->cli );
+    $self->{file} = App::cplay::Indexes::get_repositories_ix_file( $self->cli );
 
     return $self;
 }

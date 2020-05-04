@@ -1,4 +1,4 @@
-package App::cplay::Index;
+package App::cplay::Indexes;
 
 use App::cplay::std;    # import strict, warnings & features
 

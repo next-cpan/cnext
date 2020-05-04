@@ -1,7 +1,7 @@
 package App::cplay::Index::Modules;
 
 use App::cplay::std;    # import strict, warnings & features
-use App::cplay::Index;
+use App::cplay::Indexes;
 
 use App::cplay::Helpers qw{read_file zip};
 use App::cplay::Logger;    # import all
@@ -27,7 +27,7 @@ with 'App::cplay::Index::Role::Iterator';    # provides the iterate helper
 
 sub build ( $self, %opts ) {
 
-    $self->{file} = App::cplay::Index::get_modules_ix_file( $self->cli );
+    $self->{file} = App::cplay::Indexes::get_modules_ix_file( $self->cli );
 
     return $self;
 }
