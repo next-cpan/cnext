@@ -15,6 +15,7 @@ use App::cplay::cmd::install     ();
 use App::cplay::cmd::look        ();
 use App::cplay::cmd::selfinstall ();
 use App::cplay::cmd::selfupdate  ();
+use App::cplay::cmd::search      ();
 use App::cplay::cmd::start       ();
 use App::cplay::cmd::test        ();
 use App::cplay::cmd::version     ();

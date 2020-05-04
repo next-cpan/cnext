@@ -6,6 +6,8 @@ use App::cplay::Index;
 use App::cplay::Helpers qw{read_file zip};
 use App::cplay::Logger;    # import all
 
+use App::cplay::Search::Result ();
+
 use Simple::Accessor qw{file cli cache};
 
 with 'App::cplay::Roles::JSON';
@@ -53,6 +55,71 @@ sub quick_search ( $self, $module ) {
 
     #...
     # FIXME idea only read the file line per line
+}
+
+sub regexp_search ( $self, $pattern ) {
+
+    return unless defined $pattern && length $pattern;
+
+    my $result = App::cplay::Search::Result->new;
+
+    my $module_ix     = $self->columns->{module};
+    my $repository_ix = $self->columns->{repository};
+
+    my $check_raw = sub($raw) {
+        if ( $raw->[$module_ix] =~ m{$pattern}i ) {
+            $result->add_module( $raw->[$module_ix] );
+
+            # maybe also add the repository
+            # $result->add_repository( $raw->[$repository_ix] );
+        }
+
+        if ( $raw->[$repository_ix] =~ m{$pattern}i ) {
+            $result->add_repository( $raw->[$repository_ix] );
+        }
+
+        return 1;    # continue the search [maybe add a limit??]
+    };
+
+    $self->iterate($check_raw);
+
+    return $result;
+}
+
+sub iterate ( $self, $callback ) {    # FIXME move to generic location
+
+    die "Missing a callback function" unless ref $callback eq 'CODE';
+
+    # my $module_ix             = $self->columns->{module};
+    # my $version_ix            = $self->columns->{version};
+    # my $repository_ix         = $self->columns->{repository};
+    # my $repository_version_ix = $self->columns->{repository_version};
+
+    open( my $fh, '<:utf8', $self->file ) or die $!;
+
+    my $in_data;
+    while ( my $line = <$fh> ) {
+        if ( !$in_data ) {
+            $in_data = 1 if $line =~ m{^\s*"data"};    # search for the data marker
+            next;
+        }
+
+        next unless $line =~ m{^\s*\[};
+        $line =~ s{,\s*$}{};
+
+        my $raw;
+        eval { $raw = $self->json->decode($line) };
+
+        my $continue = $callback->($raw);
+        last unless $continue;
+
+        # move to helper
+        # if ($found) {
+        #     return { zip( @{ $self->sorted_columns }, @$raw ) };
+        # }
+    }
+
+    return;
 }
 
 1;
