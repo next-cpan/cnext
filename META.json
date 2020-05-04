@@ -86,6 +86,9 @@
       "App::cplay::IPC" : {
          "file" : "lib/App/cplay/IPC.pm"
       },
+      "App::cplay::Index" : {
+         "file" : "lib/App/cplay/Index.pm"
+      },
       "App::cplay::Index::Modules" : {
          "file" : "lib/App/cplay/Index/Modules.pm"
       },
@@ -94,9 +97,6 @@
       },
       "App::cplay::Index::Role::Columns" : {
          "file" : "lib/App/cplay/Index/Role/Columns.pm"
-      },
-      "App::cplay::Index::Role::Iterator" : {
-         "file" : "lib/App/cplay/Index/Role/Iterator.pm"
       },
       "App::cplay::Indexes" : {
          "file" : "lib/App/cplay/Indexes.pm"
