@@ -111,7 +111,11 @@ sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_
     if ( defined $need_version ) {
         $ok = $self->has_module_version( $module_or_repository, $need_version );
         DEBUG("Module $module_or_repository v$need_version is missing") unless $ok;
-        OK("$module_or_repository is already installed.") if $ok && ( $self->depth == 1 || $self->cli->verbose );
+        if ( $ok && ( $self->depth == 1 || $self->cli->verbose ) ) {
+            my $log_level = $self->depth > 1 ? q[resolve] : q[OK];
+            my $logger    = App::cplay::Logger->can($log_level);
+            $logger->("$module_or_repository is already installed.");
+        }
     }
 
     if ( !$ok ) {
