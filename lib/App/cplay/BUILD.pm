@@ -1,5 +1,6 @@
 package App::cplay::BUILD;
 
+use App::cplay;
 use App::cplay::std;
 
 use App::cplay::Logger;    # import all
@@ -57,7 +58,7 @@ sub _build_xs                  { 0 }
 sub _build_builder             { 'play' }
 sub _build_builder_API_version { 1 }
 sub _build_license             { 'perl' }
-sub _build_source              { 'p5' }
+sub _build_source              { App::cplay::source() }
 sub _build_version             { '0.001' }
 
 sub _build_tests { ['t/*.t'] }

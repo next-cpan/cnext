@@ -1,7 +1,14 @@
 package App::cplay;
 
+use App::cplay::std;
+
 our $VERSION  = "0.0001";
 our $REVISION = '~REVISION~';
+
+sub source {
+    state $branch = "$]" > 7 ? 'p7' : 'p5';
+    return $branch;
+}
 
 1;
 

@@ -195,7 +195,7 @@ sub _install_single_module_or_repository ( $self, $module_or_repository, $can_be
         DEBUG("Try to install '$repository' from a custom tag/version.");
 
         # $module_or_repository, $custom_requested_version, 0, $can_be_repo
-        my $branch = q[p5];    # FIXME move to a central location
+        my $branch = App::cplay::source();
 
         my $tag;
         if ( $custom_requested_version =~ m{^$branch} ) {    # p5-v1.00

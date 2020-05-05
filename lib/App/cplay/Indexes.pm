@@ -1,7 +1,8 @@
 package App::cplay::Indexes;
 
-use App::cplay::std;    # import strict, warnings & features
+use App::cplay;
 
+use App::cplay::std;    # import strict, warnings & features
 use App::cplay::Logger;
 
 use App::cplay::Installer::Unpacker ();
@@ -10,7 +11,7 @@ use App::cplay::Installer::Unpacker ();
 use constant BASE_URL => q[https://github.com/pause-play/play-indexes];
 
 # tarball containing all .ix files
-use constant IDX_TARBALL_URL => BASE_URL . q[/archive/p5.tar.gz];
+use constant IDX_TARBALL_URL => BASE_URL . q[/archive/] . App::cplay::source() . q[.tar.gz];
 
 use constant MODULES_IX_BASENAME      => 'modules.idx';
 use constant REPOSITORIES_IX_BASENAME => 'repositories.idx';
@@ -58,7 +59,7 @@ sub setup_once ( $cli, $attempt = 1 ) {
 
     if ($force_refresh) {
         my $http       = $cli->http;
-        my $ix_tarball = $cli->cache_dir . '/p5.tar.gz';
+        my $ix_tarball = $cli->cache_dir . '/' . App::cplay::source() . '.tar.gz';
         unlink $ix_tarball if $attempt > 1;
 
         App::cplay::Logger::fetch(IDX_TARBALL_URL);
