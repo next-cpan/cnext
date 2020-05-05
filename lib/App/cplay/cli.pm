@@ -196,8 +196,16 @@ sub parse_options ( $self, @opts ) {
         ( map $with_option->($_), @with_phases ),    # phase
     ) or exit 1;
 
-    $self->{color}         = 1 if !defined $self->{color}         && -t STDOUT;
-    $self->{show_progress} = 1 if !defined $self->{show_progress} && -t STDOUT;
+    $self->{color} = 1 if !defined $self->{color} && -t STDOUT;
+    if ( !defined $self->{show_progress} && -t STDOUT ) {
+        if ( scalar @ARGV > 1 ) {
+            $self->{show_progress} = 1;              # auto hide progress
+        }
+        else {
+            # this is making -v behaves differently when installing/testing a single element
+            $self->{show_progress} = 0;              # do not delete previous lines
+        }
+    }
 
     $self->{show_progress} = 0 if $self->debug;      # no progress on debug
     $self->{show_progress} = 0 unless -t STDIN;
