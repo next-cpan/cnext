@@ -7,10 +7,11 @@ use App::cplay::Logger;    # import all
 
 use base 'App::cplay::Index';
 
-use Simple::Accessor qw{file cli cache template_url};
+use Simple::Accessor qw{file cli};
 
 with 'App::cplay::Roles::JSON';
-with 'App::cplay::Index::Role::Columns';    # provide columns and sorted_columns
+with 'App::cplay::Index::Role::Columns';        # provides columns and sorted_columns
+with 'App::cplay::Index::Role::TemplateURL';    # provides template_url
 
 sub build ( $self, %opts ) {
 
@@ -19,33 +20,29 @@ sub build ( $self, %opts ) {
     return $self;
 }
 
-sub _build_template_url($self) {
-    $self->cache->{template_url} or die;
-}
-
 ## maybe do a fast search...
 sub search ( $self, $repository, $version = undef ) {
 
-    #return unless defined $module;
-
     INFO( "search repository $repository / " . ( $version // 'undef' ) );
-
-    return unless my $cache = $self->cache;
 
     my $repository_ix = $self->columns->{repository};
     my $version_ix    = $self->columns->{version};
 
-    foreach my $raw ( @{ $cache->{data} } ) {
-        next unless $raw->[$repository_ix] eq $repository;
+    my $result;
+    my $iterator = sub($raw) {
+        return unless $raw->[$repository_ix] eq $repository;
 
         # we found it, let's check the version
         if ( !defined $version || $version eq $raw->[$version_ix] ) {
-            return $self->raw_to_hash($raw);
+            $result = $self->raw_to_hash($raw);
+            return 1;    # stop the iterator
         }
         return;
-    }
+    };
 
-    return;
+    $self->iterate($iterator);
+
+    return $result;
 }
 
 sub get_tarball_url ( $self, $repository ) {
