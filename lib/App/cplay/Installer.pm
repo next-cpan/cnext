@@ -285,12 +285,16 @@ sub install_from_BUILD ( $self, $BUILD, $name = undef ) {
         FATAL("Unknown builder type '$builder_type' for distribution '$name'");
     }
 
+    # we successfully installed the module
+    #   let's advertise the installed modules [update memory cached version]
+    #   and announce the OK status
+
     $self->advertise_installed_modules($BUILD);
 
     if ( $self->run_install ) {
         OK("Installed distribution $name-$version");
     }
-    else {
+    else {    # we are not installing the module but only running unit tests
         OK("Tests Succeeds for $name-$version");
     }
 
@@ -356,9 +360,9 @@ sub _builder_play ( $self, $name ) {
         }
 
         my $cmd = App::cplay::Installer::Command->new(
-            type => 'test',
-            txt  => "tests for $name",
-            cmd  => [
+            log_level => 'test',
+            txt       => "tests for $name",
+            cmd       => [
                 $^X,  "-MExtUtils::Command::MM",                             "-MTest::Harness",
                 "-e", "undef *Test::Harness::Switches; test_harness(0,lib)", @tests
             ],
@@ -489,34 +493,35 @@ sub _builder_Makefile_PL ( $self, $name ) {
     my @test_cmd = ( $^X, $use_dot ? (qw{-I .}) : (), "Makefile.PL" );
 
     push @cmds, App::cplay::Installer::Command->new(
-        type    => 'configure',
-        txt     => "perl " . join( ' ', @test_cmd[ 1 .. $#test_cmd ] ),
-        cmd     => [@test_cmd],
-        timeout => $self->cli->configure_timeout,
+        log_level => 'configure',
+        txt       => "perl " . join( ' ', @test_cmd[ 1 .. $#test_cmd ] ),
+        cmd       => [@test_cmd],
+        timeout   => $self->cli->configure_timeout,
     );
 
     push @cmds, App::cplay::Installer::Command->new(
-        type    => 'build',
-        txt     => "make",
-        cmd     => $make,
-        timeout => $self->cli->build_timeout,
+        log_level => 'build',
+        txt       => "make",
+        cmd       => $make,
+        timeout   => $self->cli->build_timeout,
     );
 
     if ( $self->cli->run_tests ) {
         push @cmds, App::cplay::Installer::Command->new(
-            type    => 'test',
-            txt     => "make test",
-            cmd     => [ $make, "test" ],
-            timeout => $self->cli->test_timeout,
+            log_level => 'test',
+            txt       => "make test",
+            cmd       => [ $make, "test" ],
+            timeout   => $self->cli->test_timeout,
+
         );
     }
 
     if ( $self->run_install ) {
         push @cmds, App::cplay::Installer::Command->new(
-            type    => 'install',
-            txt     => "make install",
-            cmd     => [ $make, "install" ],
-            timeout => $self->cli->install_timeout,
+            log_level => 'install',
+            txt       => "make install",
+            cmd       => [ $make, "install" ],
+            timeout   => $self->cli->install_timeout,
         );
     }
 
@@ -531,31 +536,31 @@ sub _builder_Build ( $self, $name ) {
 
     my @cmds;
     push @cmds, App::cplay::Installer::Command->new(
-        type    => 'configure',
-        txt     => "perl Build.PL",
-        cmd     => [ $^X, "Build.PL" ],
-        timeout => $self->cli->configure_timeout,
+        log_level => 'configure',
+        txt       => "perl Build.PL",
+        cmd       => [ $^X, "Build.PL" ],
+        timeout   => $self->cli->configure_timeout,
     );
 
     push @cmds, App::cplay::Installer::Command->new(
-        type    => 'build',
-        cmd     => "./Build",
-        timeout => $self->cli->configure_timeout,
+        log_level => 'build',
+        cmd       => "./Build",
+        timeout   => $self->cli->configure_timeout,
     );
 
     if ( $self->cli->run_tests ) {
         push @cmds, App::cplay::Installer::Command->new(
-            type    => 'test',
-            cmd     => [ "./Build", "test" ],
-            timeout => $self->cli->test_timeout,
+            log_level => 'test',
+            cmd       => [ "./Build", "test" ],
+            timeout   => $self->cli->test_timeout,
         );
     }
 
     if ( $self->run_install ) {
         push @cmds, App::cplay::Installer::Command->new(
-            type    => 'install',
-            cmd     => [ "./Build", "install" ],
-            timeout => $self->cli->install_timeout,
+            log_level => 'install',
+            cmd       => [ "./Build", "install" ],
+            timeout   => $self->cli->install_timeout,
         );
     }
 
