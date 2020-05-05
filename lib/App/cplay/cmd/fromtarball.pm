@@ -15,9 +15,6 @@ sub run ( $cli, @args ) {
 
     my $installer = App::cplay::Installer->new( cli => $cli );
 
-    # guarantee that ExtUtils::MakeMaker is >= 6.64
-    return 1 unless $installer->check_makemaker();    ## FIXME move it to build
-
     my $tarball = $args[0];
 
     INFO("Installing module from tarball $tarball");

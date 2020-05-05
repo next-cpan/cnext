@@ -10,9 +10,6 @@ sub run ( $self, @modules ) {
 
     my $installer = App::cplay::Installer->new( cli => $self );
 
-    # guarantee that ExtUtils::MakeMaker is >= 6.64
-    return 1 unless $installer->check_makemaker();
-
     foreach my $module (@modules) {
         if ( $module eq '.' ) {
             INFO "Installing distribution from .";

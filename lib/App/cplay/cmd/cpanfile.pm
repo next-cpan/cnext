@@ -11,9 +11,6 @@ sub run ( $self, @files ) {
 
     my $installer = App::cplay::Installer->new( cli => $self );
 
-    # guarantee that ExtUtils::MakeMaker is >= 6.64
-    return 1 unless $installer->check_makemaker();    # move to build ?
-
     return 1 unless _install_and_load_cpanfile($installer);
 
     # default cpanfile

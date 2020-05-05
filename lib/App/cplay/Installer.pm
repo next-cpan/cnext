@@ -67,26 +67,6 @@ sub _build_unpacker($self) {
     App::cplay::Installer::Unpacker->new( tmproot => $self->cli->build_dir );
 }
 
-sub check_makemaker($self) {
-    my $module  = 'ExtUtils::MakeMaker';
-    my $version = EXTUTILS_MAKEMAKER_MIN_VERSION;
-
-    # do not use the local helper has_module_version here
-    return 1 if App::cplay::Module::has_module_version( $module, $version );
-
-    WARN("Trying to update ExtUtils::MakeMaker");
-
-    # install the last available version
-    my $ok = $self->install_single_module_or_repository($module);
-
-    if ( !$ok ) {
-        ERROR("Please update ExtUtils::MakeMaker to $version or later");
-        return;
-    }
-
-    return $ok;
-}
-
 sub has_module_version ( $self, $module, $version ) {
 
     if ( $self->depth == 1 && $self->cli->reinstall ) {
