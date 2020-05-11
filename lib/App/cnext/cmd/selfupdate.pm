@@ -14,7 +14,7 @@ use File::Basename ();
 use Cwd            ();
 use File::Copy     ();
 
-use constant URL => q[http://get.cnext.us/];    # or https://git.io/cnext
+use constant URL => q[https://git.io/cnext];    # or https://git.io/cnext
 
 sub run ( $cli, @argv ) {
     if ( !is_fatpacked() ) {

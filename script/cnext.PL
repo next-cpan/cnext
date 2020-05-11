@@ -136,7 +136,7 @@ You can also select where you want to install the script using installdirs
 
 You can also download and install cnext to any custom location.
 
-   curl -fsSL --compressed http://get.cnext.us > cnext
+   curl -fsSL --compressed https://git.io/cnext > cnext
    chmod +x cnext
    ./cnext --version
 
