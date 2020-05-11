@@ -1,4 +1,4 @@
-name: cplay-makefile
+name: cnext-makefile
 
 on:
   push:
@@ -41,15 +41,15 @@ jobs:
         run: |
           sudo rm -f $(perldoc -lm ${{ env.CPLAY_MODULE }})
 
-      - name: install cplay
+      - name: install cnext
         run: |
-          curl -L https://git.io/cplay | sudo perl - self-install
-          which cplay
-          cplay --version
+          curl -L https://git.io/cnext | sudo perl - self-install
+          which cnext
+          cnext --version
 
-      - name: cplay from-tarball ${{ env.CPLAY_DISTRO }}
+      - name: cnext from-tarball ${{ env.CPLAY_DISTRO }}
         run: |
-          sudo cplay from-tarball -d https://github.com/next-cpan/${{ env.CPLAY_DISTRO }}/archive/p5.tar.gz
+          sudo cnext from-tarball -d https://github.com/next-cpan/${{ env.CPLAY_DISTRO }}/archive/p5.tar.gz
 
       - name: check module is installed
         run: |

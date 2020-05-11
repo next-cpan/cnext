@@ -1,4 +1,4 @@
-name: cplay-fatpack
+name: cnext-fatpack
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: ["master"]
 
 jobs:
-  cplay:
+  cnext:
     env:
       # some plugins still needs this to run their tests...
       PERL_USE_UNSAFE_INC: 0
@@ -30,13 +30,13 @@ jobs:
       - name: perl '-V:install.*'
         run: perl '-V:install.*'
 
-      - name: install cplay
+      - name: install cnext
         run: |
-          curl -L https://git.io/cplay | sudo perl - self-install
-          which cplay
-          cplay --version
+          curl -L https://git.io/cnext | sudo perl - self-install
+          which cnext
+          cnext --version
 
-      # sudo ./cplay from-tarball -d https://github.com/${{ github.repository }}/archive/${{ github.sha }}.tar.gz
-      - name: cplay from-tarball A1z-Html
+      # sudo ./cnext from-tarball -d https://github.com/${{ github.repository }}/archive/${{ github.sha }}.tar.gz
+      - name: cnext from-tarball A1z-Html
         run: |
-          sudo cplay from-tarball -d https://github.com/next-cpan/A1z-Html/archive/p5.tar.gz
+          sudo cnext from-tarball -d https://github.com/next-cpan/A1z-Html/archive/p5.tar.gz
