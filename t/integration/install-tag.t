@@ -7,7 +7,7 @@ use Test2::Bundle::Extended;
 use Test2::Tools::Explain;
 use Test2::Plugin::NoWarnings;
 
-use cPlayTestHelpers;
+use cNextTestHelpers;
 
 use App::cnext::std;
 use App::cnext::Tester;
@@ -15,10 +15,10 @@ use App::cnext::Tester;
 use File::pushd;
 
 # custom modules with preset tags for testing
-# https://github.com/next-cpan/cPlay-Test-Module
+# https://github.com/next-cpan/cNext-Test-Module
 
-my $module       = q[cPlay::Test::Module];
-my $distribution = q[cPlay-Test-Module];
+my $module       = q[Next::Test::Module];
+my $distribution = q[Next-Test-Module];
 my $last_version = q[1.00];
 
 note "Testing cnext install for module $module";
@@ -161,7 +161,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
             is $lines => array {
 
                 # cannot use @ inside the \Q..\E due to a bug in 5.20
-                item match qr{\QFAIL Fail to install cPlay-Test-Module\E\@\Q0.66 or its dependencies.\E};
+                item match qr{\QFAIL Fail to install cNext-Test-Module\E\@\Q0.66 or its dependencies.\E};
                 end;
             }, "fail to install $distribution\@$unknow_version";
         },

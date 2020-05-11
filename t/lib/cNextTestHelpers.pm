@@ -1,4 +1,4 @@
-package cPlayTestHelpers;    # inspired by App::Yath::Tester
+package cNextTestHelpers;    # inspired by App::Yath::Tester
 
 use App::cnext::std;
 

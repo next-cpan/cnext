@@ -10,7 +10,7 @@ use Test2::Plugin::NoWarnings;
 
 use Test::MockModule;
 
-use cPlayTestHelpers;
+use cNextTestHelpers;
 
 use App::cnext::std;
 use App::cnext::Tester;
