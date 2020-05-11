@@ -1,7 +1,7 @@
-package App::cplay::Index::Role::TemplateURL;
+package App::next::Index::Role::TemplateURL;
 
-use App::cplay::std;    # import strict, warnings & features
-use App::cplay::Logger;
+use App::next::std;    # import strict, warnings & features
+use App::next::Logger;
 
 use File::Basename qw(basename);
 

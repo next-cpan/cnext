@@ -1,14 +1,14 @@
-package App::cplay::cmd::install;
+package App::next::cmd::install;
 
-use App::cplay::std;
+use App::next::std;
 
-use App::cplay::Logger;    # import all
-use App::cplay::Installer;
+use App::next::Logger;    # import all
+use App::next::Installer;
 
 sub run ( $self, @modules ) {
     return 1 unless scalar @modules;
 
-    my $installer = App::cplay::Installer->new( cli => $self );
+    my $installer = App::next::Installer->new( cli => $self );
 
     foreach my $module (@modules) {
         if ( $module eq '.' ) {

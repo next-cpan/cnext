@@ -4,7 +4,7 @@
 
 # NAME
 
-App::cplay -  CPAN client using pause-play indexes
+App::next -  CPAN client using pause-play indexes
 
 # SYNOPSIS
 

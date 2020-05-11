@@ -1,27 +1,27 @@
-package App::cplay::cli;
+package App::next::cli;
 
-use App::cplay::std;    # import strict, warnings & features
+use App::next::std;    # import strict, warnings & features
 
-use App::cplay ();
-use App::cplay::Logger;    # import all
-use App::cplay::Http;
+use App::next ();
+use App::next::Logger;    # import all
+use App::next::Http;
 
 # need to load all commands to fatpack them
-use App::cplay::cmd::cpanfile    ();
-use App::cplay::cmd::fromtarball ();
-use App::cplay::cmd::getrepo     ();
-use App::cplay::cmd::help        ();
-use App::cplay::cmd::install     ();
-use App::cplay::cmd::look        ();
-use App::cplay::cmd::selfinstall ();
-use App::cplay::cmd::selfupdate  ();
-use App::cplay::cmd::search      ();
-use App::cplay::cmd::start       ();
-use App::cplay::cmd::test        ();
-use App::cplay::cmd::version     ();
+use App::next::cmd::cpanfile    ();
+use App::next::cmd::fromtarball ();
+use App::next::cmd::getrepo     ();
+use App::next::cmd::help        ();
+use App::next::cmd::install     ();
+use App::next::cmd::look        ();
+use App::next::cmd::selfinstall ();
+use App::next::cmd::selfupdate  ();
+use App::next::cmd::search      ();
+use App::next::cmd::start       ();
+use App::next::cmd::test        ();
+use App::next::cmd::version     ();
 
-use App::cplay::Index::Repositories;
-use App::cplay::Index::Modules;
+use App::next::Index::Repositories;
+use App::next::Index::Modules;
 
 use Cwd ();
 
@@ -131,15 +131,15 @@ sub _build_build_timeout     { 3_600 }
 sub _build_test_timeout      { 1_800 }
 
 sub _build_http {
-    App::cplay::Http->create;    # FIXME maybe some args
+    App::next::Http->create;    # FIXME maybe some args
 }
 
 sub _build_repositories_idx($self) {
-    App::cplay::Index::Repositories->new( cli => $self );
+    App::next::Index::Repositories->new( cli => $self );
 }
 
 sub _build_modules_idx($self) {
-    App::cplay::Index::Modules->new( cli => $self );
+    App::next::Index::Modules->new( cli => $self );
 }
 
 sub parse_options ( $self, @opts ) {
@@ -239,10 +239,10 @@ sub parse_options ( $self, @opts ) {
 
     $self->{cleanup} //= 1;
 
-    $App::cplay::Logger::COLOR         = 1 if $self->{color};
-    $App::cplay::Logger::VERBOSE       = 1 if $self->{verbose};
-    $App::cplay::Logger::DEBUG         = 1 if $self->{debug};
-    $App::cplay::Logger::SHOW_PROGRESS = 1 if $self->{show_progress};
+    $App::next::Logger::COLOR         = 1 if $self->{color};
+    $App::next::Logger::VERBOSE       = 1 if $self->{verbose};
+    $App::next::Logger::DEBUG         = 1 if $self->{debug};
+    $App::next::Logger::SHOW_PROGRESS = 1 if $self->{show_progress};
 
     if ( @ARGV && $ARGV[0] eq "-" ) {
         $self->{argv}     = $self->read_argv_from_stdin;
@@ -288,7 +288,7 @@ sub get_cmd_sub_for ( $self, $cmd ) {
     $cmd = $aliases->{$cmd} if defined $aliases->{$cmd};
 
     return unless $cmd =~ m{^[A-Za-z0-9_]+$};
-    return "App::cplay::cmd::$cmd"->can('run');
+    return "App::next::cmd::$cmd"->can('run');
 }
 
 sub run ( $self, @argv ) {

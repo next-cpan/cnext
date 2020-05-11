@@ -1,6 +1,6 @@
-package App::cplay;
+package App::next;
 
-use App::cplay::std;
+use App::next::std;
 
 our $VERSION  = "0.0001";
 our $REVISION = '~REVISION~';
@@ -18,7 +18,7 @@ sub source {
 
 =head1 NAME
 
-App::cplay -  CPAN client using pause-play indexes
+App::next -  CPAN client using pause-play indexes
 
 =head1 SYNOPSIS
 

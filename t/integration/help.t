@@ -7,8 +7,8 @@ use Test2::Bundle::Extended;
 use Test2::Tools::Explain;
 use Test2::Plugin::NoWarnings;
 
-use App::cplay::std;
-use App::cplay::Tester;
+use App::next::std;
+use App::next::Tester;
 
 {
     cplay(

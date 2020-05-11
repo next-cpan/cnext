@@ -10,11 +10,11 @@ use Test2::Plugin::NoWarnings;
 
 use cPlayTestHelpers;
 
-use App::cplay::std;
-use App::cplay::Tester;
+use App::next::std;
+use App::next::Tester;
 
-use App::cplay::IPC;
-use App::cplay::Helpers qw{read_file};
+use App::next::IPC;
+use App::next::Helpers qw{read_file};
 
 use File::Temp;
 use File::pushd;
@@ -68,8 +68,8 @@ my $intmp = pushd("$tmp");
 
     {
         note "check BUILD.json";
-        require App::cplay::Roles::JSON;
-        my $build = App::cplay::Roles::JSON->new->json->decode( read_file( q[My-Custom-Module/BUILD.json], ':utf8' ) );
+        require App::next::Roles::JSON;
+        my $build = App::next::Roles::JSON->new->json->decode( read_file( q[My-Custom-Module/BUILD.json], ':utf8' ) );
         is $build, {
             'abstract'            => 'Abstract for My-Custom-Module',
             'builder'             => 'play',
@@ -102,7 +102,7 @@ my $intmp = pushd("$tmp");
         my $in_dir = pushd('My-Custom-Module');
 
         my @test = ( $^X, '-Ilib', 't/00-load.t' );
-        my ( $status, $out, $err ) = App::cplay::IPC::run3( [@test] );
+        my ( $status, $out, $err ) = App::next::IPC::run3( [@test] );
         is $status, 0, "perl -Ilib t/00-load.t";
         is $out, <<OUT, "test output";
 ok 1 - use My::Custom::Module;

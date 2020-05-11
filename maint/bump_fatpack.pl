@@ -8,7 +8,7 @@ sub find_version {
 
     open my $fh, "<", $file or die $!;
     while (<$fh>) {
-        /package App::cplay;our\$VERSION="(.*?)"/ and return $1;
+        /package App::next;our\$VERSION="(.*?)"/ and return $1;
     }
     return;
 }

@@ -1,7 +1,7 @@
-package App::cplay::Timeout;
+package App::next::Timeout;
 
-use App::cplay::std;    # import strict, warnings & features
-use App::cplay::Logger;
+use App::next::std;    # import strict, warnings & features
+use App::next::Logger;
 
 use Simple::Accessor qw{timeout message prevsig};
 

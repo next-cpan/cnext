@@ -1,13 +1,13 @@
-package App::cplay::Installer::Command;
+package App::next::Installer::Command;
 
-use App::cplay::std;    # import strict, warnings & features
-use App::cplay::Logger;
+use App::next::std;    # import strict, warnings & features
+use App::next::Logger;
 
-use App::cplay::Timeout ();
+use App::next::Timeout ();
 
 use Simple::Accessor qw{txt cmd timeout env log_level};
 
-use App::cplay::IPC ();
+use App::next::IPC ();
 
 # maybe consider using Command::Runner
 
@@ -25,16 +25,16 @@ sub _build_txt($self) {
 sub run($self) {
     my $log_level = $self->log_level;
 
-    my $log_type = App::cplay::Logger->can($log_level) or FATAL("Unknown helper to log $log_level");
+    my $log_type = App::next::Logger->can($log_level) or FATAL("Unknown helper to log $log_level");
     $log_type->( "running " . $self->txt );
 
     my ( $status, $out, $err );
-    my $todo = sub { ( $status, $out, $err ) = App::cplay::IPC::run3( $self->cmd, $self->log_level ) };
+    my $todo = sub { ( $status, $out, $err ) = App::next::IPC::run3( $self->cmd, $self->log_level ) };
 
     local %ENV = ( %ENV, %{ $self->env } );
 
     if ( $self->timeout ) {
-        App::cplay::Timeout->new(
+        App::next::Timeout->new(
             message => q[Reach timeout while running ] . $self->txt,
             timeout => $self->timeout,
         )->run($todo);

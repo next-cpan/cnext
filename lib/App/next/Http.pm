@@ -1,8 +1,8 @@
-package App::cplay::Http;
+package App::next::Http;
 
-use App::cplay::std;    # import strict, warnings & features
+use App::next::std;    # import strict, warnings & features
 
-use App::cplay ();
+use App::next ();
 
 use HTTP::Tinyish;
 
@@ -21,7 +21,7 @@ sub create ( $class, %args ) {
     die "Couldn't find HTTP Clients that support https" unless $backend;
 
     my $http = $backend->new(
-        agent      => "App::cplay/v" . $App::cplay::VERSION,
+        agent      => "App::next/v" . $App::next::VERSION,
         timeout    => 60,
         verify_SSL => 1,
         %args,

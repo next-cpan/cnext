@@ -1,11 +1,11 @@
-package App::cplay::cmd::version;
+package App::next::cmd::version;
 
-use App::cplay::std;
+use App::next::std;
 
 sub run ( $self, @argv ) {
 
-    my $version  = $App::cplay::VERSION;
-    my $revision = $App::cplay::REVISION;
+    my $version  = $App::next::VERSION;
+    my $revision = $App::next::REVISION;
 
     say "cplay $version\@$revision ($0)";
 

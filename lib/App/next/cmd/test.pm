@@ -1,14 +1,14 @@
-package App::cplay::cmd::test;
+package App::next::cmd::test;
 
-use App::cplay::std;
+use App::next::std;
 
-use App::cplay::Logger;    # import all
-use App::cplay::Installer;
+use App::next::Logger;    # import all
+use App::next::Installer;
 
 sub run ( $cli, @modules ) {    # very close to install command [could refactor?]
     return 1 unless scalar @modules;
 
-    my $installer = App::cplay::Installer->new( cli => $cli, run_install => 0 );
+    my $installer = App::next::Installer->new( cli => $cli, run_install => 0 );
 
     if ( !$cli->run_tests ) {
         ERROR("Cannot disable tests when using 'test' command.");

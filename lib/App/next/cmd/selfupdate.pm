@@ -1,14 +1,14 @@
-package App::cplay::cmd::selfupdate;
+package App::next::cmd::selfupdate;
 
-use App::cplay ();
+use App::next ();
 
-use App::cplay::std;
-use App::cplay::Logger;    # import all
+use App::next::std;
+use App::next::Logger;    # import all
 
-use App::cplay::Installer;
-use App::cplay::InstallDirs;
+use App::next::Installer;
+use App::next::InstallDirs;
 
-use App::cplay::Helpers qw{write_file is_fatpacked update_shebang};
+use App::next::Helpers qw{write_file is_fatpacked update_shebang};
 
 use File::Basename ();
 use Cwd            ();
@@ -22,12 +22,12 @@ sub run ( $cli, @argv ) {
         return 1;
     }
 
-    App::cplay::Logger::setup_for_script();
+    App::next::Logger::setup_for_script();
 
     my $force = grep { $_ eq 'force' } @argv;
     INFO("running 'selfupdate force'") if $force;
 
-    my $installer = App::cplay::Installer->new( cli => $cli );
+    my $installer = App::next::Installer->new( cli => $cli );
 
     my $tmp_file = $installer->cli->build_dir . "/cplay.tmp";
     unlink $tmp_file if -e $tmp_file;
@@ -39,8 +39,8 @@ sub run ( $cli, @argv ) {
         return 1;
     }
 
-    my $current_version = $App::cplay::VERSION . '@' . $App::cplay::REVISION;
-    my ( $exit, $out, $err ) = App::cplay::IPC::run3( [ "$^X", $tmp_file, q[--version] ] );
+    my $current_version = $App::next::VERSION . '@' . $App::next::REVISION;
+    my ( $exit, $out, $err ) = App::next::IPC::run3( [ "$^X", $tmp_file, q[--version] ] );
     my $new_version;
     if ( $out && $out =~ m{^cplay\s+(\d+\.\d+\@\w+)\b}a ) {    # FIXME use sha1 id
         $new_version = $1;

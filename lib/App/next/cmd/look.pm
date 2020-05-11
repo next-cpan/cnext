@@ -1,7 +1,7 @@
-package App::cplay::cmd::look;
+package App::next::cmd::look;
 
-use App::cplay::std;
-use App::cplay::Logger;    # import all
+use App::next::std;
+use App::next::Logger;    # import all
 
 use File::Which ();
 use File::Path qw(mkpath rmtree);
@@ -44,7 +44,7 @@ sub run ( $cli, @argv ) {
         mkpath($base_dir) unless -d $base_dir;
         rmtree($dir) if -d $dir;
 
-        my ( $exit, $out, $err ) = App::cplay::IPC::run3( [ $git, 'clone', $url, $dir ] );
+        my ( $exit, $out, $err ) = App::next::IPC::run3( [ $git, 'clone', $url, $dir ] );
 
         if ( $exit != 0 || !-d $dir ) {
             ERROR("Fail to clone git repository '$url'");

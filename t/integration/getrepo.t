@@ -10,11 +10,11 @@ use Test2::Plugin::NoWarnings;
 
 use cPlayTestHelpers;
 
-use App::cplay::std;
-use App::cplay::Tester;
+use App::next::std;
+use App::next::Tester;
 
-#use App::cplay::IPC;
-#use App::cplay::Helpers qw{read_file write_file};
+#use App::next::IPC;
+#use App::next::Helpers qw{read_file write_file};
 
 #use File::Temp;
 #use File::pushd;

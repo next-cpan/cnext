@@ -1,8 +1,8 @@
-package App::cplay::Index;
+package App::next::Index;
 
-use App::cplay::std;    # import strict, warnings & features
+use App::next::std;    # import strict, warnings & features
 
-use App::cplay::Helpers qw{read_file zip};
+use App::next::Helpers qw{read_file zip};
 
 # naive solution for now read the whole cache
 sub _build_cache($self) {

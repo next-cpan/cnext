@@ -1,9 +1,9 @@
-package App::cplay::Starter;
+package App::next::Starter;
 
-use App::cplay::std;
+use App::next::std;
 
-use App::cplay::Logger;    # import all
-use App::cplay::Helpers qw{write_file};
+use App::next::Logger;    # import all
+use App::next::Helpers qw{write_file};
 
 use Simple::Accessor qw{
   distribution module
@@ -11,8 +11,8 @@ use Simple::Accessor qw{
   BUILD root_directory
 };
 
-use App::cplay::BUILD ();
-use File::Copy        ();  # CORE
+use App::next::BUILD ();
+use File::Copy       ();  # CORE
 use File::Path qw(make_path);    # CORE
 use File::Find     ();           # CORE
 use File::Basename ();           # CORE
@@ -142,7 +142,7 @@ EOS
 }
 
 sub add_BUILD($self) {
-    my $build = App::cplay::BUILD->new(
+    my $build = App::next::BUILD->new(
         abstract => "Abstract for " . $self->distribution,
         name     => $self->distribution,
         primary  => $self->module,

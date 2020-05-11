@@ -9,10 +9,10 @@ use Test2::Plugin::NoWarnings;
 
 use cPlayTestHelpers;
 
-use App::cplay::std;
-use App::cplay::Tester;
+use App::next::std;
+use App::next::Tester;
 
-use App::cplay::Http;
+use App::next::Http;
 
 use File::Temp;
 use Config;

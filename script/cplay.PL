@@ -39,10 +39,10 @@ use warnings;
 use FindBin qw($Bin);    # Auto-removed
 use lib "$Bin/../lib", "$Bin/../fatlib";    # Auto-removed
 
-use App::cplay::cli ();
+use App::next::cli ();
 
 unless (caller) {
-    exit( App::cplay::cli->new( name => "App::cplay" )->run(@ARGV) // 0 );
+    exit( App::next::cli->new( name => "App::next" )->run(@ARGV) // 0 );
 }
 
 1;
@@ -54,7 +54,7 @@ unless (caller) {
 
 =head1 NAME
 
-App::cplay -  CPAN client using pause-play indexes
+App::next -  CPAN client using pause-play indexes
 
 =head1 SYNOPSIS
 

@@ -1,21 +1,21 @@
-package App::cplay::Index::Repositories;
+package App::next::Index::Repositories;
 
-use App::cplay::std;    # import strict, warnings & features
-use App::cplay::Indexes;
+use App::next::std;    # import strict, warnings & features
+use App::next::Indexes;
 
-use App::cplay::Logger;    # import all
+use App::next::Logger;    # import all
 
-use base 'App::cplay::Index';
+use base 'App::next::Index';
 
 use Simple::Accessor qw{file cli};
 
-with 'App::cplay::Roles::JSON';
-with 'App::cplay::Index::Role::Columns';        # provides columns and sorted_columns
-with 'App::cplay::Index::Role::TemplateURL';    # provides template_url
+with 'App::next::Roles::JSON';
+with 'App::next::Index::Role::Columns';        # provides columns and sorted_columns
+with 'App::next::Index::Role::TemplateURL';    # provides template_url
 
 sub build ( $self, %opts ) {
 
-    $self->{file} = App::cplay::Indexes::get_repositories_ix_file( $self->cli );
+    $self->{file} = App::next::Indexes::get_repositories_ix_file( $self->cli );
 
     return $self;
 }

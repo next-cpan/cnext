@@ -10,19 +10,19 @@ use Test2::Plugin::NoWarnings;
 
 use cPlayTestHelpers;
 
-use App::cplay::std;
-use App::cplay::Tester;
+use App::next::std;
+use App::next::Tester;
 
-use App::cplay::IPC ();
+use App::next::IPC ();
 
-use App::cplay::InstallDirs;
+use App::next::InstallDirs;
 
 use Cwd qw{abs_path};
 
 note "Testing cplay --self-install";
 
 if ( use_fatpack() ) {
-    my $install_to_dir = App::cplay::InstallDirs->new->bin;
+    my $install_to_dir = App::next::InstallDirs->new->bin;
     my $cplay_path     = $install_to_dir . '/cplay';
 
     {
@@ -49,7 +49,7 @@ if ( use_fatpack() ) {
         ok -f $cplay_path, "cplay is installed to $cplay_path";
         ok -x $cplay_path, "cplay is executable";
 
-        my ( $exit, $out, $err ) = App::cplay::IPC::run3( [ $cplay_path, '--version' ] );
+        my ( $exit, $out, $err ) = App::next::IPC::run3( [ $cplay_path, '--version' ] );
         is $exit,  0,                         'cplay --version exits with 0';
         like $out, qr{^\s*cplay\s+\d+\.\d+}a, 'cplay --version output' or diag ":$out:";
         is $err,   undef,                     'nothing on stderr';
@@ -89,7 +89,7 @@ if ( use_fatpack() ) {
     foreach my $type (qw{site perl vendor}) {
         note "Testing installdirs=$type";
 
-        my $install_to_dir = App::cplay::InstallDirs->new( type => $type )->bin;
+        my $install_to_dir = App::next::InstallDirs->new( type => $type )->bin;
         next unless $install_to_dir;
 
         note "install_to_dir: ", $install_to_dir;

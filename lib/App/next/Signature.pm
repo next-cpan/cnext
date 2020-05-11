@@ -1,8 +1,8 @@
-package App::cplay::Signature;
+package App::next::Signature;
 
-use App::cplay::std;    # import strict, warnings & features
+use App::next::std;    # import strict, warnings & features
 
-use App::cplay::Logger;
+use App::next::Logger;
 
 use Digest::Perl::MD5;    # fatpack in
 

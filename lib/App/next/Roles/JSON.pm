@@ -1,6 +1,6 @@
-package App::cplay::Roles::JSON;
+package App::next::Roles::JSON;
 
-use App::cplay::std;    # import strict, warnings & features
+use App::next::std;    # import strict, warnings & features
 
 use JSON::PP ();
 

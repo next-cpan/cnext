@@ -1,10 +1,10 @@
-package App::cplay::Helpers;
+package App::next::Helpers;
 
-use App::cplay::std;    # import strict, warnings & features
+use App::next::std;    # import strict, warnings & features
 
 use Config;
 use File::Which ();
-use App::cplay::Logger;
+use App::next::Logger;
 
 use Exporter 'import';
 our @EXPORT_OK = qw(read_file zip write_file is_fatpacked update_shebang is_valid_distribution_name);

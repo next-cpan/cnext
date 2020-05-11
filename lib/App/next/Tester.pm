@@ -1,8 +1,8 @@
-package App::cplay::Tester;    # inspired by App::Yath::Tester
+package App::next::Tester;    # inspired by App::Yath::Tester
 
-use App::cplay::std;
+use App::next::std;
 
-#use App::cplay::Logger;
+#use App::next::Logger;
 
 use Test2::API qw/context run_subtest/;
 use Test2::Tools::Compare qw/is/;
@@ -25,7 +25,7 @@ sub find_cplay {
     state $cache;
 
     if ( !defined $cache ) {
-        require App::cplay;
+        require App::next;
         my $path = abs_path( $INC{'App/cplay.pm'} );
 
         if ( use_fatpack() ) {

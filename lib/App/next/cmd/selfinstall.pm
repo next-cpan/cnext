@@ -1,11 +1,11 @@
-package App::cplay::cmd::selfinstall;
+package App::next::cmd::selfinstall;
 
-use App::cplay::std;
+use App::next::std;
 
-use App::cplay::Logger;    # import all
-use App::cplay::Installer;
+use App::next::Logger;    # import all
+use App::next::Installer;
 
-use App::cplay::Helpers qw{write_file is_fatpacked};
+use App::next::Helpers qw{write_file is_fatpacked};
 
 use File::Basename ();
 use Cwd            ();
@@ -18,12 +18,12 @@ sub run ( $cli, @argv ) {
 
     FATAL("No source code") unless length( $main::SOURCE_CODE // '' );
 
-    App::cplay::Logger::setup_for_script();
+    App::next::Logger::setup_for_script();
 
     my $tmp_file = $cli->build_dir . "/cplay.tmp";
     write_file( $tmp_file, $main::SOURCE_CODE );
 
-    my $installer = App::cplay::Installer->new( cli => $cli );
+    my $installer = App::next::Installer->new( cli => $cli );
     my $dirs      = $installer->installdirs;
     my $path      = $dirs->install_to_bin( $tmp_file, 'cplay' );
     OK "cplay is installed to $path";

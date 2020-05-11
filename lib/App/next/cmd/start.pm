@@ -1,9 +1,9 @@
-package App::cplay::cmd::start;
+package App::next::cmd::start;
 
-use App::cplay::std;
+use App::next::std;
 
-use App::cplay::Logger;    # import all
-use App::cplay::Starter;
+use App::next::Logger;    # import all
+use App::next::Starter;
 
 use Cwd;
 use File::pushd;
@@ -20,7 +20,7 @@ sub run ( $cli, @modules ) {
 
         my $in_dir = pushd($root);
 
-        my $ok = eval { App::cplay::Starter->new( module_or_distribution => $module )->create; };
+        my $ok = eval { App::next::Starter->new( module_or_distribution => $module )->create; };
 
         if ($ok) {
             OK("Directory for $module created.");

@@ -1,13 +1,13 @@
-package App::cplay::Installer::Share;    # Maybe InstallDirs/Share ?
+package App::next::Installer::Share;    # Maybe InstallDirs/Share ?
 
-use App::cplay::std;
+use App::next::std;
 
-use App::cplay::Logger;                  # import all
+use App::next::Logger;                  # import all
 
-use App::cplay::Helpers qw{is_valid_distribution_name};
+use App::next::Helpers qw{is_valid_distribution_name};
 
-use File::Spec;                          # CORE
-use Umask::Local ();                     # fatpacked
+use File::Spec;                         # CORE
+use Umask::Local ();                    # fatpacked
 
 use Simple::Accessor qw{installdirs BUILD dist_dir};
 

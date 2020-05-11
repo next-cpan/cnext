@@ -1,7 +1,7 @@
-package App::cplay::cmd::getrepo;
+package App::next::cmd::getrepo;
 
-use App::cplay::std;
-use App::cplay::Logger;    # import all
+use App::next::std;
+use App::next::Logger;    # import all
 
 sub run ( $cli, @argv ) {
 

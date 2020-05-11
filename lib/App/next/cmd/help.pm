@@ -1,6 +1,6 @@
-package App::cplay::cmd::help;
+package App::next::cmd::help;
 
-use App::cplay::std;
+use App::next::std;
 
 use Pod::Text ();
 

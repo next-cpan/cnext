@@ -1,4 +1,4 @@
-package App::cplay::std;
+package App::next::std;
 
 use strict;
 use warnings;

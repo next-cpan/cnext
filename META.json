@@ -70,120 +70,120 @@
       }
    },
    "provides" : {
-      "App::cplay" : {
+      "App::next" : {
          "file" : "lib/App/cplay.pm",
          "version" : "0.0001"
       },
-      "App::cplay::BUILD" : {
+      "App::next::BUILD" : {
          "file" : "lib/App/cplay/BUILD.pm"
       },
-      "App::cplay::Helpers" : {
+      "App::next::Helpers" : {
          "file" : "lib/App/cplay/Helpers.pm"
       },
-      "App::cplay::Http" : {
+      "App::next::Http" : {
          "file" : "lib/App/cplay/Http.pm"
       },
-      "App::cplay::IPC" : {
+      "App::next::IPC" : {
          "file" : "lib/App/cplay/IPC.pm"
       },
-      "App::cplay::Index" : {
+      "App::next::Index" : {
          "file" : "lib/App/cplay/Index.pm"
       },
-      "App::cplay::Index::Modules" : {
+      "App::next::Index::Modules" : {
          "file" : "lib/App/cplay/Index/Modules.pm"
       },
-      "App::cplay::Index::Repositories" : {
+      "App::next::Index::Repositories" : {
          "file" : "lib/App/cplay/Index/Repositories.pm"
       },
-      "App::cplay::Index::Role::Columns" : {
+      "App::next::Index::Role::Columns" : {
          "file" : "lib/App/cplay/Index/Role/Columns.pm"
       },
-      "App::cplay::Index::Role::TemplateURL" : {
+      "App::next::Index::Role::TemplateURL" : {
          "file" : "lib/App/cplay/Index/Role/TemplateURL.pm"
       },
-      "App::cplay::Indexes" : {
+      "App::next::Indexes" : {
          "file" : "lib/App/cplay/Indexes.pm"
       },
-      "App::cplay::InstallDirs" : {
+      "App::next::InstallDirs" : {
          "file" : "lib/App/cplay/InstallDirs.pm"
       },
-      "App::cplay::Installer" : {
+      "App::next::Installer" : {
          "file" : "lib/App/cplay/Installer.pm"
       },
-      "App::cplay::Installer::Command" : {
+      "App::next::Installer::Command" : {
          "file" : "lib/App/cplay/Installer/Command.pm"
       },
-      "App::cplay::Installer::Share" : {
+      "App::next::Installer::Share" : {
          "file" : "lib/App/cplay/Installer/Share.pm"
       },
-      "App::cplay::Installer::Unpacker" : {
+      "App::next::Installer::Unpacker" : {
          "file" : "lib/App/cplay/Installer/Unpacker.pm"
       },
-      "App::cplay::Logger" : {
+      "App::next::Logger" : {
          "file" : "lib/App/cplay/Logger.pm"
       },
-      "App::cplay::Module" : {
+      "App::next::Module" : {
          "file" : "lib/App/cplay/Module.pm"
       },
-      "App::cplay::Roles::JSON" : {
+      "App::next::Roles::JSON" : {
          "file" : "lib/App/cplay/Roles/JSON.pm"
       },
-      "App::cplay::Search::Result" : {
+      "App::next::Search::Result" : {
          "file" : "lib/App/cplay/Search/Result.pm"
       },
-      "App::cplay::Signature" : {
+      "App::next::Signature" : {
          "file" : "lib/App/cplay/Signature.pm"
       },
-      "App::cplay::Starter" : {
+      "App::next::Starter" : {
          "file" : "lib/App/cplay/Starter.pm",
          "version" : "0.001"
       },
-      "App::cplay::Tester" : {
+      "App::next::Tester" : {
          "file" : "lib/App/cplay/Tester.pm"
       },
-      "App::cplay::Timeout" : {
+      "App::next::Timeout" : {
          "file" : "lib/App/cplay/Timeout.pm"
       },
-      "App::cplay::cli" : {
+      "App::next::cli" : {
          "file" : "lib/App/cplay/cli.pm"
       },
-      "App::cplay::cmd::cpanfile" : {
+      "App::next::cmd::cpanfile" : {
          "file" : "lib/App/cplay/cmd/cpanfile.pm"
       },
-      "App::cplay::cmd::fromtarball" : {
+      "App::next::cmd::fromtarball" : {
          "file" : "lib/App/cplay/cmd/fromtarball.pm"
       },
-      "App::cplay::cmd::getrepo" : {
+      "App::next::cmd::getrepo" : {
          "file" : "lib/App/cplay/cmd/getrepo.pm"
       },
-      "App::cplay::cmd::help" : {
+      "App::next::cmd::help" : {
          "file" : "lib/App/cplay/cmd/help.pm"
       },
-      "App::cplay::cmd::install" : {
+      "App::next::cmd::install" : {
          "file" : "lib/App/cplay/cmd/install.pm"
       },
-      "App::cplay::cmd::look" : {
+      "App::next::cmd::look" : {
          "file" : "lib/App/cplay/cmd/look.pm"
       },
-      "App::cplay::cmd::search" : {
+      "App::next::cmd::search" : {
          "file" : "lib/App/cplay/cmd/search.pm"
       },
-      "App::cplay::cmd::selfinstall" : {
+      "App::next::cmd::selfinstall" : {
          "file" : "lib/App/cplay/cmd/selfinstall.pm"
       },
-      "App::cplay::cmd::selfupdate" : {
+      "App::next::cmd::selfupdate" : {
          "file" : "lib/App/cplay/cmd/selfupdate.pm"
       },
-      "App::cplay::cmd::start" : {
+      "App::next::cmd::start" : {
          "file" : "lib/App/cplay/cmd/start.pm"
       },
-      "App::cplay::cmd::test" : {
+      "App::next::cmd::test" : {
          "file" : "lib/App/cplay/cmd/test.pm"
       },
-      "App::cplay::cmd::version" : {
+      "App::next::cmd::version" : {
          "file" : "lib/App/cplay/cmd/version.pm"
       },
-      "App::cplay::std" : {
+      "App::next::std" : {
          "file" : "lib/App/cplay/std.pm"
       }
    },

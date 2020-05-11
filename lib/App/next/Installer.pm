@@ -1,20 +1,20 @@
-package App::cplay::Installer;
+package App::next::Installer;
 
-use App::cplay::std;
+use App::next::std;
 
-use App::cplay;
-use App::cplay::Logger;    # import all
-use App::cplay::Module ();
-use App::cplay::Signature qw{check_signature};
+use App::next;
+use App::next::Logger;    # import all
+use App::next::Module ();
+use App::next::Signature qw{check_signature};
 
-use App::cplay::Installer::Unpacker ();
-use App::cplay::IPC                 ();
+use App::next::Installer::Unpacker ();
+use App::next::IPC                 ();
 
-use App::cplay::BUILD ();
+use App::next::BUILD ();
 
-use App::cplay::Installer::Command ();
-use App::cplay::Installer::Share   ();
-use App::cplay::Helpers qw{is_valid_distribution_name};
+use App::next::Installer::Command ();
+use App::next::Installer::Share   ();
+use App::next::Helpers qw{is_valid_distribution_name};
 
 use Config;
 
@@ -27,9 +27,9 @@ use Umask::Local;         # fatpacked
 
 use File::pushd;
 
-use App::cplay::InstallDirs ();
+use App::next::InstallDirs ();
 
-App::cplay::Logger->import(qw{fetch configure install resolve});
+App::next::Logger->import(qw{fetch configure install resolve});
 
 use Simple::Accessor qw{
   cli
@@ -60,11 +60,11 @@ sub build ( $self, %opts ) {
 }
 
 sub _build_installdirs($self) {
-    App::cplay::InstallDirs->new( type => $self->cli->installdirs );
+    App::next::InstallDirs->new( type => $self->cli->installdirs );
 }
 
 sub _build_unpacker($self) {
-    App::cplay::Installer::Unpacker->new( tmproot => $self->cli->build_dir );
+    App::next::Installer::Unpacker->new( tmproot => $self->cli->build_dir );
 }
 
 sub has_module_version ( $self, $module, $version ) {
@@ -75,13 +75,13 @@ sub has_module_version ( $self, $module, $version ) {
     }
 
     if ( $self->cli->local_lib ) {
-        return 1 if App::cplay::Module::has_module_version( $module, $version, $self->cli->local_lib );
+        return 1 if App::next::Module::has_module_version( $module, $version, $self->cli->local_lib );
         if ( $self->depth > 1 ) {    # FIXME maybe implement --self-contained there ?? -- need to check for CORE
-            return 1 if App::cplay::Module::has_module_version( $module, $version );
+            return 1 if App::next::Module::has_module_version( $module, $version );
         }
     }
     else {
-        return App::cplay::Module::has_module_version( $module, $version );
+        return App::next::Module::has_module_version( $module, $version );
     }
 
     return;
@@ -90,7 +90,7 @@ sub has_module_version ( $self, $module, $version ) {
 sub install_from_file ( $self, $file = 'BUILD.json' ) {
 
     # cannot load BUILD.json
-    return unless my $BUILD = App::cplay::BUILD::create_from_file($file);
+    return unless my $BUILD = App::next::BUILD::create_from_file($file);
 
     $self->depth(1);    # need to setup depth
     my $ok = $self->install_from_BUILD($BUILD);
@@ -117,7 +117,7 @@ sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_
 
         if ( $ok && ( $self->depth == 1 || $self->cli->verbose ) ) {
             my $log_level = $self->depth > 1 ? q[resolve] : q[OK];
-            my $logger    = App::cplay::Logger->can($log_level);
+            my $logger    = App::next::Logger->can($log_level);
             $logger->("$module_or_repository is already installed.");
         }
     }
@@ -183,7 +183,7 @@ sub _install_single_module_or_repository ( $self, $module_or_repository, $can_be
         DEBUG("Try to install '$repository' from a custom tag/version.");
 
         # $module_or_repository, $custom_requested_version, 0, $can_be_repo
-        my $branch = App::cplay::source();
+        my $branch = App::next::source();
 
         my $tag;
         if ( $custom_requested_version =~ m{^$branch} ) {    # p5-v1.00
@@ -318,7 +318,7 @@ sub advertise_installed_modules ( $self, $BUILD ) {
     foreach my $module ( sort keys %{ $BUILD->provides } ) {
         my $v = $BUILD->provides->{$module}->{version} // 0;
         DEBUG("advertise_installed_modules: $module => $v");
-        App::cplay::Module::module_updated( $module, $v, $self->cli->local_lib );
+        App::next::Module::module_updated( $module, $v, $self->cli->local_lib );
     }
 
     return;
@@ -369,7 +369,7 @@ sub _builder_play ( $self, $name ) {
             File::Path::make_path('blib/arch');
         }
 
-        my $cmd = App::cplay::Installer::Command->new(
+        my $cmd = App::next::Installer::Command->new(
             log_level => 'test',
             txt       => "tests for $name",
             cmd       => [
@@ -399,7 +399,7 @@ sub _builder_play ( $self, $name ) {
             $ok &= $self->_builder_play_install_share($BUILD) // 0;
             return;
         };
-        App::cplay::Timeout->new(
+        App::next::Timeout->new(
             message => q[Reach timeout while installing files],
             timeout => $self->cli->install_timeout,
         )->run($install);
@@ -411,7 +411,7 @@ sub _builder_play ( $self, $name ) {
 }
 
 sub _builder_play_install_bin ( $self, $BUILD ) {
-    die "invalid BUILD" unless ref $BUILD eq 'App::cplay::BUILD';
+    die "invalid BUILD" unless ref $BUILD eq 'App::next::BUILD';
     my $scripts = $BUILD->scripts;
     return 1 unless ref $scripts && scalar @$scripts;
 
@@ -431,12 +431,12 @@ sub _builder_play_install_bin ( $self, $BUILD ) {
 }
 
 sub _builder_play_install_share ( $self, $BUILD ) {
-    die "invalid BUILD" unless ref $BUILD eq 'App::cplay::BUILD';
+    die "invalid BUILD" unless ref $BUILD eq 'App::next::BUILD';
 
     # shortcut
     return 1 unless -d q[share] || -d q[share-module];
 
-    return App::cplay::Installer::Share->new(
+    return App::next::Installer::Share->new(
         installdirs => $self->installdirs,
         BUILD       => $BUILD,
     )->install;
@@ -495,21 +495,21 @@ sub _builder_play_install_files ( $self, $BUILD ) {
 }
 
 sub _builder_Makefile_PL ( $self, $name ) {
-    my $make = App::cplay::Helpers::make_binary();
+    my $make = App::next::Helpers::make_binary();
 
     my @cmds;
 
     my $use_dot  = -d 'inc';
     my @test_cmd = ( $^X, $use_dot ? (qw{-I .}) : (), "Makefile.PL" );
 
-    push @cmds, App::cplay::Installer::Command->new(
+    push @cmds, App::next::Installer::Command->new(
         log_level => 'configure',
         txt       => "perl " . join( ' ', @test_cmd[ 1 .. $#test_cmd ] ),
         cmd       => [@test_cmd],
         timeout   => $self->cli->configure_timeout,
     );
 
-    push @cmds, App::cplay::Installer::Command->new(
+    push @cmds, App::next::Installer::Command->new(
         log_level => 'build',
         txt       => "make",
         cmd       => $make,
@@ -517,7 +517,7 @@ sub _builder_Makefile_PL ( $self, $name ) {
     );
 
     if ( $self->cli->run_tests ) {
-        push @cmds, App::cplay::Installer::Command->new(
+        push @cmds, App::next::Installer::Command->new(
             log_level => 'test',
             txt       => "make test",
             cmd       => [ $make, "test" ],
@@ -527,7 +527,7 @@ sub _builder_Makefile_PL ( $self, $name ) {
     }
 
     if ( $self->run_install ) {
-        push @cmds, App::cplay::Installer::Command->new(
+        push @cmds, App::next::Installer::Command->new(
             log_level => 'install',
             txt       => "make install",
             cmd       => [ $make, "install" ],
@@ -545,21 +545,21 @@ sub _builder_Makefile_PL ( $self, $name ) {
 sub _builder_Build ( $self, $name ) {
 
     my @cmds;
-    push @cmds, App::cplay::Installer::Command->new(
+    push @cmds, App::next::Installer::Command->new(
         log_level => 'configure',
         txt       => "perl Build.PL",
         cmd       => [ $^X, "Build.PL" ],
         timeout   => $self->cli->configure_timeout,
     );
 
-    push @cmds, App::cplay::Installer::Command->new(
+    push @cmds, App::next::Installer::Command->new(
         log_level => 'build',
         cmd       => "./Build",
         timeout   => $self->cli->configure_timeout,
     );
 
     if ( $self->cli->run_tests ) {
-        push @cmds, App::cplay::Installer::Command->new(
+        push @cmds, App::next::Installer::Command->new(
             log_level => 'test',
             cmd       => [ "./Build", "test" ],
             timeout   => $self->cli->test_timeout,
@@ -567,7 +567,7 @@ sub _builder_Build ( $self, $name ) {
     }
 
     if ( $self->run_install ) {
-        push @cmds, App::cplay::Installer::Command->new(
+        push @cmds, App::next::Installer::Command->new(
             log_level => 'install',
             cmd       => [ "./Build", "install" ],
             timeout   => $self->cli->install_timeout,
@@ -631,7 +631,7 @@ sub setup_tarball ( $self, $repository_info ) {
 
 sub load_BUILD_json($self) {
 
-    return unless my $BUILD = App::cplay::BUILD::create_from_file('BUILD.json');
+    return unless my $BUILD = App::next::BUILD::create_from_file('BUILD.json');
     $self->BUILD->{ $BUILD->name } = $BUILD;    # store the BUILD informations
 
     return $BUILD;

@@ -12,10 +12,10 @@ use Test::MockModule;
 
 use cPlayTestHelpers;
 
-use App::cplay::std;
-use App::cplay::Tester;
+use App::next::std;
+use App::next::Tester;
 
-use App::cplay::IPC ();
+use App::next::IPC ();
 
 use Cwd qw{abs_path};
 
@@ -29,14 +29,14 @@ my $tmp = File::Temp->newdir( DIR => $ENV{HOME} );
 note "Testing cplay --self-update";
 
 if ( use_fatpack() ) {
-    my ( $fatpacked, @ilib ) = App::cplay::Tester::find_cplay;
+    my ( $fatpacked, @ilib ) = App::next::Tester::find_cplay;
 
     my $local_cplay = $tmp . '/cplay';
 
     File::Copy::copy( $fatpacked, $local_cplay ) or die;
     qx{chmod +x $local_cplay};
 
-    my $mock = Test::MockModule->new('App::cplay::Tester');
+    my $mock = Test::MockModule->new('App::next::Tester');
     $mock->redefine(
         'find_cplay' => sub {
             return $local_cplay unless wantarray;

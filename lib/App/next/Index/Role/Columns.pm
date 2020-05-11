@@ -1,11 +1,11 @@
-package App::cplay::Index::Role::Columns;
+package App::next::Index::Role::Columns;
 
-use App::cplay::std;    # import strict, warnings & features
-use App::cplay::Logger;
+use App::next::std;    # import strict, warnings & features
+use App::next::Logger;
 
 use Simple::Accessor qw{columns sorted_columns};
 
-# role_needs 'App::cplay::Roles::JSON'
+# role_needs 'App::next::Roles::JSON'
 
 sub _build_columns($self) {    # fast parse version
 

@@ -1,7 +1,7 @@
-package App::cplay::Search::Result;
+package App::next::Search::Result;
 
-use App::cplay::std;       # import strict, warnings & features
-use App::cplay::Logger;    # import all
+use App::next::std;       # import strict, warnings & features
+use App::next::Logger;    # import all
 
 use Simple::Accessor qw{_modules _repositories};
 

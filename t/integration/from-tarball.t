@@ -9,10 +9,10 @@ use Test2::Plugin::NoWarnings;
 
 use cPlayTestHelpers;
 
-use App::cplay::std;
-use App::cplay::Tester;
+use App::next::std;
+use App::next::Tester;
 
-use App::cplay::Http;
+use App::next::Http;
 
 use File::Temp;
 
@@ -45,7 +45,7 @@ my $url    = q[https://github.com/pause-play/A1z-Html/archive/p5.tar.gz];
 {
     note "using a local tarball file";
 
-    my $http = App::cplay::Http->create;
+    my $http = App::next::Http->create;
 
     my $local_tarball = $tmp . "/local.tarball.tar.gz";
 

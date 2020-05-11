@@ -1,15 +1,15 @@
-package App::cplay::InstallDirs;
+package App::next::InstallDirs;
 
-use App::cplay::std;
+use App::next::std;
 
-use App::cplay::Logger;    # import all
-use App::cplay::IPC;
+use App::next::Logger;    # import all
+use App::next::IPC;
 
 use Config;
 use File::Path;
-use File::Spec;            # CORE
+use File::Spec;           # CORE
 
-use Umask::Local ();       # fatpacked
+use Umask::Local ();      # fatpacked
 
 use Simple::Accessor qw{
   type
@@ -167,7 +167,7 @@ sub install_to_bin ( $self, $file, $basename = undef, $perl = $^X ) {
       and DEBUG("perl shebang adjusted for '$file' to use $perl");
 
     # FIXME should not be needed
-    App::cplay::IPC::run3( [ 'chmod', '+x', $to_file ] ) unless -x $to_file;
+    App::next::IPC::run3( [ 'chmod', '+x', $to_file ] ) unless -x $to_file;
 
     return $to_file;
 }

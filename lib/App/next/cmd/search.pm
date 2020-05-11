@@ -1,9 +1,9 @@
-package App::cplay::cmd::search;
+package App::next::cmd::search;
 
-use App::cplay::std;
+use App::next::std;
 
-use App::cplay::Logger;    # import all
-use App::cplay::Installer;
+use App::next::Logger;    # import all
+use App::next::Installer;
 
 sub run ( $cli, @patterns ) {
     if ( !scalar @patterns ) {

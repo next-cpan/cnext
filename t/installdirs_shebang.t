@@ -9,8 +9,8 @@ use Test2::Plugin::NoWarnings;
 
 use Test::MockModule;
 
-use App::cplay::std;
-use App::cplay::InstallDirs;
+use App::next::std;
+use App::next::InstallDirs;
 
 use File::Slurper qw{read_text write_text read_binary write_binary};
 
@@ -46,7 +46,7 @@ my @tests = (
     [ '#!/bin/ruby' => "#!/bin/ruby" ],
 );
 
-my $idir = App::cplay::InstallDirs->new;
+my $idir = App::next::InstallDirs->new;
 
 foreach my $test (@tests) {
     my ( $shebang, $updated_shebang ) = @$test;
