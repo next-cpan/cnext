@@ -37,7 +37,7 @@ BEGIN {
     my %fatpacked;
 
     $fatpacked{"App/cnext.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CNEXT';
-  package App::cnext;use App::cnext::std;our$VERSION="0.0001";our$REVISION='6251786';sub source {state$branch="$]" > 7 ? 'p7' : 'p5';return$branch}1;
+  package App::cnext;use App::cnext::std;our$VERSION="0.0001";our$REVISION='f5f72d6';sub source {state$branch="$]" > 7 ? 'p7' : 'p5';return$branch}1;
 APP_CNEXT
 
     $fatpacked{"App/cnext/BUILD.pm"} = '#line ' . ( 1 + __LINE__ ) . ' "' . __FILE__ . "\"\n" . <<'APP_CNEXT_BUILD';
