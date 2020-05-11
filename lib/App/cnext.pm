@@ -12,7 +12,7 @@ sub source {
 
 1;
 
-## __CPLAY_POD_MARKER__
+## __CNEXT_POD_MARKER__
 
 =encoding utf8
 

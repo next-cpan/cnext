@@ -15,8 +15,8 @@ jobs:
       AUTOMATED_TESTING: 1
       RELEASE_TESTING: 0
       # would be better to find a different module without deps
-      CPLAY_MODULE: "Acme::Alien::DontPanic"
-      CPLAY_DISTRO: "Acme-Alien-DontPanic"
+      CNEXT_MODULE: "Acme::Alien::DontPanic"
+      CNEXT_DISTRO: "Acme-Alien-DontPanic"
 
     runs-on: ubuntu-latest
 
@@ -31,12 +31,12 @@ jobs:
         uses: perl-actions/install-cpm@v1.3
         with:
           install: |
-           ${{ env.CPLAY_MODULE }}
+           ${{ env.CNEXT_MODULE }}
            Test2::Suite
 
-      - name: remove ${{ env.CPLAY_MODULE }}
+      - name: remove ${{ env.CNEXT_MODULE }}
         run: |
-          sudo rm -f $(perldoc -lm ${{ env.CPLAY_MODULE }})
+          sudo rm -f $(perldoc -lm ${{ env.CNEXT_MODULE }})
 
       - name: install cnext
         run: |
@@ -44,10 +44,10 @@ jobs:
           which cnext
           cnext --version
 
-      - name: cnext from-tarball ${{ env.CPLAY_DISTRO }}
+      - name: cnext from-tarball ${{ env.CNEXT_DISTRO }}
         run: |
-          sudo cnext from-tarball -d https://github.com/next-cpan/${{ env.CPLAY_DISTRO }}/archive/p5.tar.gz
+          sudo cnext from-tarball -d https://github.com/next-cpan/${{ env.CNEXT_DISTRO }}/archive/p5.tar.gz
 
       - name: check module is installed
         run: |
-          perl -m${{ env.CPLAY_MODULE }} -e1
+          perl -m${{ env.CNEXT_MODULE }} -e1

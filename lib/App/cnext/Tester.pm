@@ -51,7 +51,7 @@ sub find_cnext {
 }
 
 sub use_fatpack {
-    return $ENV{USE_CPLAY_COMPILED} ? 1 : 0;
+    return $ENV{USE_CNEXT_COMPILED} ? 1 : 0;
 }
 
 sub cnext(%params) {

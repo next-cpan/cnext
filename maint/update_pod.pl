@@ -19,7 +19,7 @@ sub run {
     my $txt_cnext_pm = File::Slurper::read_text($cnext_pm) or die;
     my $txt_cnext_PL = File::Slurper::read_text($cnext_PL) or die;
 
-    my $marker = q[## __CPLAY_POD_MARKER__];
+    my $marker = q[## __CNEXT_POD_MARKER__];
 
     # read POD from .pm file
     my ( $before, $pod ) = split( $marker, $txt_cnext_pm, 2 );

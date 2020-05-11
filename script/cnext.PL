@@ -48,7 +48,7 @@ unless (caller) {
 1;
 
 ### DO NOT EDIT POD HERE, adjuts cnext.pm
-## __CPLAY_POD_MARKER__
+## __CNEXT_POD_MARKER__
 
 =encoding utf8
 

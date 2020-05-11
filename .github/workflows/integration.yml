@@ -46,4 +46,4 @@ jobs:
       - name: Running Tests with fatpack=${{ matrix.fatpack }}
         run: prove -vl t/integration/*.t
         env:
-          USE_CPLAY_COMPILED: ${{ matrix.fatpack }}
+          USE_CNEXT_COMPILED: ${{ matrix.fatpack }}
