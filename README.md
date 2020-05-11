@@ -169,7 +169,7 @@ cnext Devel-PPPort@3.57_02
 
 ## Install a module from a custom repository
 
-```perl
+```
 cnext --from-tarball ./path-to/custom.tar.gz
 # where :owner, :repository and :sha are replaced with the accurate values
 cnext --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
