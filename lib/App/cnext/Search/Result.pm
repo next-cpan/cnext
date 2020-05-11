@@ -1,7 +1,7 @@
-package App::next::Search::Result;
+package App::cnext::Search::Result;
 
-use App::next::std;       # import strict, warnings & features
-use App::next::Logger;    # import all
+use App::cnext::std;       # import strict, warnings & features
+use App::cnext::Logger;    # import all
 
 use Simple::Accessor qw{_modules _repositories};
 

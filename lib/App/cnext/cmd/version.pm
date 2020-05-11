@@ -1,11 +1,11 @@
-package App::next::cmd::version;
+package App::cnext::cmd::version;
 
-use App::next::std;
+use App::cnext::std;
 
 sub run ( $self, @argv ) {
 
-    my $version  = $App::next::VERSION;
-    my $revision = $App::next::REVISION;
+    my $version  = $App::cnext::VERSION;
+    my $revision = $App::cnext::REVISION;
 
     say "cnext $version\@$revision ($0)";
 

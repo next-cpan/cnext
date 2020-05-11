@@ -1,4 +1,4 @@
-package App::next::std;
+package App::cnext::std;
 
 use strict;
 use warnings;

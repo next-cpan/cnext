@@ -7,12 +7,12 @@ use Test2::Bundle::Extended;
 use Test2::Tools::Explain;
 use Test2::Plugin::NoWarnings;
 
-use App::next::std;
-use App::next::Tester;
+use App::cnext::std;
+use App::cnext::Tester;
 
-use App::next;
+use App::cnext;
 
-my $V = $App::next::VERSION;
+my $V = $App::cnext::VERSION;
 
 {
     cnext(

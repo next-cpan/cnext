@@ -10,19 +10,19 @@ use Test2::Plugin::NoWarnings;
 
 use cPlayTestHelpers;
 
-use App::next::std;
-use App::next::Tester;
+use App::cnext::std;
+use App::cnext::Tester;
 
-use App::next::IPC ();
+use App::cnext::IPC ();
 
-use App::next::InstallDirs;
+use App::cnext::InstallDirs;
 
 use Cwd qw{abs_path};
 
 note "Testing cnext --self-install";
 
 if ( use_fatpack() ) {
-    my $install_to_dir = App::next::InstallDirs->new->bin;
+    my $install_to_dir = App::cnext::InstallDirs->new->bin;
     my $cnext_path     = $install_to_dir . '/cnext';
 
     {
@@ -49,7 +49,7 @@ if ( use_fatpack() ) {
         ok -f $cnext_path, "cnext is installed to $cnext_path";
         ok -x $cnext_path, "cnext is executable";
 
-        my ( $exit, $out, $err ) = App::next::IPC::run3( [ $cnext_path, '--version' ] );
+        my ( $exit, $out, $err ) = App::cnext::IPC::run3( [ $cnext_path, '--version' ] );
         is $exit,  0,                         'cnext --version exits with 0';
         like $out, qr{^\s*cnext\s+\d+\.\d+}a, 'cnext --version output' or diag ":$out:";
         is $err,   undef,                     'nothing on stderr';
@@ -89,7 +89,7 @@ if ( use_fatpack() ) {
     foreach my $type (qw{site perl vendor}) {
         note "Testing installdirs=$type";
 
-        my $install_to_dir = App::next::InstallDirs->new( type => $type )->bin;
+        my $install_to_dir = App::cnext::InstallDirs->new( type => $type )->bin;
         next unless $install_to_dir;
 
         note "install_to_dir: ", $install_to_dir;

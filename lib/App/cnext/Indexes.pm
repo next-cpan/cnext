@@ -1,17 +1,17 @@
-package App::next::Indexes;
+package App::cnext::Indexes;
 
-use App::next;
+use App::cnext;
 
-use App::next::std;    # import strict, warnings & features
-use App::next::Logger;
+use App::cnext::std;    # import strict, warnings & features
+use App::cnext::Logger;
 
-use App::next::Installer::Unpacker ();
+use App::cnext::Installer::Unpacker ();
 
 # CDN -> https://next-cpan.github.io/next-indexes
 use constant BASE_URL => q[https://github.com/next-cpan/next-indexes];
 
 # tarball containing all .ix files
-use constant IDX_TARBALL_URL => BASE_URL . q[/archive/] . App::next::source() . q[.tar.gz];
+use constant IDX_TARBALL_URL => BASE_URL . q[/archive/] . App::cnext::source() . q[.tar.gz];
 
 use constant MODULES_IX_BASENAME      => 'modules.idx';
 use constant REPOSITORIES_IX_BASENAME => 'repositories.idx';
@@ -25,7 +25,7 @@ my $_REPOSITORIES_IX_FILE;
 sub setup_once ( $cli, $attempt = 1 ) {
     no warnings 'redefine';
 
-    ref $cli eq 'App::next::cli' or die "cli is not one App::next: $cli";
+    ref $cli eq 'App::cnext::cli' or die "cli is not one App::cnext: $cli";
 
     # check if existing index files are available
     #	refresh them if needed
@@ -59,12 +59,12 @@ sub setup_once ( $cli, $attempt = 1 ) {
 
     if ($force_refresh) {
         my $http       = $cli->http;
-        my $ix_tarball = $cli->cache_dir . '/' . App::next::source() . '.tar.gz';
+        my $ix_tarball = $cli->cache_dir . '/' . App::cnext::source() . '.tar.gz';
         unlink $ix_tarball if $attempt > 1;
 
-        App::next::Logger::fetch(IDX_TARBALL_URL);
+        App::cnext::Logger::fetch(IDX_TARBALL_URL);
         $http->mirror( IDX_TARBALL_URL, $ix_tarball );
-        my $unpacker = App::next::Installer::Unpacker->new( tmproot => $cli->build_dir );
+        my $unpacker = App::cnext::Installer::Unpacker->new( tmproot => $cli->build_dir );
 
         my $cd = $cli->cache_dir;
 

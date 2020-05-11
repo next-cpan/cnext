@@ -9,16 +9,16 @@ use Test2::Plugin::NoWarnings;
 
 use Test::MockModule;
 
-use App::next::std;
-use App::next::InstallDirs;
+use App::cnext::std;
+use App::cnext::InstallDirs;
 
 use Config;
 
-is App::next::InstallDirs::_get_config, \%Config,
+is App::cnext::InstallDirs::_get_config, \%Config,
   "_get_config is using Config by default";
 
 my %cfg;
-my $mock = Test::MockModule->new('App::next::InstallDirs');
+my $mock = Test::MockModule->new('App::cnext::InstallDirs');
 $mock->redefine( _get_config => sub { \%cfg } );
 
 %cfg = (
@@ -53,8 +53,8 @@ $mock->redefine( _get_config => sub { \%cfg } );
 );
 
 {
-    note "App::next::InstallDirs->new()";
-    my $dirs = App::next::InstallDirs->new();
+    note "App::cnext::InstallDirs->new()";
+    my $dirs = App::cnext::InstallDirs->new();
     is $dirs->type, 'site', 'default type is site';
     is $dirs->arch,   $cfg{installsitearch},    'arch';
     is $dirs->lib,    $cfg{installsitelib},     'lib';
@@ -65,8 +65,8 @@ $mock->redefine( _get_config => sub { \%cfg } );
 }
 
 {
-    note "App::next::InstallDirs->new( type => 'site' )";
-    my $dirs = App::next::InstallDirs->new( type => 'site' );
+    note "App::cnext::InstallDirs->new( type => 'site' )";
+    my $dirs = App::cnext::InstallDirs->new( type => 'site' );
     is $dirs->type, 'site', 'type';
     is $dirs->arch,   $cfg{installsitearch},    'arch';
     is $dirs->lib,    $cfg{installsitelib},     'lib';
@@ -77,8 +77,8 @@ $mock->redefine( _get_config => sub { \%cfg } );
 }
 
 {
-    note "App::next::InstallDirs->new( type => 'perl' )";
-    my $dirs = App::next::InstallDirs->new( type => 'perl' );
+    note "App::cnext::InstallDirs->new( type => 'perl' )";
+    my $dirs = App::cnext::InstallDirs->new( type => 'perl' );
     is $dirs->type, 'perl', 'type';
     is $dirs->arch,   $cfg{installarchlib}, 'arch';
     is $dirs->lib,    $cfg{installprivlib}, 'lib';
@@ -90,8 +90,8 @@ $mock->redefine( _get_config => sub { \%cfg } );
 }
 
 {
-    note "App::next::InstallDirs->new( type => 'vendor' )";
-    my $dirs = App::next::InstallDirs->new( type => 'vendor' );
+    note "App::cnext::InstallDirs->new( type => 'vendor' )";
+    my $dirs = App::cnext::InstallDirs->new( type => 'vendor' );
     is $dirs->type, 'vendor', 'type';
     is $dirs->arch,   $cfg{installvendorarch},    'arch';
     is $dirs->lib,    $cfg{installvendorlib},     'lib';
@@ -105,7 +105,7 @@ $mock->redefine( _get_config => sub { \%cfg } );
 #     delete $cfg{installsitebin};
 #     like(
 #         dies {
-#             App::next::InstallDirs->new();
+#             App::cnext::InstallDirs->new();
 #         },
 #         qr/'installsitebin' not set in Config/,
 #         "'installsitebin' not set in Config"
@@ -116,17 +116,17 @@ note "Testing some common errors";
 {
     like(
         dies {
-            App::next::InstallDirs->new( type => 'unknown' );
+            App::cnext::InstallDirs->new( type => 'unknown' );
         },
         qr/Invalid type unknown/,
-        "App::next::InstallDirs->new( type => 'unknown' ) dies"
+        "App::cnext::InstallDirs->new( type => 'unknown' ) dies"
     );
 }
 
 {
     like(
         dies {
-            App::next::InstallDirs->new(
+            App::cnext::InstallDirs->new(
                 type      => 'site',
                 something => 'boom'
             );
@@ -139,7 +139,7 @@ note "Testing some common errors";
 {
     like(
         dies {
-            App::next::InstallDirs->new( extra => 'boom' );
+            App::cnext::InstallDirs->new( extra => 'boom' );
         },
         qr/Too many arguments to new: extra/,
         "extra key in new"

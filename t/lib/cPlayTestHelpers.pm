@@ -1,8 +1,8 @@
 package cPlayTestHelpers;    # inspired by App::Yath::Tester
 
-use App::next::std;
+use App::cnext::std;
 
-use App::next::IPC;
+use App::cnext::IPC;
 
 use Test::More;
 
@@ -12,7 +12,7 @@ our @EXPORT = qw/remove_module is_module_installed is_module_installed_to_local_
 use constant PERLDOC => $^X . 'doc';
 
 sub remove_module($module) {
-    my ( $status, $out, $err ) = App::next::IPC::run3( [ PERLDOC, '-lm', $module ] );
+    my ( $status, $out, $err ) = App::cnext::IPC::run3( [ PERLDOC, '-lm', $module ] );
     if ( $status == 0 ) {
         note "$module is already installed, removing it";
         chomp $out;
@@ -24,12 +24,12 @@ sub remove_module($module) {
 }
 
 sub is_module_installed($module) {
-    my ( $status, $out, $err ) = App::next::IPC::run3( [ PERLDOC, '-lm', $module ] );
+    my ( $status, $out, $err ) = App::cnext::IPC::run3( [ PERLDOC, '-lm', $module ] );
     return $status == 0;
 }
 
 sub module_path($module) {
-    my ( $status, $out, $err ) = App::next::IPC::run3( [ PERLDOC, '-lm', $module ] );
+    my ( $status, $out, $err ) = App::cnext::IPC::run3( [ PERLDOC, '-lm', $module ] );
     return unless $status == 0;
     chomp $out if $out;
     return $out;
@@ -49,7 +49,7 @@ die unless \$INC{"$pp"} =~ m{^\Q$local_lib\E};
 print 1;
 EOS
 
-    my ( $status, $out, $err ) = App::next::IPC::run3( [ $^X, "-mlocal::lib=--no-create,$local_lib", '-e', $oneliner ] );
+    my ( $status, $out, $err ) = App::cnext::IPC::run3( [ $^X, "-mlocal::lib=--no-create,$local_lib", '-e', $oneliner ] );
     if ( $status == 0 ) {
         chomp $out if defined $out;
         return 1   if $out == 1;

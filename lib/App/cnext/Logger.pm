@@ -1,6 +1,6 @@
-package App::next::Logger;    # stolen from App::cpm::Logger
+package App::cnext::Logger;    # stolen from App::cpm::Logger
 
-use App::next::std;
+use App::cnext::std;
 
 use List::Util 'max';
 
@@ -187,13 +187,13 @@ sub test ( $msg, @args ) {
 
 =pod
 
-    use App::next::Logger; # DONE INFO FAIL WARN imported
+    use App::cnext::Logger; # DONE INFO FAIL WARN imported
 
     INFO( "One information" );
     FAIL( "This just failed" );
     WARN( "This is a warning" );
 
-    use App::next::Logger qw{resolve fetch configure install};
+    use App::cnext::Logger qw{resolve fetch configure install};
 
     resolve( "Resolving something" );
     fetch( "Fetching something" );
@@ -203,12 +203,12 @@ sub test ( $msg, @args ) {
     DONE( "This is now done" );
     DONE( "This is now done", optional => 'xyz' );
 
-    App::next::Logger->log(result => "INFO", type => 'DONE', message => 'this is a message');
-    App::next::Logger->log(result => "INFO", type => 'FAIL', message => 'this is a message');
-    App::next::Logger->log(result => "INFO", type => 'WARN', message => 'this is a message');
-    App::next::Logger->log(result => "INFO", type => 'resolve', message => 'this is a message');
-    App::next::Logger->log(result => "INFO", type => 'fetch', message => 'this is a message');
-    App::next::Logger->log(result => "INFO", type => 'configure', message => 'this is a message');
-    App::next::Logger->log(result => "INFO", type => 'install', message => 'this is a message');
+    App::cnext::Logger->log(result => "INFO", type => 'DONE', message => 'this is a message');
+    App::cnext::Logger->log(result => "INFO", type => 'FAIL', message => 'this is a message');
+    App::cnext::Logger->log(result => "INFO", type => 'WARN', message => 'this is a message');
+    App::cnext::Logger->log(result => "INFO", type => 'resolve', message => 'this is a message');
+    App::cnext::Logger->log(result => "INFO", type => 'fetch', message => 'this is a message');
+    App::cnext::Logger->log(result => "INFO", type => 'configure', message => 'this is a message');
+    App::cnext::Logger->log(result => "INFO", type => 'install', message => 'this is a message');
 
 =cut

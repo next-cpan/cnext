@@ -9,8 +9,8 @@ use Test2::Plugin::NoWarnings;
 
 use cPlayTestHelpers;
 
-use App::next::std;
-use App::next::Tester;
+use App::cnext::std;
+use App::cnext::Tester;
 
 use File::pushd;
 

@@ -1,8 +1,8 @@
-package App::next::Http;
+package App::cnext::Http;
 
-use App::next::std;    # import strict, warnings & features
+use App::cnext::std;    # import strict, warnings & features
 
-use App::next ();
+use App::cnext ();
 
 use HTTP::Tinyish;
 
@@ -21,7 +21,7 @@ sub create ( $class, %args ) {
     die "Couldn't find HTTP Clients that support https" unless $backend;
 
     my $http = $backend->new(
-        agent      => "App::next/v" . $App::next::VERSION,
+        agent      => "App::cnext/v" . $App::cnext::VERSION,
         timeout    => 60,
         verify_SSL => 1,
         %args,

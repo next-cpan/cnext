@@ -1,15 +1,15 @@
-package App::next::cmd::cpanfile;
+package App::cnext::cmd::cpanfile;
 
-use App::next::std;
+use App::cnext::std;
 
-use App::next::Logger;    # import all
-use App::next::Installer;
+use App::cnext::Logger;    # import all
+use App::cnext::Installer;
 
-use App::next::Module qw(get_module_version);
+use App::cnext::Module qw(get_module_version);
 
 sub run ( $self, @files ) {
 
-    my $installer = App::next::Installer->new( cli => $self );
+    my $installer = App::cnext::Installer->new( cli => $self );
 
     return 1 unless _install_and_load_cpanfile($installer);
 

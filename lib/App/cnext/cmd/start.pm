@@ -1,9 +1,9 @@
-package App::next::cmd::start;
+package App::cnext::cmd::start;
 
-use App::next::std;
+use App::cnext::std;
 
-use App::next::Logger;    # import all
-use App::next::Starter;
+use App::cnext::Logger;    # import all
+use App::cnext::Starter;
 
 use Cwd;
 use File::pushd;
@@ -20,7 +20,7 @@ sub run ( $cli, @modules ) {
 
         my $in_dir = pushd($root);
 
-        my $ok = eval { App::next::Starter->new( module_or_distribution => $module )->create; };
+        my $ok = eval { App::cnext::Starter->new( module_or_distribution => $module )->create; };
 
         if ($ok) {
             OK("Directory for $module created.");

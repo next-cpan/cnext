@@ -39,10 +39,10 @@ use warnings;
 use FindBin qw($Bin);    # Auto-removed
 use lib "$Bin/../lib", "$Bin/../fatlib";    # Auto-removed
 
-use App::next::cli ();
+use App::cnext::cli ();
 
 unless (caller) {
-    exit( App::next::cli->new( name => "App::next" )->run(@ARGV) // 0 );
+    exit( App::cnext::cli->new( name => "App::cnext" )->run(@ARGV) // 0 );
 }
 
 1;
@@ -54,7 +54,7 @@ unless (caller) {
 
 =head1 NAME
 
-App::next -  CPAN client using next-cpan indexes
+App::cnext -  CPAN client using next-cpan indexes
 
 =head1 SYNOPSIS
 

@@ -1,21 +1,21 @@
-package App::next::Index::Repositories;
+package App::cnext::Index::Repositories;
 
-use App::next::std;    # import strict, warnings & features
-use App::next::Indexes;
+use App::cnext::std;    # import strict, warnings & features
+use App::cnext::Indexes;
 
-use App::next::Logger;    # import all
+use App::cnext::Logger;    # import all
 
-use base 'App::next::Index';
+use base 'App::cnext::Index';
 
 use Simple::Accessor qw{file cli};
 
-with 'App::next::Roles::JSON';
-with 'App::next::Index::Role::Columns';        # provides columns and sorted_columns
-with 'App::next::Index::Role::TemplateURL';    # provides template_url
+with 'App::cnext::Roles::JSON';
+with 'App::cnext::Index::Role::Columns';        # provides columns and sorted_columns
+with 'App::cnext::Index::Role::TemplateURL';    # provides template_url
 
 sub build ( $self, %opts ) {
 
-    $self->{file} = App::next::Indexes::get_repositories_ix_file( $self->cli );
+    $self->{file} = App::cnext::Indexes::get_repositories_ix_file( $self->cli );
 
     return $self;
 }

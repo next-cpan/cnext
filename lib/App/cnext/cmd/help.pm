@@ -1,6 +1,6 @@
-package App::next::cmd::help;
+package App::cnext::cmd::help;
 
-use App::next::std;
+use App::cnext::std;
 
 use Pod::Text ();
 

@@ -1,9 +1,9 @@
-package App::next::cmd::search;
+package App::cnext::cmd::search;
 
-use App::next::std;
+use App::cnext::std;
 
-use App::next::Logger;    # import all
-use App::next::Installer;
+use App::cnext::Logger;    # import all
+use App::cnext::Installer;
 
 sub run ( $cli, @patterns ) {
     if ( !scalar @patterns ) {

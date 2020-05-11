@@ -1,10 +1,10 @@
-package App::next::Installer::Unpacker;
+package App::cnext::Installer::Unpacker;
 
 # Based on hhttps://github.com/skaji/cpm/blob/master/lib/App/cpm/Installer/Unpacker.pm
 
-use App::next::std;
+use App::cnext::std;
 
-use App::next::IPC ();
+use App::cnext::IPC ();
 
 use File::Basename ();
 use File::Temp     ();
@@ -31,7 +31,7 @@ sub unpack ( $self, $file ) {
 sub _init_untar($self) {
     my $tar = $self->{tar} = File::Which::which('gtar') || File::Which::which("tar");
     if ($tar) {
-        my ( $exit, $out, $err ) = App::next::IPC::run3 [ $tar, '--version' ];
+        my ( $exit, $out, $err ) = App::cnext::IPC::run3 [ $tar, '--version' ];
         $self->{tar_kind} = $out      =~ /bsdtar/ ? "bsd" : "gnu";
         $self->{tar_bad}  = 1 if $out =~ /GNU.*1\.13/i || $^O eq 'MSWin32' || $^O eq 'solaris' || $^O eq 'hpux';
     }
@@ -65,10 +65,10 @@ sub _untar ( $self, $file ) {
     my ( $exit, $out, $err );
     {
         my $ar = $file =~ /\.bz2$/ ? 'j' : 'z';
-        ( $exit, $out, $err ) = App::next::IPC::run3 [ $self->{tar}, "${ar}tf", $file ];
+        ( $exit, $out, $err ) = App::cnext::IPC::run3 [ $self->{tar}, "${ar}tf", $file ];
         last if $exit != 0;
         my $root = $self->_find_tarroot( split /\r?\n/, $out );
-        ( $exit, $out, $err ) = App::next::IPC::run3 [ $self->{tar}, "${ar}xf", $file, "-o" ];
+        ( $exit, $out, $err ) = App::cnext::IPC::run3 [ $self->{tar}, "${ar}xf", $file, "-o" ];
         return $root if $exit == 0 and -d $root;
     }
     return if !$wantarray;
@@ -81,15 +81,15 @@ sub _untar_bad ( $self, $file ) {
     {
         my $ar   = $file =~ /\.bz2$/ ? $self->{bzip2} : $self->{gzip};
         my $temp = File::Temp->new( SUFFIX => '.tar', EXLOCK => 0 );
-        ( $exit, $out, $err ) = App::next::IPC::run3 [ $ar, "-dc", $file ], $temp->filename;
+        ( $exit, $out, $err ) = App::cnext::IPC::run3 [ $ar, "-dc", $file ], $temp->filename;
         last if $exit != 0;
 
         # XXX /usr/bin/tar: Cannot connect to C: resolve failed
         my @opt = $^O eq 'MSWin32' && $self->{tar_kind} ne "bsd" ? ('--force-local') : ();
-        ( $exit, $out, $err ) = App::next::IPC::run3 [ $self->{tar}, @opt, "-tf", $temp->filename ];
+        ( $exit, $out, $err ) = App::cnext::IPC::run3 [ $self->{tar}, @opt, "-tf", $temp->filename ];
         last if $exit != 0 || !$out;
         my $root = $self->_find_tarroot( split /\r?\n/, $out );
-        ( $exit, $out, $err ) = App::next::IPC::run3 [ $self->{tar}, @opt, "-xf", $temp->filename, "-o" ];
+        ( $exit, $out, $err ) = App::cnext::IPC::run3 [ $self->{tar}, @opt, "-xf", $temp->filename, "-o" ];
         return $root if $exit == 0 and -d $root;
     }
     return if !$wantarray;

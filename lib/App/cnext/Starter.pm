@@ -1,9 +1,9 @@
-package App::next::Starter;
+package App::cnext::Starter;
 
-use App::next::std;
+use App::cnext::std;
 
-use App::next::Logger;    # import all
-use App::next::Helpers qw{write_file};
+use App::cnext::Logger;    # import all
+use App::cnext::Helpers qw{write_file};
 
 use Simple::Accessor qw{
   distribution module
@@ -11,8 +11,8 @@ use Simple::Accessor qw{
   BUILD root_directory
 };
 
-use App::next::BUILD ();
-use File::Copy       ();  # CORE
+use App::cnext::BUILD ();
+use File::Copy        ();  # CORE
 use File::Path qw(make_path);    # CORE
 use File::Find     ();           # CORE
 use File::Basename ();           # CORE
@@ -142,7 +142,7 @@ EOS
 }
 
 sub add_BUILD($self) {
-    my $build = App::next::BUILD->new(
+    my $build = App::cnext::BUILD->new(
         abstract => "Abstract for " . $self->distribution,
         name     => $self->distribution,
         primary  => $self->module,

@@ -1,15 +1,15 @@
-package App::next::InstallDirs;
+package App::cnext::InstallDirs;
 
-use App::next::std;
+use App::cnext::std;
 
-use App::next::Logger;    # import all
-use App::next::IPC;
+use App::cnext::Logger;    # import all
+use App::cnext::IPC;
 
 use Config;
 use File::Path;
-use File::Spec;           # CORE
+use File::Spec;            # CORE
 
-use Umask::Local ();      # fatpacked
+use Umask::Local ();       # fatpacked
 
 use Simple::Accessor qw{
   type
@@ -167,7 +167,7 @@ sub install_to_bin ( $self, $file, $basename = undef, $perl = $^X ) {
       and DEBUG("perl shebang adjusted for '$file' to use $perl");
 
     # FIXME should not be needed
-    App::next::IPC::run3( [ 'chmod', '+x', $to_file ] ) unless -x $to_file;
+    App::cnext::IPC::run3( [ 'chmod', '+x', $to_file ] ) unless -x $to_file;
 
     return $to_file;
 }

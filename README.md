@@ -4,7 +4,7 @@
 
 # NAME
 
-App::next -  CPAN client using next-cpan indexes
+App::cnext -  CPAN client using next-cpan indexes
 
 # SYNOPSIS
 

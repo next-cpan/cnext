@@ -70,120 +70,120 @@
       }
    },
    "provides" : {
-      "App::next" : {
+      "App::cnext" : {
          "file" : "lib/App/cnext.pm",
          "version" : "0.0001"
       },
-      "App::next::BUILD" : {
+      "App::cnext::BUILD" : {
          "file" : "lib/App/cnext/BUILD.pm"
       },
-      "App::next::Helpers" : {
+      "App::cnext::Helpers" : {
          "file" : "lib/App/cnext/Helpers.pm"
       },
-      "App::next::Http" : {
+      "App::cnext::Http" : {
          "file" : "lib/App/cnext/Http.pm"
       },
-      "App::next::IPC" : {
+      "App::cnext::IPC" : {
          "file" : "lib/App/cnext/IPC.pm"
       },
-      "App::next::Index" : {
+      "App::cnext::Index" : {
          "file" : "lib/App/cnext/Index.pm"
       },
-      "App::next::Index::Modules" : {
+      "App::cnext::Index::Modules" : {
          "file" : "lib/App/cnext/Index/Modules.pm"
       },
-      "App::next::Index::Repositories" : {
+      "App::cnext::Index::Repositories" : {
          "file" : "lib/App/cnext/Index/Repositories.pm"
       },
-      "App::next::Index::Role::Columns" : {
+      "App::cnext::Index::Role::Columns" : {
          "file" : "lib/App/cnext/Index/Role/Columns.pm"
       },
-      "App::next::Index::Role::TemplateURL" : {
+      "App::cnext::Index::Role::TemplateURL" : {
          "file" : "lib/App/cnext/Index/Role/TemplateURL.pm"
       },
-      "App::next::Indexes" : {
+      "App::cnext::Indexes" : {
          "file" : "lib/App/cnext/Indexes.pm"
       },
-      "App::next::InstallDirs" : {
+      "App::cnext::InstallDirs" : {
          "file" : "lib/App/cnext/InstallDirs.pm"
       },
-      "App::next::Installer" : {
+      "App::cnext::Installer" : {
          "file" : "lib/App/cnext/Installer.pm"
       },
-      "App::next::Installer::Command" : {
+      "App::cnext::Installer::Command" : {
          "file" : "lib/App/cnext/Installer/Command.pm"
       },
-      "App::next::Installer::Share" : {
+      "App::cnext::Installer::Share" : {
          "file" : "lib/App/cnext/Installer/Share.pm"
       },
-      "App::next::Installer::Unpacker" : {
+      "App::cnext::Installer::Unpacker" : {
          "file" : "lib/App/cnext/Installer/Unpacker.pm"
       },
-      "App::next::Logger" : {
+      "App::cnext::Logger" : {
          "file" : "lib/App/cnext/Logger.pm"
       },
-      "App::next::Module" : {
+      "App::cnext::Module" : {
          "file" : "lib/App/cnext/Module.pm"
       },
-      "App::next::Roles::JSON" : {
+      "App::cnext::Roles::JSON" : {
          "file" : "lib/App/cnext/Roles/JSON.pm"
       },
-      "App::next::Search::Result" : {
+      "App::cnext::Search::Result" : {
          "file" : "lib/App/cnext/Search/Result.pm"
       },
-      "App::next::Signature" : {
+      "App::cnext::Signature" : {
          "file" : "lib/App/cnext/Signature.pm"
       },
-      "App::next::Starter" : {
+      "App::cnext::Starter" : {
          "file" : "lib/App/cnext/Starter.pm",
          "version" : "0.001"
       },
-      "App::next::Tester" : {
+      "App::cnext::Tester" : {
          "file" : "lib/App/cnext/Tester.pm"
       },
-      "App::next::Timeout" : {
+      "App::cnext::Timeout" : {
          "file" : "lib/App/cnext/Timeout.pm"
       },
-      "App::next::cli" : {
+      "App::cnext::cli" : {
          "file" : "lib/App/cnext/cli.pm"
       },
-      "App::next::cmd::cpanfile" : {
+      "App::cnext::cmd::cpanfile" : {
          "file" : "lib/App/cnext/cmd/cpanfile.pm"
       },
-      "App::next::cmd::fromtarball" : {
+      "App::cnext::cmd::fromtarball" : {
          "file" : "lib/App/cnext/cmd/fromtarball.pm"
       },
-      "App::next::cmd::getrepo" : {
+      "App::cnext::cmd::getrepo" : {
          "file" : "lib/App/cnext/cmd/getrepo.pm"
       },
-      "App::next::cmd::help" : {
+      "App::cnext::cmd::help" : {
          "file" : "lib/App/cnext/cmd/help.pm"
       },
-      "App::next::cmd::install" : {
+      "App::cnext::cmd::install" : {
          "file" : "lib/App/cnext/cmd/install.pm"
       },
-      "App::next::cmd::look" : {
+      "App::cnext::cmd::look" : {
          "file" : "lib/App/cnext/cmd/look.pm"
       },
-      "App::next::cmd::search" : {
+      "App::cnext::cmd::search" : {
          "file" : "lib/App/cnext/cmd/search.pm"
       },
-      "App::next::cmd::selfinstall" : {
+      "App::cnext::cmd::selfinstall" : {
          "file" : "lib/App/cnext/cmd/selfinstall.pm"
       },
-      "App::next::cmd::selfupdate" : {
+      "App::cnext::cmd::selfupdate" : {
          "file" : "lib/App/cnext/cmd/selfupdate.pm"
       },
-      "App::next::cmd::start" : {
+      "App::cnext::cmd::start" : {
          "file" : "lib/App/cnext/cmd/start.pm"
       },
-      "App::next::cmd::test" : {
+      "App::cnext::cmd::test" : {
          "file" : "lib/App/cnext/cmd/test.pm"
       },
-      "App::next::cmd::version" : {
+      "App::cnext::cmd::version" : {
          "file" : "lib/App/cnext/cmd/version.pm"
       },
-      "App::next::std" : {
+      "App::cnext::std" : {
          "file" : "lib/App/cnext/std.pm"
       }
    },

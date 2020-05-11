@@ -1,11 +1,11 @@
-package App::next::cmd::selfinstall;
+package App::cnext::cmd::selfinstall;
 
-use App::next::std;
+use App::cnext::std;
 
-use App::next::Logger;    # import all
-use App::next::Installer;
+use App::cnext::Logger;    # import all
+use App::cnext::Installer;
 
-use App::next::Helpers qw{write_file is_fatpacked};
+use App::cnext::Helpers qw{write_file is_fatpacked};
 
 use File::Basename ();
 use Cwd            ();
@@ -18,12 +18,12 @@ sub run ( $cli, @argv ) {
 
     FATAL("No source code") unless length( $main::SOURCE_CODE // '' );
 
-    App::next::Logger::setup_for_script();
+    App::cnext::Logger::setup_for_script();
 
     my $tmp_file = $cli->build_dir . "/cnext.tmp";
     write_file( $tmp_file, $main::SOURCE_CODE );
 
-    my $installer = App::next::Installer->new( cli => $cli );
+    my $installer = App::cnext::Installer->new( cli => $cli );
     my $dirs      = $installer->installdirs;
     my $path      = $dirs->install_to_bin( $tmp_file, 'cnext' );
     OK "cnext is installed to $path";

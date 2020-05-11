@@ -1,14 +1,14 @@
-package App::next::cmd::selfupdate;
+package App::cnext::cmd::selfupdate;
 
-use App::next ();
+use App::cnext ();
 
-use App::next::std;
-use App::next::Logger;    # import all
+use App::cnext::std;
+use App::cnext::Logger;    # import all
 
-use App::next::Installer;
-use App::next::InstallDirs;
+use App::cnext::Installer;
+use App::cnext::InstallDirs;
 
-use App::next::Helpers qw{write_file is_fatpacked update_shebang};
+use App::cnext::Helpers qw{write_file is_fatpacked update_shebang};
 
 use File::Basename ();
 use Cwd            ();
@@ -22,12 +22,12 @@ sub run ( $cli, @argv ) {
         return 1;
     }
 
-    App::next::Logger::setup_for_script();
+    App::cnext::Logger::setup_for_script();
 
     my $force = grep { $_ eq 'force' } @argv;
     INFO("running 'selfupdate force'") if $force;
 
-    my $installer = App::next::Installer->new( cli => $cli );
+    my $installer = App::cnext::Installer->new( cli => $cli );
 
     my $tmp_file = $installer->cli->build_dir . "/cnext.tmp";
     unlink $tmp_file if -e $tmp_file;
@@ -39,8 +39,8 @@ sub run ( $cli, @argv ) {
         return 1;
     }
 
-    my $current_version = $App::next::VERSION . '@' . $App::next::REVISION;
-    my ( $exit, $out, $err ) = App::next::IPC::run3( [ "$^X", $tmp_file, q[--version] ] );
+    my $current_version = $App::cnext::VERSION . '@' . $App::cnext::REVISION;
+    my ( $exit, $out, $err ) = App::cnext::IPC::run3( [ "$^X", $tmp_file, q[--version] ] );
     my $new_version;
     if ( $out && $out =~ m{^cnext\s+(\d+\.\d+\@\w+)\b}a ) {    # FIXME use sha1 id
         $new_version = $1;

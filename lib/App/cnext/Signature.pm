@@ -1,8 +1,8 @@
-package App::next::Signature;
+package App::cnext::Signature;
 
-use App::next::std;    # import strict, warnings & features
+use App::cnext::std;    # import strict, warnings & features
 
-use App::next::Logger;
+use App::cnext::Logger;
 
 use Digest::Perl::MD5;    # fatpack in
 

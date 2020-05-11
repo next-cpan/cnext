@@ -1,16 +1,16 @@
-package App::next::Module;
+package App::cnext::Module;
 
-use App::next::std;    # import strict, warnings & features
-use App::next::Logger;
+use App::cnext::std;    # import strict, warnings & features
+use App::cnext::Logger;
 
-use App::next::IPC;
+use App::cnext::IPC;
 
 use Exporter 'import';
 our @EXPORT    = qw(has_module_version);
 our @EXPORT_OK = ( @EXPORT, qw{get_module_version module_updated} );
 
-my %CACHE;             # check if we have a specific version of a module
-my %GOT;               # current install version of a module
+my %CACHE;              # check if we have a specific version of a module
+my %GOT;                # current install version of a module
 
 sub has_module_version ( $module, $version, $local_lib = undef ) {
     my $IN = _in($local_lib);
@@ -71,7 +71,7 @@ sub get_module_version ( $module, $local_lib = undef ) {
 
     if ( !defined $local_lib ) {
         my $oneliner = qq|eval { require $module; 1 } or die; print eval { \$${module}::VERSION } // 0|;
-        my ( $status, $out, $err ) = App::next::IPC::run3( [ $^X, '-e', $oneliner ] );
+        my ( $status, $out, $err ) = App::cnext::IPC::run3( [ $^X, '-e', $oneliner ] );
         if ( $status == 0 ) {
             $version = $out;
             chomp $version if $version;
@@ -89,7 +89,7 @@ eval { require $module; 1 } or die;
 die unless \$INC{"$pp"} =~ m{^\Q$local_lib\E}; 
 print eval { \$${module}::VERSION } // 0;
 EOS
-        my ( $status, $out, $err ) = App::next::IPC::run3( [ $^X, "-mlocal::lib=--no-create,$local_lib", '-e', $oneliner ] );
+        my ( $status, $out, $err ) = App::cnext::IPC::run3( [ $^X, "-mlocal::lib=--no-create,$local_lib", '-e', $oneliner ] );
         if ( $status == 0 ) {
             $version = $out;
             chomp $version if $version;

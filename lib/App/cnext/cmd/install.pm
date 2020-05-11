@@ -1,14 +1,14 @@
-package App::next::cmd::install;
+package App::cnext::cmd::install;
 
-use App::next::std;
+use App::cnext::std;
 
-use App::next::Logger;    # import all
-use App::next::Installer;
+use App::cnext::Logger;    # import all
+use App::cnext::Installer;
 
 sub run ( $self, @modules ) {
     return 1 unless scalar @modules;
 
-    my $installer = App::next::Installer->new( cli => $self );
+    my $installer = App::cnext::Installer->new( cli => $self );
 
     foreach my $module (@modules) {
         if ( $module eq '.' ) {

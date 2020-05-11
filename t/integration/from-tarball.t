@@ -9,10 +9,10 @@ use Test2::Plugin::NoWarnings;
 
 use cPlayTestHelpers;
 
-use App::next::std;
-use App::next::Tester;
+use App::cnext::std;
+use App::cnext::Tester;
 
-use App::next::Http;
+use App::cnext::Http;
 
 use File::Temp;
 
@@ -45,7 +45,7 @@ my $url    = q[https://github.com/next-cpan/A1z-Html/archive/p5.tar.gz];
 {
     note "using a local tarball file";
 
-    my $http = App::next::Http->create;
+    my $http = App::cnext::Http->create;
 
     my $local_tarball = $tmp . "/local.tarball.tar.gz";
 

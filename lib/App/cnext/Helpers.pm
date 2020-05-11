@@ -1,10 +1,10 @@
-package App::next::Helpers;
+package App::cnext::Helpers;
 
-use App::next::std;    # import strict, warnings & features
+use App::cnext::std;    # import strict, warnings & features
 
 use Config;
 use File::Which ();
-use App::next::Logger;
+use App::cnext::Logger;
 
 use Exporter 'import';
 our @EXPORT_OK = qw(read_file zip write_file is_fatpacked update_shebang is_valid_distribution_name);

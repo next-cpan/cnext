@@ -1,8 +1,8 @@
-package App::next::Tester;    # inspired by App::Yath::Tester
+package App::cnext::Tester;    # inspired by App::Yath::Tester
 
-use App::next::std;
+use App::cnext::std;
 
-#use App::next::Logger;
+#use App::cnext::Logger;
 
 use Test2::API qw/context run_subtest/;
 use Test2::Tools::Compare qw/is/;
@@ -25,7 +25,7 @@ sub find_cnext {
     state $cache;
 
     if ( !defined $cache ) {
-        require App::next;
+        require App::cnext;
         my $path = abs_path( $INC{'App/cnext.pm'} );
 
         if ( use_fatpack() ) {

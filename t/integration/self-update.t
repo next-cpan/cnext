@@ -12,10 +12,10 @@ use Test::MockModule;
 
 use cPlayTestHelpers;
 
-use App::next::std;
-use App::next::Tester;
+use App::cnext::std;
+use App::cnext::Tester;
 
-use App::next::IPC ();
+use App::cnext::IPC ();
 
 use Cwd qw{abs_path};
 
@@ -29,14 +29,14 @@ my $tmp = File::Temp->newdir( DIR => $ENV{HOME} );
 note "Testing cnext --self-update";
 
 if ( use_fatpack() ) {
-    my ( $fatpacked, @ilib ) = App::next::Tester::find_cnext;
+    my ( $fatpacked, @ilib ) = App::cnext::Tester::find_cnext;
 
     my $local_cnext = $tmp . '/cnext';
 
     File::Copy::copy( $fatpacked, $local_cnext ) or die;
     qx{chmod +x $local_cnext};
 
-    my $mock = Test::MockModule->new('App::next::Tester');
+    my $mock = Test::MockModule->new('App::cnext::Tester');
     $mock->redefine(
         'find_cnext' => sub {
             return $local_cnext unless wantarray;

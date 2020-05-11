@@ -1,14 +1,14 @@
-package App::next::cmd::test;
+package App::cnext::cmd::test;
 
-use App::next::std;
+use App::cnext::std;
 
-use App::next::Logger;    # import all
-use App::next::Installer;
+use App::cnext::Logger;    # import all
+use App::cnext::Installer;
 
 sub run ( $cli, @modules ) {    # very close to install command [could refactor?]
     return 1 unless scalar @modules;
 
-    my $installer = App::next::Installer->new( cli => $cli, run_install => 0 );
+    my $installer = App::cnext::Installer->new( cli => $cli, run_install => 0 );
 
     if ( !$cli->run_tests ) {
         ERROR("Cannot disable tests when using 'test' command.");

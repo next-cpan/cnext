@@ -1,6 +1,6 @@
-package App::next::Roles::JSON;
+package App::cnext::Roles::JSON;
 
-use App::next::std;    # import strict, warnings & features
+use App::cnext::std;    # import strict, warnings & features
 
 use JSON::PP ();
 

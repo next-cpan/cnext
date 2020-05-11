@@ -1,7 +1,7 @@
-package App::next::cmd::getrepo;
+package App::cnext::cmd::getrepo;
 
-use App::next::std;
-use App::next::Logger;    # import all
+use App::cnext::std;
+use App::cnext::Logger;    # import all
 
 sub run ( $cli, @argv ) {
 

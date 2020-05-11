@@ -1,6 +1,6 @@
-package App::next;
+package App::cnext;
 
-use App::next::std;
+use App::cnext::std;
 
 our $VERSION  = "0.0001";
 our $REVISION = '~REVISION~';
@@ -18,7 +18,7 @@ sub source {
 
 =head1 NAME
 
-App::next -  CPAN client using next-cpan indexes
+App::cnext -  CPAN client using next-cpan indexes
 
 =head1 SYNOPSIS
 

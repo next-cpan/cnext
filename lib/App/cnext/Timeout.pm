@@ -1,7 +1,7 @@
-package App::next::Timeout;
+package App::cnext::Timeout;
 
-use App::next::std;    # import strict, warnings & features
-use App::next::Logger;
+use App::cnext::std;    # import strict, warnings & features
+use App::cnext::Logger;
 
 use Simple::Accessor qw{timeout message prevsig};
 

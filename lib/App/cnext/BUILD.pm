@@ -1,11 +1,11 @@
-package App::next::BUILD;
+package App::cnext::BUILD;
 
-use App::next;
-use App::next::std;
+use App::cnext;
+use App::cnext::std;
 
-use App::next::Logger;    # import all
+use App::cnext::Logger;    # import all
 
-use App::next::Helpers qw{read_file write_file};
+use App::cnext::Helpers qw{read_file write_file};
 
 use Cwd            ();
 use File::Basename ();
@@ -34,7 +34,7 @@ use constant IN_JSON => qw{
 use Simple::Accessor +IN_JSON, qw{ _rootdir _filepath };
 
 # could also assume _* are private values
-with 'App::next::Roles::JSON';
+with 'App::cnext::Roles::JSON';
 
 sub build ( $self, %options ) {
 
@@ -58,7 +58,7 @@ sub _build_xs                  { 0 }
 sub _build_builder             { 'play' }
 sub _build_builder_API_version { 1 }
 sub _build_license             { 'perl' }
-sub _build_source              { App::next::source() }
+sub _build_source              { App::cnext::source() }
 sub _build_version             { '0.001' }
 
 sub _build_tests { ['t/*.t'] }
@@ -112,7 +112,7 @@ sub as_hash($self) {
 
 sub create_from_file($file='BUILD.json') {
 
-    state $JSON = App::next::Roles::JSON->new;    # not used as a role here
+    state $JSON = App::cnext::Roles::JSON->new;    # not used as a role here
 
     $file = Cwd::abs_path($file);
 
@@ -134,7 +134,7 @@ sub create_from_file($file='BUILD.json') {
 
     my $_rootdir = File::Basename::dirname($file);
 
-    return App::next::BUILD->new( %$json, _rootdir => $_rootdir, _filepath => $file );
+    return App::cnext::BUILD->new( %$json, _rootdir => $_rootdir, _filepath => $file );
 }
 
 1;

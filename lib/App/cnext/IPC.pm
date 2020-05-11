@@ -1,7 +1,7 @@
-package App::next::IPC;
+package App::cnext::IPC;
 
-use App::next::std;
-use App::next::Logger qw{RUN DEBUG STDERROR};
+use App::cnext::std;
+use App::cnext::Logger qw{RUN DEBUG STDERROR};
 
 use IPC::Run3 ();
 
@@ -19,7 +19,7 @@ sub run3 ( $cmd, $log_level = 'DEBUG' ) {
 }
 
 sub _output ( $r_str, $log_level = 'DEBUG' ) {
-    my $log = App::next::Logger->can($log_level) or die "unknown log level '$log_level'";
+    my $log = App::cnext::Logger->can($log_level) or die "unknown log level '$log_level'";
     return sub($line) {
         $log->($line);
         $$r_str = '' unless defined $$r_str;

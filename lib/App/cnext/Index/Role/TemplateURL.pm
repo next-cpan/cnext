@@ -1,7 +1,7 @@
-package App::next::Index::Role::TemplateURL;
+package App::cnext::Index::Role::TemplateURL;
 
-use App::next::std;    # import strict, warnings & features
-use App::next::Logger;
+use App::cnext::std;    # import strict, warnings & features
+use App::cnext::Logger;
 
 use File::Basename qw(basename);
 

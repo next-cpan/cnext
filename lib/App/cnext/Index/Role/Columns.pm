@@ -1,11 +1,11 @@
-package App::next::Index::Role::Columns;
+package App::cnext::Index::Role::Columns;
 
-use App::next::std;    # import strict, warnings & features
-use App::next::Logger;
+use App::cnext::std;    # import strict, warnings & features
+use App::cnext::Logger;
 
 use Simple::Accessor qw{columns sorted_columns};
 
-# role_needs 'App::next::Roles::JSON'
+# role_needs 'App::cnext::Roles::JSON'
 
 sub _build_columns($self) {    # fast parse version
 

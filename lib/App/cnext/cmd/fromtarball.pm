@@ -1,10 +1,10 @@
-package App::next::cmd::fromtarball;
+package App::cnext::cmd::fromtarball;
 
-use App::next::std;
+use App::cnext::std;
 
-use App::next::Logger;    # import all
-use App::next::Installer;
-use App::next::BUILD;
+use App::cnext::Logger;    # import all
+use App::cnext::Installer;
+use App::cnext::BUILD;
 
 use File::Path ();
 
@@ -13,7 +13,7 @@ use Cwd;
 sub run ( $cli, @args ) {
     do { ERROR("Need a single tarball"); return 1 } unless scalar @args == 1;
 
-    my $installer = App::next::Installer->new( cli => $cli );
+    my $installer = App::cnext::Installer->new( cli => $cli );
 
     my $tarball = $args[0];
 
@@ -59,7 +59,7 @@ sub download_if_needed ( $installer, $tarball_or_url ) {
     my $basename = "fromtarball-$$.tar.gz";
     my $path     = $installer->cli->build_dir . "/$basename";
 
-    App::next::Logger::fetch($tarball_or_url);
+    App::cnext::Logger::fetch($tarball_or_url);
     $installer->cli->http->mirror( $tarball_or_url, $path );
 
     return ( $path, 1 );
