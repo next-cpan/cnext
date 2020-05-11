@@ -1,10 +1,10 @@
-[![Actions Status](https://github.com/pause-play/cplay/workflows/unit-tests/badge.svg)](https://github.com/pause-play/cplay/actions)
-[![Actions Status](https://github.com/pause-play/cplay/workflows/integration/badge.svg)](https://github.com/pause-play/cplay/actions)
-[![Actions Status](https://github.com/pause-play/cplay/workflows/cplay-fatpack/badge.svg)](https://github.com/pause-play/cplay/actions)
+[![Actions Status](https://github.com/next-cpan/cplay/workflows/unit-tests/badge.svg)](https://github.com/next-cpan/cplay/actions)
+[![Actions Status](https://github.com/next-cpan/cplay/workflows/integration/badge.svg)](https://github.com/next-cpan/cplay/actions)
+[![Actions Status](https://github.com/next-cpan/cplay/workflows/cplay-fatpack/badge.svg)](https://github.com/next-cpan/cplay/actions)
 
 # NAME
 
-App::next -  CPAN client using pause-play indexes
+App::next -  CPAN client using next-cpan indexes
 
 # SYNOPSIS
 
@@ -53,7 +53,7 @@ Run `cplay -h` or `perldoc cplay` for more options.
 # DESCRIPTION
 
 This repository provides the \`cplay\` client to install Perl modules without using PAUSE.
-This is using the \`pause-play\` GitHub repositories indexed by \`play-indexes\`
+This is using the \`next-cpan\` GitHub repositories indexed by \`play-indexes\`
 
 [https://ix.cplay.us](https://ix.cplay.us)
 
@@ -174,7 +174,7 @@ cplay --from-tarball ./path-to/custom.tar.gz
 # where :owner, :repository and :sha are replaced with the accurate values
 cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
 
-cplay --from-tarball -d https://github.com/pause-play/A1z-Html/archive/p5.tar.gz
+cplay --from-tarball -d https://github.com/next-cpan/A1z-Html/archive/p5.tar.gz
 ```
 
 ## Install one distribution to a custom directory

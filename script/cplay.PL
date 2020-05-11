@@ -54,7 +54,7 @@ unless (caller) {
 
 =head1 NAME
 
-App::next -  CPAN client using pause-play indexes
+App::next -  CPAN client using next-cpan indexes
 
 =head1 SYNOPSIS
 
@@ -101,7 +101,7 @@ Run C<cplay -h> or C<perldoc cplay> for more options.
 =head1 DESCRIPTION
 
 This repository provides the `cplay` client to install Perl modules without using PAUSE.
-This is using the `pause-play` GitHub repositories indexed by `play-indexes`
+This is using the `next-cpan` GitHub repositories indexed by `play-indexes`
 
 L<https://ix.cplay.us|https://ix.cplay.us>
 
@@ -204,7 +204,7 @@ You could use either a module name or a distribution name.
    # where :owner, :repository and :sha are replaced with the accurate values
    cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
 
-   cplay --from-tarball -d https://github.com/pause-play/A1z-Html/archive/p5.tar.gz
+   cplay --from-tarball -d https://github.com/next-cpan/A1z-Html/archive/p5.tar.gz
 
 =head2 Install one distribution to a custom directory
 

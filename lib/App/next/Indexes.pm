@@ -7,8 +7,8 @@ use App::next::Logger;
 
 use App::next::Installer::Unpacker ();
 
-# CDN -> https://pause-play.github.io/play-indexes
-use constant BASE_URL => q[https://github.com/pause-play/play-indexes];
+# CDN -> https://next-cpan.github.io/play-indexes
+use constant BASE_URL => q[https://github.com/next-cpan/play-indexes];
 
 # tarball containing all .ix files
 use constant IDX_TARBALL_URL => BASE_URL . q[/archive/] . App::next::source() . q[.tar.gz];

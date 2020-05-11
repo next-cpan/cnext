@@ -46,7 +46,7 @@ jobs:
 
       - name: cplay from-tarball ${{ env.CPLAY_DISTRO }}
         run: |
-          sudo cplay from-tarball -d https://github.com/pause-play/${{ env.CPLAY_DISTRO }}/archive/p5.tar.gz
+          sudo cplay from-tarball -d https://github.com/next-cpan/${{ env.CPLAY_DISTRO }}/archive/p5.tar.gz
 
       - name: check module is installed
         run: |

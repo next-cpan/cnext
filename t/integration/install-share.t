@@ -26,7 +26,7 @@ my $distro = q[Alien-Saxon];
 #   we could provide a fixture to test and not depend on a 3rdparty module
 note "Testing cplay using $distro with a perl binary/script";
 
-my $url = qq[https://github.com/pause-play/${distro}/archive/p5.tar.gz];
+my $url = qq[https://github.com/next-cpan/${distro}/archive/p5.tar.gz];
 
 my @share_files = qw{
   saxon9-xqj.jar

@@ -21,7 +21,7 @@ if ( -e 'cplay' ) {
 }
 
 my %WriteMakefileArgs = (
-    "ABSTRACT"           => "CPAN client using pause-play indexes",
+    "ABSTRACT"           => "CPAN client using next-cpan indexes",
     "AUTHOR"             => "- Nicolas R.",
     "CONFIGURE_REQUIRES" => { "ExtUtils::MakeMaker" => 0 },
     "DISTNAME"           => "App-cplay",

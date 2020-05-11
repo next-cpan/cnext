@@ -15,7 +15,7 @@ use App::next::Tester;
 use File::pushd;
 
 # custom modules with preset tags for testing
-# https://github.com/pause-play/cPlay-Test-Module
+# https://github.com/next-cpan/cPlay-Test-Module
 
 my $module       = q[cPlay::Test::Module];
 my $distribution = q[cPlay-Test-Module];

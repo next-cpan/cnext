@@ -121,7 +121,7 @@ share-module/Module-Name implies that your files will go to:
 We enforce if Module-Name is not a provides in the distro.
 
 
-https://github.com/pause-play/Alien-Saxon
+https://github.com/next-cpan/Alien-Saxon
 
 https://metacpan.org/pod/File::ShareDir::Install#install_share
 

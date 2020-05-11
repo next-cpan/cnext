@@ -24,7 +24,7 @@ my $distro = q[Acme-Stardate];
 
 note "Testing cplay using $distro with a perl binary/script";
 
-my $url = qq[https://github.com/pause-play/${distro}/archive/p5.tar.gz];
+my $url = qq[https://github.com/next-cpan/${distro}/archive/p5.tar.gz];
 
 {
     note "Local Installation of ", $distro;

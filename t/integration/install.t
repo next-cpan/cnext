@@ -247,7 +247,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
         test => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => bag {
-                item match qr{fetch\s+https://github.com/pause-play/A1z-Html/archive};
+                item match qr{fetch\s+https://github.com/next-cpan/A1z-Html/archive};
                 item match qr{DEBUG\s+signature OK};
                 item match qr{test\s+running tests for A1z-Html};
                 item match qr{RUN\s+.+\QTest::Harness\E};
@@ -267,7 +267,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
         test => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => bag {
-                item match qr{fetch\s+https://github.com/pause-play/A1z-Html/archive};
+                item match qr{fetch\s+https://github.com/next-cpan/A1z-Html/archive};
                 item match qr{test\s+running tests for A1z-Html};
                 item match qr{OK\s+Installed distribution A1z-Html};
                 etc;
@@ -286,7 +286,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
         test => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => bag {
-                item match qr{fetch\s+https://github.com/pause-play/A1z-Html/archive};
+                item match qr{fetch\s+https://github.com/next-cpan/A1z-Html/archive};
                 item match qr{DEBUG\s+signature OK};
                 item match qr{OK\s+Installed distribution A1z-Html};
                 etc;

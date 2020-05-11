@@ -1,5 +1,5 @@
 {
-   "abstract" : "CPAN client using pause-play indexes",
+   "abstract" : "CPAN client using next-cpan indexes",
    "author" : [
       "- Nicolas R."
    ],
@@ -190,13 +190,13 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/pause-play/cplay/issues"
+         "web" : "https://github.com/next-cpan/cplay/issues"
       },
-      "homepage" : "https://github.com/pause-play/cplay",
+      "homepage" : "https://github.com/next-cpan/cplay",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/pause-play/cplay.git",
-         "web" : "https://github.com/pause-play/cplay"
+         "url" : "https://github.com/next-cpan/cplay.git",
+         "web" : "https://github.com/next-cpan/cplay"
       }
    },
    "version" : "0.0001",

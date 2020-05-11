@@ -21,7 +21,7 @@ my $tmp = File::Temp->newdir();
 note "Testing cplay --from-tarball";
 
 my $module = q[A1z::Html];
-my $url    = q[https://github.com/pause-play/A1z-Html/archive/p5.tar.gz];
+my $url    = q[https://github.com/next-cpan/A1z-Html/archive/p5.tar.gz];
 
 {
     note "from url $url";
