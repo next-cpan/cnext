@@ -111,6 +111,10 @@ sub install_single_module_or_repository ( $self, $module_or_repository, $can_be_
     if ( defined $need_version ) {
         $ok = $self->has_module_version( $module_or_repository, $need_version );
         DEBUG("Module $module_or_repository v$need_version is missing") unless $ok;
+
+        # when depth == 1 make sure we are using the last version of the repository
+        ## FIXME need to check the version on the repository primary module...
+
         if ( $ok && ( $self->depth == 1 || $self->cli->verbose ) ) {
             my $log_level = $self->depth > 1 ? q[resolve] : q[OK];
             my $logger    = App::cplay::Logger->can($log_level);
@@ -224,6 +228,8 @@ sub _install_single_module_or_repository ( $self, $module_or_repository, $can_be
             return 1;
         }
         $repository_info //= $cli->repositories_idx->search( $module_info->{repository}, $module_info->{repository_version} );
+
+        ## FIXME need to check the version on the repository primary module...
     }
 
     if ( !$repository_info ) {
