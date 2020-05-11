@@ -1,6 +1,6 @@
 .build
 *.tar.gz
-App-cplay-*
+App-cnext-*
 MYMETA.json
 MYMETA.yml
 Makefile

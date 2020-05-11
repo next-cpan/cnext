@@ -22,7 +22,7 @@ my $tmp = File::Temp->newdir();
 my $module       = q[A1z::Html];
 my $distribution = q[A1z-Html];
 
-note "Testing cplay install for module $module";
+note "Testing cnext install for module $module";
 
 {
     note "Trying local::lib while the module is not installed";
@@ -30,7 +30,7 @@ note "Testing cplay install for module $module";
 
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
-    cplay(
+    cnext(
         command => 'install',
         args    => [ '-L', $localdir, $module ],
         exit    => 0,
@@ -47,7 +47,7 @@ note "Testing cplay install for module $module";
     ok is_module_installed_to_local_lib( $module, $localdir ), "module is installed to local lib";
 
     note "try re-installing to local::lib";
-    cplay(
+    cnext(
         command => 'install',
         args    => [ '-L', $localdir, $module ],
         exit    => 0,
@@ -61,7 +61,7 @@ note "Testing cplay install for module $module";
     );
 
     note "try re-installing to local::lib with --reinstall";
-    cplay(
+    cnext(
         command => 'install',
         args    => [ '-L', $localdir, '--reinstall', $module ],
         exit    => 0,
@@ -79,7 +79,7 @@ note "Testing cplay install for module $module";
     note "Trying local::lib while the module is installed";
 
     # 1 - install the module
-    cplay(
+    cnext(
         command => 'install',
         args    => [$module],
         exit    => 0,
@@ -95,7 +95,7 @@ note "Testing cplay install for module $module";
     ok is_module_installed($module), "module is installed to the default INC";
 
     my $localdir = "$tmp/second";
-    cplay(
+    cnext(
         command => 'install',
         args    => [ '-L', $localdir, $module ],
         exit    => 0,
@@ -112,7 +112,7 @@ note "Testing cplay install for module $module";
     ok is_module_installed_to_local_lib( $module, $localdir ), "module is installed to local lib";
 
     note "try re-installing to local::lib";
-    cplay(
+    cnext(
         command => 'install',
         args    => [ '-L', $localdir, $module ],
         exit    => 0,

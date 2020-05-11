@@ -18,7 +18,7 @@ use File::pushd;
 my $module       = q[A1z::Html];
 my $distribution = q[A1z-Html];
 
-note "Testing cplay install for module $module";
+note "Testing cnext install for module $module";
 
 my $fixtures_directory = $FindBin::Bin . '/../fixtures';
 die q[Missing fixtures] unless -d $fixtures_directory;
@@ -26,7 +26,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
 {
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
-    cplay(
+    cnext(
         command => 'install',
         args    => [$module],
         exit    => 0,
@@ -44,7 +44,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
 {
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
-    cplay(
+    cnext(
         args => [$module],
         exit => 0,
         test => sub($out) {
@@ -61,7 +61,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
 {
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
-    cplay(
+    cnext(
         command => 'install',
         args    => [$distribution],
         exit    => 0,
@@ -78,7 +78,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
 
 {
     remove_module($module);
-    cplay(
+    cnext(
         args => [$distribution],
         exit => 0,
         test => sub($out) {
@@ -95,7 +95,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
 {
     note "try installing an existing distribution";
     ok is_module_installed($module), "module is already installed";
-    cplay(
+    cnext(
         args => [$distribution],
         exit => 0,
         test => sub($out) {
@@ -110,7 +110,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
 
 {
     note "try reinstalling an existing distribution";
-    cplay(
+    cnext(
         args => [ qw{--reinstall}, $distribution ],
         exit => 0,
         test => sub($out) {
@@ -135,7 +135,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
 
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
-    cplay(
+    cnext(
         command => 'install',
         args    => ['.'],
         exit    => 256,
@@ -164,7 +164,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
     ok -d $dir or die;
     my $in_dir = pushd($dir);
 
-    cplay(
+    cnext(
         command => 'install',
         args    => ['.'],
         exit    => 0,
@@ -192,7 +192,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
     ok -d $dir or die;
     my $in_dir = pushd($dir);
 
-    cplay(
+    cnext(
         command => 'install',
         args    => ['.'],
         exit    => 0,
@@ -222,7 +222,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
     ok -d $dir or die;
     my $in_dir = pushd($dir);
 
-    cplay(
+    cnext(
         command => 'install',
         args    => ['.'],
         exit    => 0,
@@ -241,7 +241,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
 
 {
     note "--debug";
-    cplay(
+    cnext(
         args => [ qw{--reinstall -d}, $distribution ],
         exit => 0,
         test => sub($out) {
@@ -261,7 +261,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
 
 {
     note "--verbose";
-    cplay(
+    cnext(
         args => [ qw{--reinstall -v}, $distribution ],
         exit => 0,
         test => sub($out) {
@@ -280,7 +280,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
 
 {
     note "--no-test";
-    cplay(
+    cnext(
         args => [ qw{--reinstall -d --no-test}, $distribution ],
         exit => 0,
         test => sub($out) {

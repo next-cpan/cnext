@@ -19,7 +19,7 @@ sub read_file ( $file, $mode = ':utf8' ) {
 }
 
 sub is_fatpacked() {
-    return unless my $ref = ref $INC{'App/cplay/cmd/selfinstall.pm'};
+    return unless my $ref = ref $INC{'App/cnext/cmd/selfinstall.pm'};
     return $ref =~ m{^FatPacked} ? 1 : 0;
 }
 

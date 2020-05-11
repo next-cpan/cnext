@@ -19,18 +19,18 @@ use App::next::InstallDirs;
 
 use Cwd qw{abs_path};
 
-note "Testing cplay --self-install";
+note "Testing cnext --self-install";
 
 if ( use_fatpack() ) {
     my $install_to_dir = App::next::InstallDirs->new->bin;
-    my $cplay_path     = $install_to_dir . '/cplay';
+    my $cnext_path     = $install_to_dir . '/cnext';
 
     {
         note "PATH is set";
-        unlink $cplay_path if -e $cplay_path;
-        ok !-e $cplay_path, "cplay_path does not exist";
+        unlink $cnext_path if -e $cnext_path;
+        ok !-e $cnext_path, "cnext_path does not exist";
 
-        cplay(
+        cnext(
             command => '--self-install',
             args    => [],
             exit    => 0,
@@ -40,21 +40,21 @@ if ( use_fatpack() ) {
             test => sub($out) {
                 my $lines = [ split( /\n/, $out->{output} ) ];
                 is $lines => array {
-                    item match qr{OK\s+cplay is installed to };
+                    item match qr{OK\s+cnext is installed to };
                     end;
-                }, "cplay is installed to expected path";
+                }, "cnext is installed to expected path";
             },
         );
 
-        ok -f $cplay_path, "cplay is installed to $cplay_path";
-        ok -x $cplay_path, "cplay is executable";
+        ok -f $cnext_path, "cnext is installed to $cnext_path";
+        ok -x $cnext_path, "cnext is executable";
 
-        my ( $exit, $out, $err ) = App::next::IPC::run3( [ $cplay_path, '--version' ] );
-        is $exit,  0,                         'cplay --version exits with 0';
-        like $out, qr{^\s*cplay\s+\d+\.\d+}a, 'cplay --version output' or diag ":$out:";
+        my ( $exit, $out, $err ) = App::next::IPC::run3( [ $cnext_path, '--version' ] );
+        is $exit,  0,                         'cnext --version exits with 0';
+        like $out, qr{^\s*cnext\s+\d+\.\d+}a, 'cnext --version output' or diag ":$out:";
         is $err,   undef,                     'nothing on stderr';
 
-        unlink $cplay_path;
+        unlink $cnext_path;
     }
 
     {
@@ -63,7 +63,7 @@ if ( use_fatpack() ) {
         my $clean_path = clean_path($install_to_dir);
         note $clean_path;
 
-        cplay(
+        cnext(
             command => '--self-install',
             args    => [],
             exit    => 0,
@@ -73,17 +73,17 @@ if ( use_fatpack() ) {
             test => sub($out) {
                 my $lines = [ split( /\n/, $out->{output} ) ];
                 is $lines => array {
-                    item match qr{OK\s+cplay is installed to };
+                    item match qr{OK\s+cnext is installed to };
                     item match qr{WARN\s+.+is not in your PATH};
                     end;
-                }, "cplay is installed to expected path";
+                }, "cnext is installed to expected path";
             },
         );
 
-        ok -f $cplay_path, "cplay is installed to $cplay_path";
-        ok -x $cplay_path, "cplay is executable";
+        ok -f $cnext_path, "cnext is installed to $cnext_path";
+        ok -x $cnext_path, "cnext is executable";
 
-        unlink $cplay_path;
+        unlink $cnext_path;
     }
 
     foreach my $type (qw{site perl vendor}) {
@@ -93,11 +93,11 @@ if ( use_fatpack() ) {
         next unless $install_to_dir;
 
         note "install_to_dir: ", $install_to_dir;
-        my $cplay_path = $install_to_dir . '/cplay';
+        my $cnext_path = $install_to_dir . '/cnext';
 
-        unlink $cplay_path;
+        unlink $cnext_path;
 
-        cplay(
+        cnext(
             command => '--self-install',
             args    => [ qw{--installdirs}, $type ],
             exit    => 0,
@@ -107,28 +107,28 @@ if ( use_fatpack() ) {
             test => sub($out) {
                 my $lines = [ split( /\n/, $out->{output} ) ];
                 is $lines => array {
-                    item match qr{OK\s+cplay is installed to };
+                    item match qr{OK\s+cnext is installed to };
                     end;
-                }, "cplay is installed to expected path";
+                }, "cnext is installed to expected path";
             },
         );
 
-        ok -f $cplay_path, "cplay is installed to $cplay_path";
-        ok -x $cplay_path, "cplay is executable";
+        ok -f $cnext_path, "cnext is installed to $cnext_path";
+        ok -x $cnext_path, "cnext is executable";
 
-        unlink $cplay_path;
+        unlink $cnext_path;
     }
 
 }
 else {
-    cplay(
+    cnext(
         command => '--self-install',
         args    => [],
         exit    => 256,
         test    => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => array {
-                item match qr{FAIL Can only install a FatPacked version of 'cplay'};
+                item match qr{FAIL Can only install a FatPacked version of 'cnext'};
                 end;
             }, "can only install a FatPacked version";
         },

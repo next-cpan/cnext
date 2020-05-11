@@ -11,7 +11,7 @@ use App::next::std;
 use App::next::Tester;
 
 {
-    cplay(
+    cnext(
         args => [qw{--help}],
         exit => 0,
         test => sub($out) {

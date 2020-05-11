@@ -26,50 +26,50 @@ use Digest::Perl::MD5;    # fatpack in
 
 my $tmp = File::Temp->newdir( DIR => $ENV{HOME} );
 
-note "Testing cplay --self-update";
+note "Testing cnext --self-update";
 
 if ( use_fatpack() ) {
-    my ( $fatpacked, @ilib ) = App::next::Tester::find_cplay;
+    my ( $fatpacked, @ilib ) = App::next::Tester::find_cnext;
 
-    my $local_cplay = $tmp . '/cplay';
+    my $local_cnext = $tmp . '/cnext';
 
-    File::Copy::copy( $fatpacked, $local_cplay ) or die;
-    qx{chmod +x $local_cplay};
+    File::Copy::copy( $fatpacked, $local_cnext ) or die;
+    qx{chmod +x $local_cnext};
 
     my $mock = Test::MockModule->new('App::next::Tester');
     $mock->redefine(
-        'find_cplay' => sub {
-            return $local_cplay unless wantarray;
-            return ( $local_cplay, @ilib );
+        'find_cnext' => sub {
+            return $local_cnext unless wantarray;
+            return ( $local_cnext, @ilib );
         }
     );
 
-    ok -f $local_cplay, '-f';
+    ok -f $local_cnext, '-f';
     ok -x _, '-x';
 
-    qx{echo "__END__\nsomething" >> $local_cplay};
-    is $?, 0, "append __END__ to local_cplay" or die;
+    qx{echo "__END__\nsomething" >> $local_cnext};
+    is $?, 0, "append __END__ to local_cnext" or die;
 
-    my $signature_before = signature($local_cplay);
+    my $signature_before = signature($local_cnext);
 
-    cplay(
+    cnext(
         command => '--self-update',
         args    => [],
         exit    => 0,
         test    => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => array {
-                item match qr{OK\s+cplay is already up to date using version};
-                item match qr{INFO\s+you can force an update by running: cplay selfupdate force};
+                item match qr{OK\s+cnext is already up to date using version};
+                item match qr{INFO\s+you can force an update by running: cnext selfupdate force};
                 end;
-            }, "cplay is installed to expected path" or diag explain $out;
+            }, "cnext is installed to expected path" or diag explain $out;
         },
         debug => 1,
     );
 
-    is signature($local_cplay), $signature_before, "cplay file was not changed";
+    is signature($local_cnext), $signature_before, "cnext file was not changed";
 
-    cplay(
+    cnext(
         command => '--self-update',
         args    => ['force'],
         exit    => 0,
@@ -77,27 +77,27 @@ if ( use_fatpack() ) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => array {
                 item match qr{INFO\s+running 'selfupdate force'};
-                item match qr{OK\s+cplay is updated to version};
+                item match qr{OK\s+cnext is updated to version};
                 end;
-            }, "cplay is installed to expected path" or diag explain $out;
+            }, "cnext is installed to expected path" or diag explain $out;
         },
         debug => 1,
     );
 
-    isnt signature($local_cplay), $signature_before, "cplay file was updated";
+    isnt signature($local_cnext), $signature_before, "cnext file was updated";
 
-    ok -f $local_cplay, "cplay is installed to $local_cplay";
-    ok -x $local_cplay, "cplay is executable";
+    ok -f $local_cnext, "cnext is installed to $local_cnext";
+    ok -x $local_cnext, "cnext is executable";
 }
 else {
-    cplay(
+    cnext(
         command => '--self-update',
         args    => [],
         exit    => 256,
         test    => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => array {
-                item match qr{FAIL Can only update a FatPacked version of 'cplay'};
+                item match qr{FAIL Can only update a FatPacked version of 'cnext'};
                 end;
             }, "can only update a FatPacked version";
         },

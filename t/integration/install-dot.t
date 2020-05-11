@@ -20,7 +20,7 @@ my $module       = q[My::Custom::Distro];
 my $distribution = q[My-Custom-Distro];
 my $last_version = q[0.01];
 
-note "Testing cplay install .";
+note "Testing cnext install .";
 
 my $dir = $FindBin::Bin . '/../fixtures/My-Custom-Distro';
 
@@ -32,7 +32,7 @@ my $tmp = File::Temp->newdir();
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
 
-    cplay(
+    cnext(
         command => 'install',
         args    => ['.'],
         exit    => 0,
@@ -50,7 +50,7 @@ my $tmp = File::Temp->newdir();
     ok !-d q[blib], 'blib is not left behind';
 
     note "Checking that we can reinsyall the distribution";
-    cplay(
+    cnext(
         command => 'install',
         args    => [qw{-n .}],
         exit    => 0,
@@ -71,7 +71,7 @@ my $tmp = File::Temp->newdir();
 
     my $local_dir = "$tmp/vendor";
 
-    cplay(
+    cnext(
         command => 'install',
         args    => [ qw{-n -L}, $local_dir, '.' ],
         exit    => 0,

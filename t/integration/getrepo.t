@@ -19,11 +19,11 @@ use App::next::Tester;
 #use File::Temp;
 #use File::pushd;
 
-note "Testing cplay get-repo action";
+note "Testing cnext get-repo action";
 
 {
 
-    cplay(
+    cnext(
         command => 'get-repo',
         args    => [qw{A1z::Html}],
         exit    => 0,
@@ -36,7 +36,7 @@ note "Testing cplay get-repo action";
         },
     );
 
-    cplay(
+    cnext(
         command => 'get-repo',
         args    => [qw{Unkown::Module::XYZ}],
         exit    => 256,
@@ -49,7 +49,7 @@ note "Testing cplay get-repo action";
         },
     );
 
-    cplay(
+    cnext(
         command => 'get-repo',
         args    => [qw{warnings}],
         exit    => 0,
@@ -62,7 +62,7 @@ note "Testing cplay get-repo action";
         },
     );
 
-    cplay(
+    cnext(
         command => 'get-repo',
         args    => [qw{File::Basename}],
         exit    => 0,
@@ -75,7 +75,7 @@ note "Testing cplay get-repo action";
         },
     );
 
-    cplay(
+    cnext(
         command => 'get-repo',
         args    => [qw{perl}],
         exit    => 0,

@@ -54,24 +54,24 @@ my $fatpack_compact;
     find( { wanted => $want, no_chdir => 1 }, "fatlib", "lib" );
     system 'perlstrip', '--cache', '-v', @files;
 
-    unlink "lib/App/cplay/Tester.pm";    # remove Tester from fatpack
+    unlink "lib/App/cnext/Tester.pm";    # remove Tester from fatpack
 
     $fatpack_compact = qx{fatpack file};
 }
 
-generate_file( 'script/cplay.PL', "cplay", $fatpack_compact );
-bump_git_revision('cplay');
-chmod 0755, "cplay";
+generate_file( 'script/cnext.PL', "cnext", $fatpack_compact );
+bump_git_revision('cnext');
+chmod 0755, "cnext";
 
 my $perltidy = qx{which perltidy};
 if ( $? == 0 && length $perltidy ) {     # probably want to add a '# notidy file tag'
     chomp $perltidy if $perltidy;
-    `$perltidy script/cplay.PL && mv script/cplay.PL.tdy script/cplay.PL`;
-    `$perltidy cplay && mv cplay.tdy cplay`;
+    `$perltidy script/cnext.PL && mv script/cnext.PL.tdy script/cnext.PL`;
+    `$perltidy cnext && mv cnext.tdy cnext`;
 }
 
 END {
-    unlink "cplay.tmp";
+    unlink "cnext.tmp";
     system "rm", "-r", ".build";
 }
 

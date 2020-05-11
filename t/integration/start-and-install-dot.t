@@ -19,7 +19,7 @@ use App::next::Helpers qw{read_file write_file};
 use File::Temp;
 use File::pushd;
 
-note "Testing cplay start action";
+note "Testing cnext start action";
 
 my $tmp = File::Temp->newdir();
 
@@ -28,12 +28,12 @@ my $intmp = pushd("$tmp");
     my $distribution = q[My-First-Module];
     my $module       = q[My::First::Module];
 
-    note "create a distribution using 'cplay start': ", $distribution;
+    note "create a distribution using 'cnext start': ", $distribution;
 
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
 
-    cplay(
+    cnext(
         command => 'start',
         args    => [$distribution],
         exit    => 0,
@@ -53,7 +53,7 @@ my $intmp = pushd("$tmp");
 
     ok !is_module_installed($module), "module is not installed";
 
-    cplay(
+    cnext(
         command => 'install',
         args    => [qw{.}],
         exit    => 0,
@@ -77,7 +77,7 @@ my $intmp = pushd("$tmp");
     isnt -s $module_path, -s q[lib/My/First/Module.pm], "module has changed on disk";
 
     note "reinstall it a second time";
-    cplay(
+    cnext(
         command => 'install',
         args    => [qw{.}],
         exit    => 0,

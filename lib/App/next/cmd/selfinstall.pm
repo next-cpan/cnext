@@ -12,7 +12,7 @@ use Cwd            ();
 
 sub run ( $cli, @argv ) {
     if ( !is_fatpacked() ) {
-        FAIL("Can only install a FatPacked version of 'cplay'.");
+        FAIL("Can only install a FatPacked version of 'cnext'.");
         return 1;
     }
 
@@ -20,13 +20,13 @@ sub run ( $cli, @argv ) {
 
     App::next::Logger::setup_for_script();
 
-    my $tmp_file = $cli->build_dir . "/cplay.tmp";
+    my $tmp_file = $cli->build_dir . "/cnext.tmp";
     write_file( $tmp_file, $main::SOURCE_CODE );
 
     my $installer = App::next::Installer->new( cli => $cli );
     my $dirs      = $installer->installdirs;
-    my $path      = $dirs->install_to_bin( $tmp_file, 'cplay' );
-    OK "cplay is installed to $path";
+    my $path      = $dirs->install_to_bin( $tmp_file, 'cnext' );
+    OK "cnext is installed to $path";
     check_path_for($path);
 
     unlink $tmp_file;

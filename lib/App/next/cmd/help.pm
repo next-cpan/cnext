@@ -9,7 +9,7 @@ sub run ( $self, @argv ) {
     my $out;
     open my $fh, ">", \$out;
 
-    my $f = $INC{'App/cplay.pm'};
+    my $f = $INC{'App/cnext.pm'};
     $f = $0 unless -e $f;
 
     Pod::Text->new->parse_from_file( $f, $fh );

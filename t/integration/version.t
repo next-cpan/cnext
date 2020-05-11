@@ -15,13 +15,13 @@ use App::next;
 my $V = $App::next::VERSION;
 
 {
-    cplay(
+    cnext(
         args => [qw{--version}],
         exit => 0,
         test => sub($out) {
             my $lines = [ split( /\n/, $out->{output} ) ];
             is $lines => array {
-                item match qr{cplay $V};
+                item match qr{cnext $V};
                 end;
             }, "--version";
         },

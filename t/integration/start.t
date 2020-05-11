@@ -19,14 +19,14 @@ use App::next::Helpers qw{read_file};
 use File::Temp;
 use File::pushd;
 
-note "Testing cplay start action";
+note "Testing cnext start action";
 
 my $tmp = File::Temp->newdir();
 
 my $intmp = pushd("$tmp");
 
 {
-    cplay(
+    cnext(
         command => 'start',
         args    => [],
         exit    => 256,
@@ -41,7 +41,7 @@ my $intmp = pushd("$tmp");
 }
 
 {
-    cplay(
+    cnext(
         command => 'start',
         args    => [qw{My-Custom-Module}],
         exit    => 0,
@@ -115,7 +115,7 @@ OUT
 
 {
     note "try creating the same module another time";
-    cplay(
+    cnext(
         command => 'start',
         args    => [qw{My-Custom-Module}],
         exit    => 256,
@@ -132,7 +132,7 @@ OUT
 {
     note "Try creating two modules";
 
-    cplay(
+    cnext(
         command => 'start',
         args    => [qw{First-Module SecondOne}],
         exit    => 0,

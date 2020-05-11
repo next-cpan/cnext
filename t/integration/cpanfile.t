@@ -27,7 +27,7 @@ ok -e $cpanfile, "cpanfile exists";
         ok !is_module_installed($module), "module $module is not installed";
     }
 
-    cplay(
+    cnext(
         command => 'cpanfile',
         args    => [ qw{--without-test}, $cpanfile ],
         exit    => 0,
@@ -46,7 +46,7 @@ ok -e $cpanfile, "cpanfile exists";
 
     note "modules are already installed";
 
-    cplay(
+    cnext(
         command => 'cpanfile',
         args    => [ qw{--without-test}, $cpanfile ],
         exit    => 0,
@@ -62,7 +62,7 @@ ok -e $cpanfile, "cpanfile exists";
 
     note "remove one module and try to reinstall";
     remove_module( $requires_modules[0] );
-    cplay(
+    cnext(
         command => 'cpanfile',
         args    => [ qw{--without-test}, $cpanfile ],
         exit    => 0,
@@ -78,7 +78,7 @@ ok -e $cpanfile, "cpanfile exists";
 
     note "remove one module and try to reinstall";
     remove_module($_) for @requires_modules;
-    cplay(
+    cnext(
         command => 'cpanfile',
         args    => [ qw{--without-test --with-develop}, $cpanfile ],
         exit    => 0,
@@ -96,7 +96,7 @@ ok -e $cpanfile, "cpanfile exists";
     );
 
     note "test with a non available module";
-    cplay(
+    cnext(
         command => 'cpanfile',
         args    => [ qw{--without-test --with-recommends}, $cpanfile ],
         exit    => 256,

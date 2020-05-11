@@ -97,9 +97,9 @@ sub _build_homedir {
 # we are storing everythink in that directory
 #   can be customized using --cache-dir
 sub _build_cache_dir($self) {
-    my $path = $self->homedir . '/.cplay';
+    my $path = $self->homedir . '/.cnext';
     return $path if -d $path;
-    mkpath($path) or FATAL("Fail to create ~/.cplay cache directory directory at: $path");
+    mkpath($path) or FATAL("Fail to create ~/.cnext cache directory directory at: $path");
     return $path;
 }
 

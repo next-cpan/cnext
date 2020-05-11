@@ -21,7 +21,7 @@ my $module       = q[cPlay::Test::Module];
 my $distribution = q[cPlay-Test-Module];
 my $last_version = q[1.00];
 
-note "Testing cplay install for module $module";
+note "Testing cnext install for module $module";
 
 my $fixtures_directory = $FindBin::Bin . '/../fixtures';
 die q[Missing fixtures] unless -d $fixtures_directory;
@@ -30,7 +30,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
     note "Installing a tagged version";
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
-    cplay(
+    cnext(
         args => [ $distribution . '@' . $last_version ],
         exit => 0,
         test => sub($out) {
@@ -48,7 +48,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
     note "Trying to reinstall a tagged version";
 
     ok is_module_installed($module), "module is already installed";
-    cplay(
+    cnext(
         args => [ $distribution . '@' . $last_version ],
         exit => 0,
         test => sub($out) {
@@ -67,7 +67,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
 
     my $tag = q[1.00_01];
 
-    cplay(
+    cnext(
         args => [ $distribution . '@' . $tag ],
         exit => 0,
         test => sub($out) {
@@ -89,7 +89,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
 
-    cplay(
+    cnext(
         args => [ $distribution . '@' . $tag ],
         exit => 0,
         test => sub($out) {
@@ -111,7 +111,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
 
-    cplay(
+    cnext(
         args => [ $distribution . '@' . $tag ],
         exit => 0,
         test => sub($out) {
@@ -133,7 +133,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
 
-    cplay(
+    cnext(
         args => [ $distribution . '@' . $tag ],
         exit => 0,
         test => sub($out) {
@@ -153,7 +153,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
 
     my $unknow_version = q[0.66];
 
-    cplay(
+    cnext(
         args => [ $distribution . '@' . $unknow_version ],
         exit => 256,
         test => sub($out) {

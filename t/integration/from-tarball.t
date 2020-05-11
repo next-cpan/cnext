@@ -18,7 +18,7 @@ use File::Temp;
 
 my $tmp = File::Temp->newdir();
 
-note "Testing cplay --from-tarball";
+note "Testing cnext --from-tarball";
 
 my $module = q[A1z::Html];
 my $url    = q[https://github.com/next-cpan/A1z-Html/archive/p5.tar.gz];
@@ -27,7 +27,7 @@ my $url    = q[https://github.com/next-cpan/A1z-Html/archive/p5.tar.gz];
     note "from url $url";
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
-    cplay(
+    cnext(
         command => 'from-tarball',
         args    => [$url],
         exit    => 0,
@@ -55,7 +55,7 @@ my $url    = q[https://github.com/next-cpan/A1z-Html/archive/p5.tar.gz];
     # remove and install from tarball
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
-    cplay(
+    cnext(
         command => 'from-tarball',
         args    => [$local_tarball],
         exit    => 0,

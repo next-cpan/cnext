@@ -7,7 +7,7 @@ sub run ( $self, @argv ) {
     my $version  = $App::next::VERSION;
     my $revision = $App::next::REVISION;
 
-    say "cplay $version\@$revision ($0)";
+    say "cnext $version\@$revision ($0)";
 
     return;
 }

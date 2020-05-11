@@ -39,7 +39,7 @@ sub setup_once ( $cli, $attempt = 1 ) {
 
     my $now = time;
 
-    INFO("Check and refresh cplay index files.");
+    INFO("Check and refresh cnext index files.");
     my $force_refresh = $cli->refresh;
     if ( !$force_refresh ) {
         foreach my $file (@all_ix_files) {

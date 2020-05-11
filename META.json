@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : 2
    },
-   "name" : "App-cplay",
+   "name" : "App-cnext",
    "no_index" : {
       "directory" : [
          "eg",
@@ -71,132 +71,132 @@
    },
    "provides" : {
       "App::next" : {
-         "file" : "lib/App/cplay.pm",
+         "file" : "lib/App/cnext.pm",
          "version" : "0.0001"
       },
       "App::next::BUILD" : {
-         "file" : "lib/App/cplay/BUILD.pm"
+         "file" : "lib/App/cnext/BUILD.pm"
       },
       "App::next::Helpers" : {
-         "file" : "lib/App/cplay/Helpers.pm"
+         "file" : "lib/App/cnext/Helpers.pm"
       },
       "App::next::Http" : {
-         "file" : "lib/App/cplay/Http.pm"
+         "file" : "lib/App/cnext/Http.pm"
       },
       "App::next::IPC" : {
-         "file" : "lib/App/cplay/IPC.pm"
+         "file" : "lib/App/cnext/IPC.pm"
       },
       "App::next::Index" : {
-         "file" : "lib/App/cplay/Index.pm"
+         "file" : "lib/App/cnext/Index.pm"
       },
       "App::next::Index::Modules" : {
-         "file" : "lib/App/cplay/Index/Modules.pm"
+         "file" : "lib/App/cnext/Index/Modules.pm"
       },
       "App::next::Index::Repositories" : {
-         "file" : "lib/App/cplay/Index/Repositories.pm"
+         "file" : "lib/App/cnext/Index/Repositories.pm"
       },
       "App::next::Index::Role::Columns" : {
-         "file" : "lib/App/cplay/Index/Role/Columns.pm"
+         "file" : "lib/App/cnext/Index/Role/Columns.pm"
       },
       "App::next::Index::Role::TemplateURL" : {
-         "file" : "lib/App/cplay/Index/Role/TemplateURL.pm"
+         "file" : "lib/App/cnext/Index/Role/TemplateURL.pm"
       },
       "App::next::Indexes" : {
-         "file" : "lib/App/cplay/Indexes.pm"
+         "file" : "lib/App/cnext/Indexes.pm"
       },
       "App::next::InstallDirs" : {
-         "file" : "lib/App/cplay/InstallDirs.pm"
+         "file" : "lib/App/cnext/InstallDirs.pm"
       },
       "App::next::Installer" : {
-         "file" : "lib/App/cplay/Installer.pm"
+         "file" : "lib/App/cnext/Installer.pm"
       },
       "App::next::Installer::Command" : {
-         "file" : "lib/App/cplay/Installer/Command.pm"
+         "file" : "lib/App/cnext/Installer/Command.pm"
       },
       "App::next::Installer::Share" : {
-         "file" : "lib/App/cplay/Installer/Share.pm"
+         "file" : "lib/App/cnext/Installer/Share.pm"
       },
       "App::next::Installer::Unpacker" : {
-         "file" : "lib/App/cplay/Installer/Unpacker.pm"
+         "file" : "lib/App/cnext/Installer/Unpacker.pm"
       },
       "App::next::Logger" : {
-         "file" : "lib/App/cplay/Logger.pm"
+         "file" : "lib/App/cnext/Logger.pm"
       },
       "App::next::Module" : {
-         "file" : "lib/App/cplay/Module.pm"
+         "file" : "lib/App/cnext/Module.pm"
       },
       "App::next::Roles::JSON" : {
-         "file" : "lib/App/cplay/Roles/JSON.pm"
+         "file" : "lib/App/cnext/Roles/JSON.pm"
       },
       "App::next::Search::Result" : {
-         "file" : "lib/App/cplay/Search/Result.pm"
+         "file" : "lib/App/cnext/Search/Result.pm"
       },
       "App::next::Signature" : {
-         "file" : "lib/App/cplay/Signature.pm"
+         "file" : "lib/App/cnext/Signature.pm"
       },
       "App::next::Starter" : {
-         "file" : "lib/App/cplay/Starter.pm",
+         "file" : "lib/App/cnext/Starter.pm",
          "version" : "0.001"
       },
       "App::next::Tester" : {
-         "file" : "lib/App/cplay/Tester.pm"
+         "file" : "lib/App/cnext/Tester.pm"
       },
       "App::next::Timeout" : {
-         "file" : "lib/App/cplay/Timeout.pm"
+         "file" : "lib/App/cnext/Timeout.pm"
       },
       "App::next::cli" : {
-         "file" : "lib/App/cplay/cli.pm"
+         "file" : "lib/App/cnext/cli.pm"
       },
       "App::next::cmd::cpanfile" : {
-         "file" : "lib/App/cplay/cmd/cpanfile.pm"
+         "file" : "lib/App/cnext/cmd/cpanfile.pm"
       },
       "App::next::cmd::fromtarball" : {
-         "file" : "lib/App/cplay/cmd/fromtarball.pm"
+         "file" : "lib/App/cnext/cmd/fromtarball.pm"
       },
       "App::next::cmd::getrepo" : {
-         "file" : "lib/App/cplay/cmd/getrepo.pm"
+         "file" : "lib/App/cnext/cmd/getrepo.pm"
       },
       "App::next::cmd::help" : {
-         "file" : "lib/App/cplay/cmd/help.pm"
+         "file" : "lib/App/cnext/cmd/help.pm"
       },
       "App::next::cmd::install" : {
-         "file" : "lib/App/cplay/cmd/install.pm"
+         "file" : "lib/App/cnext/cmd/install.pm"
       },
       "App::next::cmd::look" : {
-         "file" : "lib/App/cplay/cmd/look.pm"
+         "file" : "lib/App/cnext/cmd/look.pm"
       },
       "App::next::cmd::search" : {
-         "file" : "lib/App/cplay/cmd/search.pm"
+         "file" : "lib/App/cnext/cmd/search.pm"
       },
       "App::next::cmd::selfinstall" : {
-         "file" : "lib/App/cplay/cmd/selfinstall.pm"
+         "file" : "lib/App/cnext/cmd/selfinstall.pm"
       },
       "App::next::cmd::selfupdate" : {
-         "file" : "lib/App/cplay/cmd/selfupdate.pm"
+         "file" : "lib/App/cnext/cmd/selfupdate.pm"
       },
       "App::next::cmd::start" : {
-         "file" : "lib/App/cplay/cmd/start.pm"
+         "file" : "lib/App/cnext/cmd/start.pm"
       },
       "App::next::cmd::test" : {
-         "file" : "lib/App/cplay/cmd/test.pm"
+         "file" : "lib/App/cnext/cmd/test.pm"
       },
       "App::next::cmd::version" : {
-         "file" : "lib/App/cplay/cmd/version.pm"
+         "file" : "lib/App/cnext/cmd/version.pm"
       },
       "App::next::std" : {
-         "file" : "lib/App/cplay/std.pm"
+         "file" : "lib/App/cnext/std.pm"
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/next-cpan/cplay/issues"
+         "web" : "https://github.com/next-cpan/cnext/issues"
       },
-      "homepage" : "https://github.com/next-cpan/cplay",
+      "homepage" : "https://github.com/next-cpan/cnext",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/next-cpan/cplay.git",
-         "web" : "https://github.com/next-cpan/cplay"
+         "url" : "https://github.com/next-cpan/cnext.git",
+         "web" : "https://github.com/next-cpan/cnext"
       }
    },
    "version" : "0.0001",

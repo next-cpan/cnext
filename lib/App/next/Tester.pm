@@ -19,24 +19,24 @@ use Cwd 'abs_path';
 use Test2::Harness::Util::IPC qw/run_cmd/;
 
 use Exporter 'import';
-our @EXPORT = qw/cplay use_fatpack/;
+our @EXPORT = qw/cnext use_fatpack/;
 
-sub find_cplay {
+sub find_cnext {
     state $cache;
 
     if ( !defined $cache ) {
         require App::next;
-        my $path = abs_path( $INC{'App/cplay.pm'} );
+        my $path = abs_path( $INC{'App/cnext.pm'} );
 
         if ( use_fatpack() ) {
-            $path =~ s{\Qlib/App/cplay.pm\E$}{cplay};
-            -x $path or die "Cannot find cplay fatpack script";
+            $path =~ s{\Qlib/App/cnext.pm\E$}{cnext};
+            -x $path or die "Cannot find cnext fatpack script";
             $cache = [$path];
         }
         else {
             my $base = $path;
-            $base =~ s{\Qlib/App/cplay.pm\E$}{};
-            $path = $base . 'script/cplay.PL';
+            $base =~ s{\Qlib/App/cnext.pm\E$}{};
+            $path = $base . 'script/cnext.PL';
             my $lib = $base . 'lib';
 
             die "script $path is missing"        unless -f $path;
@@ -54,7 +54,7 @@ sub use_fatpack {
     return $ENV{USE_CPLAY_COMPILED} ? 1 : 0;
 }
 
-sub cplay(%params) {
+sub cnext(%params) {
     my $ctx = context();
 
     my $cmd = delete $params{cmd} // delete $params{command};
@@ -74,13 +74,13 @@ sub cplay(%params) {
 
     my ( $wh, $cfile );
     if ($capture) {
-        ( $wh, $cfile ) = tempfile( "cplay-$$-XXXXXXXX", TMPDIR => 1, CLEANUP => 1, SUFFIX => '.out' );
+        ( $wh, $cfile ) = tempfile( "cnext-$$-XXXXXXXX", TMPDIR => 1, CLEANUP => 1, SUFFIX => '.out' );
         $wh->autoflush(1);
     }
 
-    my ( $cplay, @lib ) = find_cplay;
+    my ( $cnext, @lib ) = find_cnext;
     my @all_args = ( $cmd ? ($cmd) : (), @$cli );
-    my @cmd      = ( $^X, @lib, $cplay, @all_args );
+    my @cmd      = ( $^X, @lib, $cnext, @all_args );
 
     print "DEBUG: Command = " . join( ' ' => @cmd ) . "\n" if $debug;
 
@@ -126,7 +126,7 @@ sub cplay(%params) {
         $capture ? ( output => join( '', @lines ) ) : (),
     };
 
-    my $name = join( ' ', map { length($_) < 30 ? $_ : substr( $_, 0, 10 ) . "[...]" . substr( $_, -10 ) } grep { defined($_) } basename($cplay), @all_args );
+    my $name = join( ' ', map { length($_) < 30 ? $_ : substr( $_, 0, 10 ) . "[...]" . substr( $_, -10 ) } grep { defined($_) } basename($cnext), @all_args );
     run_subtest(
         $name,
         sub {

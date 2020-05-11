@@ -24,7 +24,7 @@ my $distro = q[Alien-Saxon];
 
 # FIXME: once we can install a repository using 'install .'
 #   we could provide a fixture to test and not depend on a 3rdparty module
-note "Testing cplay using $distro with a perl binary/script";
+note "Testing cnext using $distro with a perl binary/script";
 
 my $url = qq[https://github.com/next-cpan/${distro}/archive/p5.tar.gz];
 
@@ -59,7 +59,7 @@ sub check_share_files_and_dir($root) {
 
     my $local_dir = "$tmp/local_dir";
 
-    cplay(
+    cnext(
         command => 'from-tarball',
         args    => [ '-n', '-L', $local_dir, $url ],
         exit    => 0,
@@ -81,7 +81,7 @@ sub check_share_files_and_dir($root) {
     remove_module($module);
     ok !is_module_installed($module), "module $module is not installed";
 
-    cplay(
+    cnext(
         command => 'from-tarball',
         args    => [ qw{-n}, $url ],
         exit    => 0,

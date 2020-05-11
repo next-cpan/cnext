@@ -25,7 +25,7 @@ BEGIN {
     if ( "$]" < 5.019 ) {    # needs 5.20 for function signature
         die <<"EOS";
 $0 is not supported on Perl $]
-	cplay needs Perl 5.20 or higher
+	cnext needs Perl 5.20 or higher
 	please consider alternate solutions such as App::cpanminus or App::cpm
 EOS
     }
@@ -47,7 +47,7 @@ unless (caller) {
 
 1;
 
-### DO NOT EDIT POD HERE, adjuts cplay.pm
+### DO NOT EDIT POD HERE, adjuts cnext.pm
 ## __CPLAY_POD_MARKER__
 
 =encoding utf8
@@ -59,159 +59,159 @@ App::next -  CPAN client using next-cpan indexes
 =head1 SYNOPSIS
 
     # Install one ore more distribution [using module or distribution names]
-    cplay Cwd
-    cplay Cwd File::Copy
+    cnext Cwd
+    cnext Cwd File::Copy
 
-    cplay install Cwd
-    cplay install Cwd File::Copy
+    cnext install Cwd
+    cnext install Cwd File::Copy
 
-    cplay install --verbose Cwd  # more output
-    cplay install --debug Cwd    # additional debug informations
+    cnext install --verbose Cwd  # more output
+    cnext install --debug Cwd    # additional debug informations
 
     # install a specific version or trial version
-    cplay install Devel-PPPort@3.57
-    cplay install Devel-PPPort@3.57_02
+    cnext install Devel-PPPort@3.57
+    cnext install Devel-PPPort@3.57_02
 
     # preserve .cpbuild directory to preserve cache and debug
-    cplay install --no-cleanup --verbose A1z::Html
+    cnext install --no-cleanup --verbose A1z::Html
 
     # install the distribution from current directory
-    cplay install .
+    cnext install .
 
     # install distributions from a cpanfile
-    cplay cpanfile .
-    cplay cpanfile ~/my-custom.cpanfile
+    cnext cpanfile .
+    cnext cpanfile ~/my-custom.cpanfile
 
     # Getting a repository / distribution name for a module
-    cplay get-repo Simple::Accessor
+    cnext get-repo Simple::Accessor
 
     # Clone a distribution to investigate / patch in a SHELL session
-    cplay look Simple-Accessor
+    cnext look Simple-Accessor
 
     # Only run unit tests without installing any distributions
-    cplay test Simple-Accessor
+    cnext test Simple-Accessor
     # Run test for the distribution in the current directory
-    cplay test .
+    cnext test .
 
-    cplay --version
-    cplay --help
+    cnext --version
+    cnext --help
 
-Run C<cplay -h> or C<perldoc cplay> for more options.
+Run C<cnext -h> or C<perldoc cnext> for more options.
 
 =head1 DESCRIPTION
 
-This repository provides the `cplay` client to install Perl modules without using PAUSE.
+This repository provides the `cnext` client to install Perl modules without using PAUSE.
 This is using the `next-cpan` GitHub repositories indexed by `next-indexes`
 
-L<https://ix.cplay.us|https://ix.cplay.us>
+L<https://ix.cnext.us|https://ix.cnext.us>
 
 Rather than using distribution tarball from PAUSE itself, `play` is relying on GitHub infrastructure to download distributions.
 
 The repo `next-indexes` host some index files which can be consumed to download and install most Perl modules.
 
-`cplay` is the recommended CPAN client using these indexes and GitHub repositories.
-You can read more about cplay client on the L<cplay website cplay.us|https://cplay.us>.
+`cnext` is the recommended CPAN client using these indexes and GitHub repositories.
+You can read more about cnext client on the L<cnext website cnext.us|https://cnext.us>.
 
 =head1 INSTALLATION
 
 =head2 Installing to system perl
 
-This is using cplay to install itself.
+This is using cnext to install itself.
 
-    curl -sL https://git.io/cplay | perl - self-install
-    cplay --version
+    curl -sL https://git.io/cnext | perl - self-install
+    cnext --version
 
 Or if you are not using root
 
-    sudo curl -sL https://git.io/cplay | perl - self-install
+    sudo curl -sL https://git.io/cnext | perl - self-install
 
 You can also select where you want to install the script using installdirs
 
-    curl -sL https://git.io/cplay | perl - self-install --installdirs=site  # this is the default
-    curl -sL https://git.io/cplay | perl - self-install --installdirs=perl
-    curl -sL https://git.io/cplay | perl - self-install --installdirs=vendor
+    curl -sL https://git.io/cnext | perl - self-install --installdirs=site  # this is the default
+    curl -sL https://git.io/cnext | perl - self-install --installdirs=perl
+    curl -sL https://git.io/cnext | perl - self-install --installdirs=vendor
 
 
 =head2 Local installation
 
-You can also download and install cplay to any custom location.
+You can also download and install cnext to any custom location.
 
-   curl -fsSL --compressed http://get.cplay.us > cplay
-   chmod +x cplay
-   ./cplay --version
+   curl -fsSL --compressed http://get.cnext.us > cnext
+   chmod +x cnext
+   ./cnext --version
 
-=head1 How to use cplay
+=head1 How to use cnext
 
 =head2 Install a Perl Module
 
    # install a single module
-   cplay A1z::Html
-   cplay install A1z::Html
-   cplay install --verbose A1z::Html
+   cnext A1z::Html
+   cnext install A1z::Html
+   cnext install --verbose A1z::Html
 
    # install multiple modules
-   cplay First::Module Second::Module ...
+   cnext First::Module Second::Module ...
 
 =head2 Install a Perl distribution
 
 You could use either a module name or a distribution name.
 
    # install a single distribution
-   cplay A1z-Html
-   cplay install A1z-Html
-   cplay install --verbose A1z-Html
+   cnext A1z-Html
+   cnext install A1z-Html
+   cnext install --verbose A1z-Html
 
    # install multiple modules
-   cplay First-Distribution Second-Distribution
+   cnext First-Distribution Second-Distribution
 
    # install a custom version
-   cplay A1z-Html@0.04
+   cnext A1z-Html@0.04
 
    # install a trial version
-   cplay Devel-PPPort@3.57_02
+   cnext Devel-PPPort@3.57_02
 
 =head2 Mix Perl modules and distributions
 
-   cplay Module::Name Distribution-Name ...
+   cnext Module::Name Distribution-Name ...
 
 =head2 Install Perl Modules from a cpanfile
 
     # by default use ./cpanfile
-    cplay cpanfile
-    cplay cpanfile .
-    cplay cpanfile ~/cpanfile.custom
+    cnext cpanfile
+    cnext cpanfile .
+    cnext cpanfile ~/cpanfile.custom
 
     # use one or more cpanfiles
-    cplay cpanfile ~/cpanfile.1 ~/cpanfile.2 ...
+    cnext cpanfile ~/cpanfile.1 ~/cpanfile.2 ...
 
     # set some feature with cpanfile
-    cplay cpanfile --feature one --feature two
+    cnext cpanfile --feature one --feature two
 
     # set some types/phases
-    cplay cpanfile --with-requires --with-build --with-runtime --with-test
+    cnext cpanfile --with-requires --with-build --with-runtime --with-test
 
     # shortcut to enable all
-    cplay cpanfile --with-all
+    cnext cpanfile --with-all
 
 =head2 Install a development or TRIAL version
 
    # install a trial version
-   cplay Devel-PPPort@3.57_02
+   cnext Devel-PPPort@3.57_02
 
 =head2 Install a module from a custom repository
 
-   cplay --from-tarball ./path-to/custom.tar.gz
+   cnext --from-tarball ./path-to/custom.tar.gz
    # where :owner, :repository and :sha are replaced with the accurate values
-   cplay --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
+   cnext --from-tarball https://github.com/:owner/:repository/archive/:sha.tar.gz
 
-   cplay --from-tarball -d https://github.com/next-cpan/A1z-Html/archive/p5.tar.gz
+   cnext --from-tarball -d https://github.com/next-cpan/A1z-Html/archive/p5.tar.gz
 
 =head2 Install one distribution to a custom directory
 
 By default modules are install to the current @INC, but you can specify a custom directory
 where to install these modules using -L.
 
-   cplay -L ~/vendor Simple-Accessor
+   cnext -L ~/vendor Simple-Accessor
 
 =head2 Set destination
 
@@ -231,41 +231,41 @@ Possible values are: perl, site, vendor (default: site)
 
 Sample usages:
 
-    cplay install A1z-Html                     # install to site directories by default
-    cplay install --installdir=site   A1z-Html  # site is the default
-    cplay install --installdir=vendor A1z-Html
-    cplay install --installdir=perl   A1z-Html
+    cnext install A1z-Html                     # install to site directories by default
+    cnext install --installdir=site   A1z-Html  # site is the default
+    cnext install --installdir=vendor A1z-Html
+    cnext install --installdir=perl   A1z-Html
 
 =head2 Checking a repository
 
 This will clone and open a SHELL in a temporary directory,
 removed once you exit the session.
 
-  cplay look A1z::Html
-  cplay look A1z-Html
+  cnext look A1z::Html
+  cnext look A1z-Html
 
 =head2 Testing a distribution
 
 You can test a distribution without installing it.
 
-  cplay test Your-Distribution
-  cplay test -v Your-Distribution # with some verbose output
-  cplay test -d Your-Distribution # with some debug output
+  cnext test Your-Distribution
+  cnext test -v Your-Distribution # with some verbose output
+  cnext test -d Your-Distribution # with some debug output
 
 You can also test a distribution described by the BUILD.json in the current directory.
 
-  cplay test .
+  cnext test .
 
 =head1 USAGE
 
-  cplay [ACTION] [OPTIONS] [ARGS]
+  cnext [ACTION] [OPTIONS] [ARGS]
 
 =head2 ACTIONS
 
       install             default action to install distributions
       cpanfile            install dependencies from a cpanfile
       fromtarabll         install a distribution from a tarball
-      selfupdate          selfupdate cplay binary
+      selfupdate          selfupdate cnext binary
       selfinstall         selfinstall the binary
       help                display this documentation
       look                Clones & opens the distribution with your SHELL
@@ -285,7 +285,7 @@ You can also test a distribution described by the BUILD.json in the current dire
    -n, --no-test
        --reinstall          reinstall the distribution(s)/module(s) even if you already have the latest version installed
                             do not apply to dependencies
-       --cache-dir, --cache specify an alternate cache directory (default: ~/.cplay)
+       --cache-dir, --cache specify an alternate cache directory (default: ~/.cnext)
        --no-check-signature disable signature check (default: on)
 
        --configure-timeout  Timeout for configuring a distibution  (default: 60)

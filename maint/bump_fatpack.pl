@@ -14,7 +14,7 @@ sub find_version {
 }
 
 my $new_ver     = shift @ARGV           or die "missing version use: $0 VERSION";
-my $current_ver = find_version("cplay") or die;
+my $current_ver = find_version("cnext") or die;
 
-system( 'perl-reversion', '-current', $current_ver, '-set', $new_ver, 'cplay' ) == 0 or die $?;
-chmod 0755, 'cplay';
+system( 'perl-reversion', '-current', $current_ver, '-set', $new_ver, 'cnext' ) == 0 or die $?;
+chmod 0755, 'cnext';

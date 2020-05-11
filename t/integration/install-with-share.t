@@ -27,7 +27,7 @@ my $distribution = q[With-Share];
 my $fixtures_directory = $FindBin::Bin . '/../fixtures';
 die q[Missing fixtures] unless -d $fixtures_directory;
 
-note "Testing cplay using $distribution with a perl binary/script";
+note "Testing cnext using $distribution with a perl binary/script";
 
 my @share_files = qw{
   file.txt
@@ -59,7 +59,7 @@ sub check_share_files_and_dir($root) {
     ok -d $dir or die;
     my $in_dir = pushd($dir);
 
-    cplay(
+    cnext(
         command => 'install',
         args    => [ '-L', $local_dir, '.' ],
         exit    => 0,
@@ -85,7 +85,7 @@ sub check_share_files_and_dir($root) {
     ok -d $dir or die;
     my $in_dir = pushd($dir);
 
-    cplay(
+    cnext(
         command => 'install',
         args    => ['.'],
         exit    => 0,

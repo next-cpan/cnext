@@ -22,12 +22,12 @@ my $last_version = q[0.04];
 my $fixtures_directory = $FindBin::Bin . '/../fixtures';
 die q[Missing fixtures] unless -d $fixtures_directory;
 
-note "Testing cplay install for module $module";
+note "Testing cnext install for module $module";
 
 {
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
-    cplay(
+    cnext(
         command => 'test',
         args    => [$module],
         exit    => 0,
@@ -45,7 +45,7 @@ note "Testing cplay install for module $module";
 {
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
-    cplay(
+    cnext(
         command => 'test',
         args    => [ '-n', $module ],
         exit    => 256,
@@ -72,7 +72,7 @@ note "Testing cplay install for module $module";
 
     remove_module($module);
     ok !is_module_installed($module), "module is not installed";
-    cplay(
+    cnext(
         command => 'test',
         args    => ['.'],
         exit    => 256,
@@ -101,7 +101,7 @@ note "Testing cplay install for module $module";
     ok -d $dir or die;
     my $in_dir = pushd($dir);
 
-    cplay(
+    cnext(
         command => 'test',
         args    => ['.'],
         exit    => 0,
@@ -129,7 +129,7 @@ note "Testing cplay install for module $module";
     ok -d $dir or die;
     my $in_dir = pushd($dir);
 
-    cplay(
+    cnext(
         command => 'test',
         args    => ['.'],
         exit    => 0,
@@ -159,7 +159,7 @@ note "Testing cplay install for module $module";
     ok -d $dir or die;
     my $in_dir = pushd($dir);
 
-    cplay(
+    cnext(
         command => 'test',
         args    => ['.'],
         exit    => 0,

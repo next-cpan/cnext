@@ -33,7 +33,7 @@ ok -e $cpanfile, "cpanfile exists";
         ok !is_module_installed($module), "module $module is not installed";
     }
 
-    cplay(
+    cnext(
         command => 'cpanfile',
         args    => [ qw{--without-test}, '-L', $localdir, $cpanfile ],
         exit    => 0,

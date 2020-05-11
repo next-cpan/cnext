@@ -22,7 +22,7 @@ my $tmp = File::Temp->newdir();
 my $module = q[Acme::Stardate];
 my $distro = q[Acme-Stardate];
 
-note "Testing cplay using $distro with a perl binary/script";
+note "Testing cnext using $distro with a perl binary/script";
 
 my $url = qq[https://github.com/next-cpan/${distro}/archive/p5.tar.gz];
 
@@ -31,7 +31,7 @@ my $url = qq[https://github.com/next-cpan/${distro}/archive/p5.tar.gz];
 
     my $local_dir = "$tmp/local_dir";
 
-    cplay(
+    cnext(
         command => 'from-tarball',
         args    => [ '-n', '-L', $local_dir, $url ],
         exit    => 0,
@@ -67,7 +67,7 @@ my $url = qq[https://github.com/next-cpan/${distro}/archive/p5.tar.gz];
     remove_module($module);
     ok !is_module_installed($module), "module $module is not installed";
 
-    cplay(
+    cnext(
         command => 'from-tarball',
         args    => [ qw{-n}, $url ],
         exit    => 0,
@@ -91,7 +91,7 @@ if ( $Config{installbin} ) {
     remove_module($module);
     ok !is_module_installed($module), "module $module is not installed";
 
-    cplay(
+    cnext(
         command => 'from-tarball',
         args    => [ qw{-n --installdir perl}, $url ],
         exit    => 0,
@@ -116,7 +116,7 @@ if ( $Config{installvendorbin} ) {
     remove_module($module);
     ok !is_module_installed($module), "module $module is not installed";
 
-    cplay(
+    cnext(
         command => 'from-tarball',
         args    => [ qw{-n --installdir vendor}, $url ],
         exit    => 0,
@@ -140,7 +140,7 @@ else {
     remove_module($module);
     ok !is_module_installed($module), "module $module is not installed";
 
-    cplay(
+    cnext(
         command => 'from-tarball',
         args    => [ qw{-n --installdir vendor}, $url ],
         exit    => 6400,
