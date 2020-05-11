@@ -161,7 +161,7 @@ die q[Missing fixtures] unless -d $fixtures_directory;
             is $lines => array {
 
                 # cannot use @ inside the \Q..\E due to a bug in 5.20
-                item match qr{\QFAIL Fail to install cNext-Test-Module\E\@\Q0.66 or its dependencies.\E};
+                item match qr{\QFAIL Fail to install $distribution\E\@\Q0.66 or its dependencies.\E};
                 end;
             }, "fail to install $distribution\@$unknow_version";
         },
