@@ -51,7 +51,15 @@ sub find_cnext {
 }
 
 sub use_fatpack {
-    return $ENV{USE_CNEXT_COMPILED} ? 1 : 0;
+    state $use_fatpack;
+
+    if ( !defined $use_fatpack ) {
+        $use_fatpack = $ENV{USE_CNEXT_COMPILED} ? 1 : 0;
+        my $txt = $use_fatpack ? "Using 'cnext' fatpacked version" : "Using 'cnext' non-fatpacked version";
+        print STDERR "# $txt USE_CNEXT_COMPILED=$use_fatpack\n";
+    }
+
+    return $use_fatpack;
 }
 
 sub cnext(%params) {
