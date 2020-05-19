@@ -55,14 +55,14 @@ Run `cnext -h` or `perldoc cnext` for more options.
 This repository provides the \`cnext\` client to install Perl modules without using PAUSE.
 This is using the \`next-cpan\` GitHub repositories indexed by \`next-indexes\`
 
-[https://ix.cnext.us](https://ix.cnext.us)
+[https://ix.nextcpan.org](https://ix.nextcpan.org)
 
 Rather than using distribution tarball from PAUSE itself, \`play\` is relying on GitHub infrastructure to download distributions.
 
 The repo \`next-indexes\` host some index files which can be consumed to download and install most Perl modules.
 
 \`cnext\` is the recommended CPAN client using these indexes and GitHub repositories.
-You can read more about cnext client on the [cnext website cnext.us](https://cnext.us).
+You can read more about cnext client on the [cnext website c.nextcpan.org](https://c.nextcpan.org).
 
 # INSTALLATION
 
